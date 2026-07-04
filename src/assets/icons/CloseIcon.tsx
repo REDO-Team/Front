@@ -12,6 +12,8 @@ export default function CloseIcon({ className = "text-black" }: IconProps) {
       viewBox="0 0 19 19"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      focusable="false"
     >
       {/* stroke="#111111"로 고정되어 있던 색상을 "currentColor"로 변경했습니다. */}
       <path

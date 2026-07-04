@@ -12,6 +12,8 @@ export default function MoreIcon({ className = "text-black" }: IconProps) {
       viewBox="0 0 4 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      focusable="false"
     >
       {/* 고정된 검은색(fill="#111111")을 지우고 fill="currentColor"로 변경하였습니다. */}
       <path

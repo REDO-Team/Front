@@ -12,6 +12,8 @@ export default function HomeIcon({ className = "text-black" }: IconProps) {
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      focusable="false"
     >
       {/* 원래 있던 고정된 회색(fill="#909090")을 지우고 fill="currentColor"로 변경하였습니다. */}
       <path

@@ -16,15 +16,17 @@ export default function TopBar({
   return (
     <header className="relative flex items-center justify-between w-full h-[56px] px-4 bg-white">
       {/* 왼쪽 아이콘 영역 */}
-      {/* 꺽새 옆에 바로 글자를 적을 때 leftIcon에서 두 덩어리로 작성해주세요! */}
-      <div className="flex items-center justify-start z-10 gap-4 cursor-pointer text-lg font-semibold leading-none text-black">
-        {leftIcon}
-        {leftText && (
-          <span className="text-lg font-semibold leading-none text-center text-black">
-            {leftText}
-          </span>
-        )}
-      </div>
+      {/* 꺾새 옆에 바로 글자를 적을 때 leftIcon에서 두 덩어리로 작성해주세요! */}
+      {(leftIcon || leftText) && (
+        <div className="flex items-center justify-start z-10 gap-4 text-lg font-semibold leading-none text-black">
+          {leftIcon}
+          {leftText && (
+            <span className="text-lg font-semibold leading-none text-center text-black">
+              {leftText}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* 가운데 제목 영역 */}
       {title && (
@@ -36,9 +38,11 @@ export default function TopBar({
       )}
 
       {/* 오른쪽 아이콘 영역 */}
-      <div className="flex items-center justify-end z-10 cursor-pointer text-base font-semibold text-black">
-        {rightIcon}
-      </div>
+      {rightIcon && (
+        <div className="flex items-center justify-end z-10 text-base font-semibold text-black">
+          {rightIcon}
+        </div>
+      )}
     </header>
   );
 }
