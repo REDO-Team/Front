@@ -30,8 +30,8 @@ export default function TopBar({
 
       {/* 가운데 제목 영역 */}
       {title && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <span className="text-lg font-semibold leading-none text-center text-black">
+        <div className="absolute inset-0 flex items-center justify-center px-12 pointer-events-none">
+          <span className="max-w-full truncate whitespace-nowrap text-lg font-semibold leading-none text-center text-black">
             {title}
           </span>
         </div>
@@ -39,7 +39,7 @@ export default function TopBar({
 
       {/* 오른쪽 아이콘 영역 */}
       {rightIcon && (
-        <div className="flex items-center justify-end z-10 text-base font-semibold text-black">
+        <div className="ml-auto flex items-center justify-end z-10 text-base font-semibold text-black">
           {rightIcon}
         </div>
       )}
