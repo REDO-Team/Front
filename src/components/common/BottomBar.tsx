@@ -47,6 +47,7 @@ export default function BottomBar({ className = "" }: BottomBarProps) {
             <li key={item.path} className="flex-1 h-full">
               <Link
                 to={item.path}
+                aria-current={isActive ? "page" : undefined}
                 className="flex flex-col items-center justify-center w-full h-full gap-2"
               >
                 <CurrentIcon
