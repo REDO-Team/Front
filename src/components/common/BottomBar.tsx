@@ -40,7 +40,9 @@ export default function BottomBar({ className = "" }: BottomBarProps) {
     >
       <ul className="flex items-center justify-around h-full px-2">
         {NAV_ITEMS.map((item) => {
-          const isActive = pathname === item.path;
+          const isActive =
+            pathname === item.path ||
+            (item.path !== "/" && pathname.startsWith(`${item.path}/`));
           const CurrentIcon = isActive ? item.ActiveIcon : item.Icon;
 
           return (
