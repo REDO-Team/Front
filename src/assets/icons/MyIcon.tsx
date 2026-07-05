@@ -2,15 +2,17 @@ interface IconProps {
   className?: string;
 }
 
-export default function MyIcon({ className }: IconProps) {
+export default function MyIcon({ className = "text-black" }: IconProps) {
   return (
     <svg
+      className={className}
       width="26"
       height="26"
       viewBox="0 0 26 26"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
+      aria-hidden="true"
+      focusable="false"
     >
       <path
         d="M12.88 24.76C19.4413 24.76 24.76 19.4413 24.76 12.88C24.76 6.31868 19.4413 1 12.88 1C6.31868 1 1 6.31868 1 12.88C1 19.4413 6.31868 24.76 12.88 24.76Z"

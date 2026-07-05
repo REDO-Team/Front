@@ -35,7 +35,8 @@ export default function BottomBar({ className = "" }: BottomBarProps) {
 
   return (
     <nav
-      className={`fixed bottom-0 left-0 right-0 mx-auto z-50 w-[402px] h-[96px] bg-white rounded-t-[30px] shadow-[0_-4px_10.1px_rgba(0,0,0,0.05)] ${className}`}
+      aria-label="하단 내비게이션"
+      className={`fixed bottom-0 left-0 right-0 mx-auto z-50 w-full max-w-[480px] h-[96px] bg-white rounded-t-[30px] shadow-[0_-4px_10.1px_rgba(0,0,0,0.05)] ${className}`}
     >
       <ul className="flex items-center justify-around h-full px-2">
         {NAV_ITEMS.map((item) => {
