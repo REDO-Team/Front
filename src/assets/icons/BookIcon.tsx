@@ -1,0 +1,26 @@
+interface IconProps {
+  className?: string;
+}
+
+export default function BookIcon({ className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      width="28"
+      height="23"
+      viewBox="0 0 28 23"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M13.8125 2.77068C15.7507 1.65163 17.9494 1.0625 20.1875 1.0625C22.4256 1.0625 24.6243 1.65163 26.5625 2.77068V21.1873C24.6243 20.0683 22.4256 19.4792 20.1875 19.4792C17.9494 19.4792 15.7507 20.0683 13.8125 21.1873C11.8743 20.0683 9.67559 19.4792 7.4375 19.4792C5.19941 19.4792 3.00074 20.0683 1.0625 21.1873V2.77068C3.00074 1.65163 5.19941 1.0625 7.4375 1.0625C9.67559 1.0625 11.8743 1.65163 13.8125 2.77068ZM13.8125 21.1873V2.77068"
+        stroke="#909090"
+        strokeWidth="2.125"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
