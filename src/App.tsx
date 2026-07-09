@@ -3,6 +3,7 @@ import './App.css';
 import Layout from './layouts/Layout';
 import HomePage from './pages/home-page';
 import SplashPage from './pages/splash-page';
+import GuidePage from './pages/guide-page';
 
 const routes: RouteObject[] = [
   {
@@ -16,6 +17,10 @@ const routes: RouteObject[] = [
       {
         path: 'splash',
         element: <SplashPage />,
+      },
+      {
+        path: 'guide',
+        element: <GuidePage />,
       },
     ],
   },
