@@ -1,12 +1,25 @@
+import { createBrowserRouter, RouterProvider, type RouteObject } from 'react-router-dom';
 import './App.css';
-import Layout from './components/common/Layout';
+import Layout from './layouts/Layout';
+import SplashPage from './pages/splash-page';
+
+const routes: RouteObject[] = [
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      {
+        path: 'splash',
+        element: <SplashPage />,
+      },
+    ],
+  },
+];
+
+const router = createBrowserRouter([...routes]);
 
 function App() {
-  return (
-    <Layout>
-      <h1 className='bg-main-gradient text-text font-pretendard font-bold text-2xl'>REDO</h1>
-    </Layout>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
