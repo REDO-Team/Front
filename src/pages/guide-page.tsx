@@ -48,10 +48,10 @@ const GuideLine = [
 ];
 
 export default function GuidePage() {
-  const [openCards, setOpenCards] = useState<number[]>([]);
+  const [openCard, setOpenCard] = useState<number>(0);
 
   const handleClickCard = (stepNum: number) => {
-    setOpenCards((prev) => (prev.includes(stepNum) ? prev.filter((num) => num !== stepNum) : [...prev, stepNum]));
+    setOpenCard((prev) => (prev === stepNum ? 0 : stepNum));
   };
 
   return (
@@ -66,7 +66,7 @@ export default function GuidePage() {
 
       <div className='flex flex-col gap-3.5'>
         {GuideLine.map((g) => {
-          return <GuideCard key={g.stepNum} Icon={g.icon} stepNum={g.stepNum} text={g.text} onClick={() => handleClickCard(g.stepNum)} isOpen={openCards.includes(g.stepNum)} />;
+          return <GuideCard key={g.stepNum} Icon={g.icon} stepNum={g.stepNum} text={g.text} onClick={() => handleClickCard(g.stepNum)} isOpen={openCard === g.stepNum} />;
         })}
       </div>
     </div>
