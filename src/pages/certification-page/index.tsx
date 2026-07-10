@@ -13,7 +13,7 @@ export default function CertificationPage() {
   return (
     <div className='h-full'>
       <div className='mb-10.5'>
-        <TopBar title='촬영하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />
+        <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />
       </div>
 
       <div className='flex flex-col items-center px-6.5 h-full'>
