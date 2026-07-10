@@ -7,6 +7,7 @@ import GuidePage from './pages/guide-page';
 import CertificationPage from './pages/certification-page';
 import LoginPage from './pages/login/login-page';
 import CertificationGuidePage from './pages/certification-page/guide-page';
+import ShootingPage from './pages/certification-page/shooting-page';
 
 const routes: RouteObject[] = [
   {
@@ -35,6 +36,10 @@ const routes: RouteObject[] = [
           {
             path: 'guide',
             element: <CertificationGuidePage />,
+          },
+          {
+            path: 'shooting',
+            element: <ShootingPage />,
           },
         ],
       },

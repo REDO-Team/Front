@@ -13,12 +13,13 @@ const Layout = () => {
   const isGuide = !!matchPath('/guide', location.pathname);
   const isCertification = !!matchPath('/certification', location.pathname);
   const isCertificationGuide = !!matchPath('/certification/guide', location.pathname);
+  const isCertificationShoot = !!matchPath('/certification/shooting', location.pathname);
 
   const hideTopBar = isHome || isSplash || isLogin;
-  const hideBottomBar = isSplash || isLogin || isCertification || isCertificationGuide;
+  const hideBottomBar = isSplash || isLogin || isCertification || isCertificationGuide || isCertificationShoot;
 
   return (
-    <div className={`min-h-screen ${isGuide || isCertification || isCertificationGuide ? 'bg-bg-green1' : 'bg-white'}`}>
+    <div className={`min-h-screen ${isGuide || isCertification || isCertificationGuide || isCertificationShoot ? 'bg-bg-green1' : 'bg-white'}`}>
       <div className='mx-auto min-h-screen w-full max-w-120'>
         {!hideTopBar && (isGuide ? <TopBar title='이용 가이드' leftIcon /> : isCertification ? <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} /> : isCertificationGuide ? <TopBar title='인증 가이드' leftIcon rightIcon={Home} onClick={() => navigate('/')} /> : <TopBar />)}
         <div className={`mx-auto flex w-full max-w-120 flex-col ${hideTopBar ? 'min-h-dvh' : 'h-[calc(100dvh-56px)] pt-14'}`}>

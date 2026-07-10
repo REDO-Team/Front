@@ -16,9 +16,10 @@ export default function TopBar({ title, leftIcon, leftText, rightIcon, onClick }
   const isGuide = matchPath('/guide', location.pathname);
   const isCertification = !!matchPath('/certification', location.pathname);
   const isCertificationGuide = !!matchPath('/certification/guide', location.pathname);
+  const isCertificationShoot = !!matchPath('/certification/shooting', location.pathname);
 
   return (
-    <header className={`fixed top-0 w-full max-w-120 flex items-center justify-between h-14 px-4 z-50 ${isGuide || isCertification || isCertificationGuide ? 'bg-bg-green1' : 'bg-white'}`}>
+    <header className={`fixed top-0 w-full max-w-120 flex items-center justify-between h-14 px-4 z-50 ${isGuide || isCertification || isCertificationGuide || isCertificationShoot ? 'bg-bg-green1' : 'bg-white'}`}>
       {/* 왼쪽 아이콘 영역 */}
       {/* 꺾새 옆에 바로 글자를 적을 때 leftIcon에서 두 덩어리로 작성해주세요! */}
       {(leftIcon || leftText) && (
