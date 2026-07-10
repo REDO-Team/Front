@@ -1,6 +1,6 @@
 import Logo from '../../assets/icons/Big-logo.svg?react';
 import GoogleIcon from '/src/assets/icons/google.svg?react';
-import KakaoIcon from '/src/assets/icons/Kakao.svg?react';
+import KakaoIcon from '/src/assets/icons/kakao.svg?react';
 import NaverIcon from '/src/assets/icons/naver.svg?react';
 
 const LoginPage = () => {
