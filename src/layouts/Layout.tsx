@@ -1,11 +1,8 @@
-import { matchPath, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { matchPath, Outlet, useLocation } from 'react-router-dom';
 import BottomBar from '../components/common/BottomBar';
-import TopBar from '../components/common/TopBar';
-import Home from '/src/assets/icons/home.svg';
 
 const Layout = () => {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const isHome = location.pathname === '/';
   const isSplash = !!matchPath('/splash', location.pathname);
@@ -21,8 +18,7 @@ const Layout = () => {
   return (
     <div className={`min-h-screen ${isGuide || isCertification || isCertificationGuide || isCertificationShoot ? 'bg-bg-green1' : 'bg-white'}`}>
       <div className='mx-auto min-h-screen w-full max-w-120'>
-        {!hideTopBar && (isGuide ? <TopBar title='이용 가이드' leftIcon /> : isCertification ? <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} /> : isCertificationGuide ? <TopBar title='인증 가이드' leftIcon rightIcon={Home} onClick={() => navigate('/')} /> : <TopBar />)}
-        <div className={`mx-auto flex w-full max-w-120 flex-col ${hideTopBar ? 'min-h-dvh' : 'h-[calc(100dvh-56px)] pt-14'}`}>
+        <div className={`mx-auto flex w-full max-w-120 flex-col ${hideTopBar ? 'min-h-dvh' : 'min-h-[calc(100dvh-56px)] pt-14'}`}>
           <main className='flex-1'>
             <Outlet />
           </main>

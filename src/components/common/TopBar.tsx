@@ -1,5 +1,5 @@
 import LeftArrow from '/src/assets/icons/left-arrow.svg';
-import { matchPath, useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface TopBarProps {
   title?: string;
@@ -7,19 +7,14 @@ interface TopBarProps {
   leftText?: string; // leftIcon 옆에 글자를 바로 적고 싶을 때 사용. leftIcon에서 두 덩어리로 작성해도 됨.
   rightIcon?: string;
   onClick?: () => void;
+  bgColor: string;
 }
 
-export default function TopBar({ title, leftIcon, leftText, rightIcon, onClick }: TopBarProps) {
+export default function TopBar({ title, leftIcon, leftText, rightIcon, onClick, bgColor = 'white' }: TopBarProps) {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const isGuide = matchPath('/guide', location.pathname);
-  const isCertification = !!matchPath('/certification', location.pathname);
-  const isCertificationGuide = !!matchPath('/certification/guide', location.pathname);
-  const isCertificationShoot = !!matchPath('/certification/shooting', location.pathname);
 
   return (
-    <header className={`fixed top-0 w-full max-w-120 flex items-center justify-between h-14 px-4 z-50 ${isGuide || isCertification || isCertificationGuide || isCertificationShoot ? 'bg-bg-green1' : 'bg-white'}`}>
+    <header className={`fixed top-0 w-full max-w-120 flex items-center justify-between h-14 px-4 z-50 bg-${bgColor}`}>
       {/* 왼쪽 아이콘 영역 */}
       {/* 꺾새 옆에 바로 글자를 적을 때 leftIcon에서 두 덩어리로 작성해주세요! */}
       {(leftIcon || leftText) && (
