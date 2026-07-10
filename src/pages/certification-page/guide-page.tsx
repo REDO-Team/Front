@@ -9,13 +9,13 @@ export default function CertificationGuidePage() {
 
   return (
     <div className='px-5 pt-5 h-full flex flex-col'>
-      <div className='flex flex-col p-5 gap-3.5 bg-linear-to-r from-main-green1 to-main-sky rounded-xl'>
+      <div className='flex flex-col p-5 gap-3.5 bg-linear-to-r from-main-green1 to-main-sky rounded-[20px] shadow-md shadow-main-green1/15'>
         <div className='flex items-center gap-1.5'>
           <img src={Info} alt='정보' className='w-4.5 h-4.5' />
           <span className='font-pretendard font-bold text-base text-white'>리워드 지급 기준</span>
         </div>
 
-        <div className='flex flex-col gap-3'>
+        <div className='flex flex-col gap-3 shadow-lg shadow-black/5'>
           <div className='flex gap-2'>
             <div className='flex flex-col px-3.5 py-3 rounded-[20px] bg-white/30 flex-1'>
               <span className='font-pretendard font-bold text-sm text-white opacity-100'>일반 인증</span>
@@ -34,7 +34,7 @@ export default function CertificationGuidePage() {
         </div>
       </div>
 
-      <div className='flex flex-col gap-3 bg-white px-6.5 py-5 rounded-[20px] mt-5'>
+      <div className='flex flex-col gap-3 bg-white px-6.5 py-5 rounded-[20px] mt-5 shadow-lg shadow-black/5'>
         <span className='font-pretendard font-semibold text-base text-text'>인증 방법</span>
         <div className='flex flex-col gap-2.5'>
           <div className='flex items-center gap-3'>
@@ -52,7 +52,7 @@ export default function CertificationGuidePage() {
         </div>
       </div>
 
-      <div className='flex flex-col gap-3 bg-white px-6.5 py-5 rounded-[20px] mt-3'>
+      <div className='flex flex-col gap-3 bg-white px-6.5 py-5 rounded-[20px] mt-3 shadow-lg shadow-black/5'>
         <span className='font-pretendard font-semibold text-base text-text'>촬영 예시 이미지</span>
         <div className='flex justify-center gap-2'>
           <div className='relative flex-1 flex flex-col items-center gap-2.5'>
