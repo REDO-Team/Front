@@ -21,7 +21,7 @@ export default function TopBar({ title, leftIcon, leftText, rightIcon }: TopBarP
       {/* 꺾새 옆에 바로 글자를 적을 때 leftIcon에서 두 덩어리로 작성해주세요! */}
       {(leftIcon || leftText) && (
         <div className='flex items-center justify-center z-10 text-lg font-semibold leading-none text-text' onClick={() => navigate(-1)}>
-          <button type='button' className='w-10 h-10 flex justify-center items-center cursor-pointer'>
+          <button type='button' className='w-6 h-6 flex justify-center items-center cursor-pointer'>
             {leftIcon && <img src={LeftArrow} alt='뒤로가기' />}
           </button>
           {leftText && <span className='text-lg font-semibold leading-none text-center text-black'>{leftText}</span>}
