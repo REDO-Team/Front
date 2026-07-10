@@ -8,10 +8,11 @@ const Layout = () => {
   const navigate = useNavigate();
 
   const isSplash = !!matchPath('/splash', location.pathname);
+  const isHome = location.pathname === '/';
   const isGuide = !!matchPath('/guide', location.pathname);
   const isCertification = !!matchPath('/certification', location.pathname);
 
-  const hideTopBar = isSplash;
+  const hideTopBar = isSplash || isHome;
   const hideBottomBar = isSplash || isCertification;
 
   return (
