@@ -64,7 +64,7 @@ export default function CertificationGuidePage() {
           <div className='flex justify-center gap-2'>
             <div className='relative flex-1 flex flex-col items-center gap-2.5'>
               <div className='min-w-37 min-h-22 rounded-[20px] bg-bg-green3 w-full'></div>
-              <img src={FullCheck} alt='옳음' className='absolute top-4 left-4.5' />
+              <img src={FullCheck} alt='옳음' className='absolute top-4 left-4.5 w-4.5 h-4.5' />
               <span className='font-pretendard font-bold text-sm text-main-green1'>좋은 예시</span>
             </div>
             <div className='relative flex-1 flex flex-col items-center gap-2.5'>
