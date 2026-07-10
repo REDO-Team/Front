@@ -19,7 +19,7 @@ export default function GuideCard({ Icon, stepNum, text, onClick, isOpen }: Guid
       <div className={`flex flex-col w-full px-5 py-6 bg-white rounded-[20px] shadow-lg shadow-black/5 ${isOpen && 'border-2 border-main-green1 '}`} onClick={() => onClick()}>
         <div className={`flex justify-between items-center ${isOpen && 'pb-3.5 border-b border-gray-200'} select-none`}>
           <div className='flex gap-2.5'>
-            <Icon className={`${isOpen ? 'text-main-green1' : 'text-gray-800'}`} />
+            <Icon className={`${isOpen ? 'text-main-green1' : 'text-gray-800'} w-6 h-6`} />
             <div className={`font-pretendard font-bold text-lg whitespace-nowrap ${isOpen ? 'text-main-green1' : 'text-gray-800'}`}>
               <span>STEP {stepNum}.</span>
               <span>&nbsp;{text}</span>
@@ -89,11 +89,11 @@ export default function GuideCard({ Icon, stepNum, text, onClick, isOpen }: Guid
               </div>
               <div className='flex flex-col gap-1 pt-1'>
                 <div className='flex gap-3'>
-                  <img src={FullCheck} alt='확인하기' />
+                  <img src={FullCheck} alt='확인하기' className='w-4.5 h-4.5' />
                   <p className='text-gray-800 font-pretendard font-bold text-sm'>비닐 라벨을 뜯어 따로 분리해요</p>
                 </div>
                 <div className='flex gap-3'>
-                  <img src={FullCheck} alt='확인하기' />
+                  <img src={FullCheck} alt='확인하기' className='w-4.5 h-4.5' />
                   <p className='text-gray-800 font-pretendard font-bold text-sm'>내용물을 비우고 물로 헹궈요</p>
                 </div>
               </div>
