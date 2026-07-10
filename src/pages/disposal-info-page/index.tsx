@@ -30,8 +30,8 @@ export default function DisposalInfoPage() {
         </div>
 
         <div className='flex flex-col gap-3.5 mt-10.5'>
-          <InfoCategoryCard img={ImageSearch} color={['#0EC966', '#33D685']} shadow='#06C65F80' title='이미지 검색' content='사진을 찍으면 AI가 바로 분류해요' to='/image-search' />
-          <InfoCategoryCard img={ProblemSearch} color={['#66E1FF', '#42C0EC']} shadow='#66E1FF' title='이미지 검색' content='사진을 찍으면 AI가 바로 분류해요' to='problem-search' />
+          <InfoCategoryCard img={ImageSearch} color={['#0EC966', '#33D685']} shadow='#06C65F80' title='이미지 검색' content='사진을 찍으면 AI가 바로 분류해요' to='/disposal-info/image-search' />
+          <InfoCategoryCard img={ProblemSearch} color={['#66E1FF', '#42C0EC']} shadow='#66E1FF' title='이미지 검색' content='사진을 찍으면 AI가 바로 분류해요' to='/disposal-info/problem-search' />
         </div>
       </div>
     </div>
