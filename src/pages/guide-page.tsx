@@ -8,9 +8,7 @@ import Camera from '/src/assets/icons/camera.svg?react';
 import Coins from '/src/assets/icons/coins.svg?react';
 import ChartBar from '/src/assets/icons/chart-bar.svg?react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import TopBar from '../components/common/TopBar';
-import Home from '/src/assets/icons/home.svg';
 
 const GuideLine = [
   {
@@ -51,7 +49,6 @@ const GuideLine = [
 ];
 
 export default function GuidePage() {
-  const navigate = useNavigate();
   const [openCard, setOpenCard] = useState<number>(0);
 
   const handleClickCard = (stepNum: number) => {
@@ -61,7 +58,7 @@ export default function GuidePage() {
   return (
     <div className='h-full '>
       <div className='mb-2.5'>
-        <TopBar title='촬영하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />
+        <TopBar title='이용 가이드' leftIcon bgColor='bg-green1' />
       </div>
 
       <div className='h-full px-5 pb-25'>

@@ -12,12 +12,13 @@ const Layout = () => {
   const isCertificationGuide = !!matchPath('/certification/guide', location.pathname);
   const isCertificationShoot = !!matchPath('/certification/shooting', location.pathname);
   const isCertificationSuccess = !!matchPath('/certification/success', location.pathname);
+  const isDisposalInfo = !!matchPath('/disposal-info', location.pathname);
 
   const hideTopBar = isHome || isSplash || isLogin;
-  const hideBottomBar = isSplash || isLogin || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess;
+  const hideBottomBar = isSplash || isLogin || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isDisposalInfo;
 
   return (
-    <div className={`min-h-screen ${isGuide || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess ? 'bg-bg-green1' : 'bg-white'} overflow-auto`}>
+    <div className={`min-h-screen ${isGuide || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isDisposalInfo ? 'bg-bg-green1' : 'bg-white'} overflow-auto`}>
       <div className='mx-auto min-h-screen w-full max-w-120'>
         <div className={`mx-auto flex w-full max-w-120 flex-col ${hideTopBar ? 'min-h-dvh' : 'h-[calc(100dvh-56px)] pt-14'}`}>
           <main className='flex flex-1 flex-col'>

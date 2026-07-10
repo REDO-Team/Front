@@ -9,6 +9,7 @@ import LoginPage from './pages/login/login-page';
 import CertificationGuidePage from './pages/certification-page/guide-page';
 import ShootingPage from './pages/certification-page/shooting-page';
 import SuccessPage from './pages/certification-page/success-page';
+import DisposalInfoPage from './pages/disposal-info-page';
 
 const routes: RouteObject[] = [
   {
@@ -53,8 +54,13 @@ const routes: RouteObject[] = [
         element: <LoginPage />,
       },
       {
-        path: 'login',
-        element: <LoginPage />,
+        path: 'disposal-info',
+        children: [
+          {
+            index: true,
+            element: <DisposalInfoPage />,
+          },
+        ],
       },
     ],
   },
