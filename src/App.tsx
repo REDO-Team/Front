@@ -5,6 +5,7 @@ import HomePage from './pages/home-page';
 import SplashPage from './pages/splash-page';
 import GuidePage from './pages/guide-page';
 import CertificationPage from './pages/certification-page';
+import CertificationGuidePage from './pages/certification-page/guide-page';
 
 const routes: RouteObject[] = [
   {
@@ -25,7 +26,16 @@ const routes: RouteObject[] = [
       },
       {
         path: 'certification',
-        element: <CertificationPage />,
+        children: [
+          {
+            index: true,
+            element: <CertificationPage />,
+          },
+          {
+            path: 'guide',
+            element: <CertificationGuidePage />,
+          },
+        ],
       },
     ],
   },
