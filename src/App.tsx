@@ -4,6 +4,7 @@ import Layout from './layouts/Layout';
 import HomePage from './pages/home-page';
 import SplashPage from './pages/splash-page';
 import GuidePage from './pages/guide-page';
+import CertificationPage from './pages/certification-page';
 
 const routes: RouteObject[] = [
   {
@@ -21,6 +22,10 @@ const routes: RouteObject[] = [
       {
         path: 'guide',
         element: <GuidePage />,
+      },
+      {
+        path: 'certification',
+        element: <CertificationPage />,
       },
     ],
   },
