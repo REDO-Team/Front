@@ -10,12 +10,16 @@ export interface HomeServiceMenuItem {
   id: string;
   title: string;
   path: string;
+  icon: 'trash' | 'camera' | 'reward' | 'chart';
 }
 
 export interface HomeCommunityPreview {
   id: number;
+  category: string;
   title: string;
   content: string;
+  author: string;
+  createdAtText: string;
   commentCount: number;
 }
 
@@ -24,4 +28,6 @@ export interface HomeRewardPreview {
   name: string;
   requiredPoint: number;
   category: string;
+  imageAlt: string;
+  imageVariant: 'plant' | 'gift-card';
 }
