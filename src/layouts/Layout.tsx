@@ -7,13 +7,15 @@ const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const isHome = location.pathname === '/';
   const isSplash = !!matchPath('/splash', location.pathname);
+  const isLogin = !!matchPath('/login', location.pathname);
   const isGuide = !!matchPath('/guide', location.pathname);
   const isCertification = !!matchPath('/certification', location.pathname);
   const isCertificationGuide = !!matchPath('/certification/guide', location.pathname);
 
-  const hideTopBar = isSplash;
-  const hideBottomBar = isSplash || isCertification || isCertificationGuide;
+  const hideTopBar = isHome || isSplash || isLogin;
+  const hideBottomBar = isSplash || isLogin || isCertification || isCertificationGuide;
 
   return (
     <div className={`min-h-screen ${isGuide || isCertification || isCertificationGuide ? 'bg-bg-green1' : 'bg-white'}`}>
