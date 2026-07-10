@@ -68,8 +68,8 @@ export default function CertificationGuidePage() {
         </div>
       </div>
 
-      <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 py-3.5 w-full text-center mt-auto' onClick={() => navigate('/certification/photo')}>
-        <span>인증하기</span>
+      <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 py-3.5 w-full text-center mt-auto' onClick={() => navigate('/certification/shooting')}>
+        인증하기
       </button>
     </div>
   );
