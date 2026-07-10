@@ -1,6 +1,6 @@
 import DownArrow from '/src/assets/icons/down-arrow.svg';
 import UpArrow from '/src/assets/icons/up-arrow.svg';
-import Check from '/src/assets/icons/check.svg';
+import Check from '/src/assets/icons/check.svg?react';
 import FullCheck from '/src/assets/icons/full-check.svg';
 import ImageUpload from '/src/assets/icons/image-upload.svg';
 import TextSearch from '/src/assets/icons/text-search.svg';
@@ -47,15 +47,15 @@ export default function GuideCard({ Icon, stepNum, text, onClick, isOpen }: Guid
               <div className='flex flex-col gap-4.5 px-5.5 py-5 bg-bg-green1'>
                 <span className='font-pretendard font-bold text-sm text-main-green2 break-keep'>이용 TIP!</span>
                 <div className='flex items-center gap-2.5'>
-                  <img src={Check} alt='확인하기' className='w-4 h-3' />
+                  <Check className='text-main-green2 w-4 h-3' />
                   <p className='font-pretendard font-bold text-sm text-main-green2 break-keep'>물건 전체가 보이게 촬영해주세요.</p>
                 </div>
                 <div className='flex items-center gap-2.5'>
-                  <img src={Check} alt='확인하기' className='w-4 h-3' />
+                  <Check className='text-main-green2 w-4 h-3' />
                   <p className='font-pretendard font-bold text-sm text-main-green2 break-keep'>밝은 곳에서 촬영해 주세요.</p>
                 </div>
                 <div className='flex items-center gap-2.5'>
-                  <img src={Check} alt='확인하기' className='w-4 h-3' />
+                  <Check className='text-main-green2 w-4 h-3' />
                   <p className='font-pretendard font-bold text-sm text-main-green2 break-keep'>하나의 물건만 촬영해 주세요.</p>
                 </div>
               </div>
@@ -67,11 +67,11 @@ export default function GuideCard({ Icon, stepNum, text, onClick, isOpen }: Guid
               <div className='flex flex-col gap-4.5 px-5.5 py-5 bg-bg-green1'>
                 <span className='font-pretendard font-bold text-sm text-main-green2 break-keep'>이용 TIP!</span>
                 <div className='flex items-center gap-2.5'>
-                  <img src={Check} alt='확인하기' className='w-4 h-3' />
+                  <Check className='text-main-green2 w-4 h-3' />
                   <p className='font-pretendard font-bold text-sm text-main-green2 break-keep'>인식이 어려운 경우, 카테고리 선택 화면이 표시될 수 있어요.</p>
                 </div>
                 <div className='flex items-center gap-2.5'>
-                  <img src={Check} alt='확인하기' className='w-4 h-3' />
+                  <Check className='text-main-green2 w-4 h-3' />
                   <p className='font-pretendard font-bold text-sm text-main-green2 break-keep'>해당하는 카테고리를 직접 선택해주세요.</p>
                 </div>
               </div>
@@ -138,19 +138,19 @@ export default function GuideCard({ Icon, stepNum, text, onClick, isOpen }: Guid
               <div className='flex flex-col gap-4.5 px-5.5 py-5 bg-bg-green1 rounded-[20px]'>
                 <span className='font-pretendard font-bold text-sm text-main-green2 break-keep'>이용 TIP!</span>
                 <div className='flex items-center gap-2.5'>
-                  <img src={Check} alt='확인하기' className='w-4 h-3' />
+                  <Check className='text-main-green2 w-4 h-3' />
                   <p className='font-pretendard font-bold text-sm text-main-green2 break-keep'>검색 없이도 인증할 수 있어요.</p>
                 </div>
                 <div className='flex items-center gap-2.5'>
-                  <img src={Check} alt='확인하기' className='w-4 h-3' />
+                  <Check className='text-main-green2 w-4 h-3' />
                   <p className='font-pretendard font-bold text-sm text-main-green2 break-keep'>검색 후 인증을 진행하면 2배의 리워드가 지급돼요.</p>
                 </div>
                 <div className='flex items-center gap-2.5'>
-                  <img src={Check} alt='확인하기' className='w-4 h-3' />
+                  <Check className='text-main-green2 w-4 h-3' />
                   <p className='font-pretendard font-bold text-sm text-main-green2 break-keep'>분리배출이 완료된 상태로 촬영해 주세요.</p>
                 </div>
                 <div className='flex items-center gap-2.5'>
-                  <img src={Check} alt='확인하기' className='w-4 h-3' />
+                  <Check className='text-main-green2 w-4 h-3' />
                   <p className='font-pretendard font-bold text-sm text-main-green2 break-keep'>분리배출이 완료된 상태로 촬영해 주세요.</p>
                 </div>
               </div>
@@ -162,7 +162,7 @@ export default function GuideCard({ Icon, stepNum, text, onClick, isOpen }: Guid
               <div className='flex flex-col gap-4.5 px-5.5 py-5 bg-bg-green1 rounded-[20px]'>
                 <span className='font-pretendard font-bold text-sm text-main-green2 break-keep'>이용 TIP!</span>
                 <div className='flex items-center gap-2.5'>
-                  <img src={Check} alt='확인하기' className='w-4 h-3' />
+                  <Check className='text-main-green2 w-4 h-3' />
                   <p className='font-pretendard font-bold text-sm text-main-green2 break-keep'>지급된 리워드는 제휴 브랜드 제품 또는 기프티콘으로 교환 가능합니다.</p>
                 </div>
               </div>

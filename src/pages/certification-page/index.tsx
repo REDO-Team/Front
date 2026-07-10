@@ -9,7 +9,7 @@ export default function CertificationPage() {
   const navigate = useNavigate();
 
   return (
-    <div className='flex flex-col items-center pt-10.5 px-6.5 bg-bg-green1 min-h-screen'>
+    <div className='flex flex-col items-center pt-10.5 px-6.5 h-full'>
       <div className='relative w-47.5 h-47.5'>
         <img src={Scan} alt='스캔' className='absolute inset-0 w-full h-full' />
         <img src={GradientLogo} alt='로고' className='absolute w-23 h-23 top-1/2 left-1/2 -translate-1/2' />
@@ -24,7 +24,7 @@ export default function CertificationPage() {
         <p className='text-base text-center text-gray-500 font-semibold'>오늘도 ReDO!와 함께해요</p>
       </div>
 
-      <div className='w-full px-6.5 py-4.5 bg-white mt-15 flex flex-col gap-4'>
+      <div className='w-full px-6.5 py-4.5 bg-white mt-auto flex flex-col gap-4'>
         <div className='flex justify-between items-center w-full'>
           <div className='flex items-center gap-4'>
             <img src={Seed} alt='인증' className='w-12.5 h-12.5' />
@@ -45,7 +45,7 @@ export default function CertificationPage() {
         </div>
       </div>
 
-      <div className='flex flex-col w-full gap-2.5 mt-18 mb-5'>
+      <div className='flex flex-col w-full gap-2.5 mt-auto mb-5'>
         <button type='button' className='font-pretendard font-bold text-xl text-white rounded-4xl bg-main-green1 px-5 py-4 w-full flex items-center justify-center relative' onClick={() => navigate('/certification/photo')}>
           <span>인증하기</span>
           <RightArrow className='absolute right-5' />
