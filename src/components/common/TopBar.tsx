@@ -7,7 +7,7 @@ interface TopBarProps {
   leftText?: string; // leftIcon 옆에 글자를 바로 적고 싶을 때 사용. leftIcon에서 두 덩어리로 작성해도 됨.
   rightIcon?: string;
   onClick?: () => void;
-  bgColor: string;
+  bgColor?: string;
 }
 
 export default function TopBar({ title, leftIcon, leftText, rightIcon, onClick, bgColor = 'white' }: TopBarProps) {
