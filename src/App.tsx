@@ -10,6 +10,7 @@ import CertificationGuidePage from './pages/certification-page/guide-page';
 import ShootingPage from './pages/certification-page/shooting-page';
 import SuccessPage from './pages/certification-page/success-page';
 import DisposalInfoPage from './pages/disposal-info-page';
+import ImageSearchPage from './pages/disposal-info-page/image-search-page';
 
 const routes: RouteObject[] = [
   {
@@ -59,6 +60,10 @@ const routes: RouteObject[] = [
           {
             index: true,
             element: <DisposalInfoPage />,
+          },
+          {
+            path: 'image-search',
+            element: <ImageSearchPage />,
           },
         ],
       },
