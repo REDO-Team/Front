@@ -5,6 +5,7 @@ import HomePage from './pages/home-page';
 import SplashPage from './pages/splash-page';
 import GuidePage from './pages/guide-page';
 import CertificationPage from './pages/certification-page';
+import LoginPage from './pages/login/login-page';
 
 const routes: RouteObject[] = [
   {
@@ -27,11 +28,15 @@ const routes: RouteObject[] = [
         path: 'certification',
         element: <CertificationPage />,
       },
+      {
+        path: 'login',
+        element: <LoginPage />,
+      },
     ],
   },
 ];
 
-const router = createBrowserRouter([...routes]);
+const router = createBrowserRouter(routes);
 
 function App() {
   return <RouterProvider router={router} />;

@@ -7,21 +7,36 @@ const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const isSplash = !!matchPath('/splash', location.pathname);
   const isHome = location.pathname === '/';
+  const isSplash = !!matchPath('/splash', location.pathname);
+  const isLogin = !!matchPath('/login', location.pathname);
   const isGuide = !!matchPath('/guide', location.pathname);
   const isCertification = !!matchPath('/certification', location.pathname);
 
-  const hideTopBar = isSplash || isHome;
-  const hideBottomBar = isSplash || isCertification;
+  const hideTopBar = isHome || isSplash || isLogin;
+  const hideBottomBar = isSplash || isLogin || isCertification;
 
   return (
     <div className='min-h-screen bg-white'>
       <div className='mx-auto min-h-screen w-full max-w-120'>
-        {!hideTopBar && (isGuide ? <TopBar title='이용 가이드' leftIcon /> : isCertification ? <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} /> : <TopBar />)}
+        {!hideTopBar &&
+          (isGuide ? (
+            <TopBar title='이용 가이드' leftIcon />
+          ) : isCertification ? (
+            <TopBar
+              title='인증하기'
+              leftIcon
+              rightIcon={Home}
+              onClick={() => navigate('/')}
+            />
+          ) : (
+            <TopBar />
+          ))}
+
         <main className='flex-1'>
           <Outlet />
         </main>
+
         {!hideBottomBar && <BottomBar />}
       </div>
     </div>
