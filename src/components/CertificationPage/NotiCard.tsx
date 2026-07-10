@@ -1,12 +1,14 @@
-import Alarm from '/src/assets/icons/alarm.svg';
+interface NotiCardProps {
+  icon: string | React.ReactNode;
+}
 
-export default function NotiCard() {
+export default function NotiCard({ icon }: NotiCardProps) {
   const currentPath = window.location.pathname;
   const isShootingPage = currentPath.includes('/shooting');
 
   return (
     <div className='w-full flex items-center gap-2.5 px-6 py-4 bg-white rounded-[20px] shadow-lg shadow-black/5'>
-      <img src={Alarm} alt='알림' className='w-9.5 h-9.5' />
+      {typeof icon === 'string' ? <img src={icon} alt='알림' className='w-9.5 h-9.5 text-main-green1' /> : icon}
       <p className='font-pretendard font-medium text-sm text-gray-600'>
         {isShootingPage ? (
           <>

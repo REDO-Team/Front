@@ -1,5 +1,6 @@
 import NotiCard from '../CertificationPage/NotiCard';
 import GradientLogo from '/src/assets/icons/gradient-logo.svg';
+import Alarm from '/src/assets/icons/alarm.svg';
 
 export default function PhotoAnalysisLoading() {
   const currentPath = window.location.pathname;
@@ -15,7 +16,7 @@ export default function PhotoAnalysisLoading() {
         </div>
       </div>
 
-      <div className='mt-auto w-full'>{showNoti && <NotiCard />}</div>
+      <div className='mt-auto w-full'>{showNoti && <NotiCard icon={Alarm} />}</div>
     </div>
   );
 }

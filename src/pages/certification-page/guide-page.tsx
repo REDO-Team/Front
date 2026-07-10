@@ -1,4 +1,4 @@
-import Info from '/src/assets/icons/info.svg';
+import Info from '/src/assets/icons/info.svg?react';
 import Check from '/src/assets/icons/check.svg?react';
 import FullCheck from '/src/assets/icons/full-check.svg';
 import Error from '/src/assets/icons/error.svg';
@@ -18,7 +18,7 @@ export default function CertificationGuidePage() {
       <div className='px-5 h-full flex flex-col'>
         <div className='flex flex-col p-5 gap-3.5 bg-linear-to-r from-main-green1 to-main-sky rounded-[20px] shadow-md shadow-main-green1/15'>
           <div className='flex items-center gap-1.5'>
-            <img src={Info} alt='정보' className='w-4.5 h-4.5' />
+            <Info className='text-white w-4.5 h-4.5' />
             <span className='font-pretendard font-bold text-base text-white'>리워드 지급 기준</span>
           </div>
 
