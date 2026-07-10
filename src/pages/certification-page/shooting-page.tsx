@@ -6,6 +6,7 @@ import NotiCard from '../../components/CertificationPage/NotiCard';
 import FilledAnalysis from '/src/assets/icons/filled-analysis.svg';
 import Location from '/src/assets/icons/location.svg';
 import Devices from '/src/assets/icons/devices.svg';
+import Info from '/src/assets/icons/info.svg?react';
 
 export default function ShootingPage() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function ShootingPage() {
       <div className='flex flex-col h-full px-6.5'>
         <ShootCard />
         <div className='mt-5 mb-4'>
-          <NotiCard />
+          <NotiCard icon={<Info className='text-main-green1 w-9.5 h-9.5' />} />
         </div>
 
         <div className='flex justify-between bg-white rounded-[20px] px-10.5 py-4.5 shadow-lg shadow-black/5'>
