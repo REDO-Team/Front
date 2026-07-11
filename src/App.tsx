@@ -13,6 +13,7 @@ import DisposalInfoPage from './pages/disposal-info-page';
 import ImageSearchPage from './pages/disposal-info-page/image-search-page';
 import FailPage from './pages/certification-page/fail-page';
 import ProblemSearchPage from './pages/disposal-info-page/problem-search-page';
+import DisposalInfoDetailage from './pages/disposal-info-page/detail-page';
 
 const routes: RouteObject[] = [
   {
@@ -74,6 +75,10 @@ const routes: RouteObject[] = [
           {
             path: 'problem-search',
             element: <ProblemSearchPage />,
+          },
+          {
+            path: 'detail',
+            element: <DisposalInfoDetailage />,
           },
         ],
       },
