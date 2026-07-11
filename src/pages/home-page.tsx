@@ -20,7 +20,7 @@ const SERVICE_MENU_ICON_SRC: Record<HomeServiceMenuItem['icon'], string> = {
   reward: RewardIcon,
   chart: ChartHomeIcon,
 };
-
+//사진 미리보기 구역
 const REWARD_IMAGE_STYLE = {
   plant:
     'bg-[linear-gradient(135deg,#edf7ef_0%,#d8c4a2_52%,#7c8f57_100%)] before:absolute before:left-3 before:top-3 before:h-7 before:w-7 before:rounded-full before:bg-[#8fa96b] after:absolute after:bottom-2 after:right-2 after:h-5 after:w-8 after:rounded-sm after:bg-[#c8934d]',
@@ -58,7 +58,7 @@ export default function HomePage() {
           </button>
         </header>
 
-        {/* 포인트 카드의 큰 재활용 아이콘은 장식 이미지라 텍스트 정보와 분리했습니다. */}
+        {/* 사용자 누적 포인트 카드입니다. */}
         <section className='relative mt-4 overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#06C65F_0%,#21D38A_48%,#66E1FF_100%)] px-6 py-4 text-white shadow-[0_8px_18px_rgba(6,198,95,0.22)]'>
           <RecycleIcon
             aria-hidden='true'

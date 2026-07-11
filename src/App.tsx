@@ -12,6 +12,7 @@ import SuccessPage from './pages/certification-page/success-page';
 import DisposalInfoPage from './pages/disposal-info-page';
 import ImageSearchPage from './pages/disposal-info-page/image-search-page';
 import FailPage from './pages/certification-page/fail-page';
+import MyContributionPage from './pages/my-contribution-page';
 
 const routes: RouteObject[] = [
   {
@@ -58,6 +59,10 @@ const routes: RouteObject[] = [
       {
         path: 'login',
         element: <LoginPage />,
+      },
+      {
+        path: 'my-contribution',
+        element: <MyContributionPage />,
       },
       {
         path: 'disposal-info',

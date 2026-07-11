@@ -15,9 +15,10 @@ const Layout = () => {
   const isCertificationFail = !!matchPath('/certification/fail', location.pathname);
   const isDisposalInfo = !!matchPath('/disposal-info', location.pathname);
   const isImageSearch = !!matchPath('/disposal-info/image-search', location.pathname);
+  const isMyContribution = !!matchPath('/my-contribution', location.pathname);
 
   const hideTopBar = isHome || isSplash || isLogin;
-  const hideBottomBar = isSplash || isLogin || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isDisposalInfo || isImageSearch || isCertificationFail;
+  const hideBottomBar = isSplash || isLogin || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isDisposalInfo || isImageSearch || isCertificationFail || isMyContribution;
 
   return (
     <div className={`min-h-screen ${isGuide || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isDisposalInfo || isImageSearch ? 'bg-bg-green1' : 'bg-white'} overflow-auto`}>
