@@ -16,10 +16,22 @@ const Layout = () => {
   const isDisposalInfo = !!matchPath('/disposal-info', location.pathname);
   const isDisposalInfoDetail = !!matchPath('/disposal-info/detail', location.pathname);
   const isImageSearch = !!matchPath('/disposal-info/image-search', location.pathname);
-  const isProblemSearch = !!matchPath('/disposal-info/problem-search', location.pathname);
+const isMyContribution = !!matchPath('/my-contribution', location.pathname);
+const isProblemSearch = !!matchPath('/disposal-info/problem-search', location.pathname);
 
-  const hideTopBar = isHome || isSplash || isLogin;
-  const hideBottomBar = isSplash || isLogin || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isDisposalInfo || isImageSearch || isCertificationFail || isProblemSearch || isDisposalInfoDetail;
+const hideTopBar = isHome || isSplash || isLogin;
+
+const hideBottomBar =
+  isSplash ||
+  isLogin ||
+  isCertification ||
+  isCertificationGuide ||
+  isCertificationShoot ||
+  isCertificationSuccess ||
+  isCertificationFail ||
+  isImageSearch ||
+  isProblemSearch ||
+  isMyContribution;
 
   return (
     <div className={`min-h-screen ${isGuide || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isDisposalInfo || isImageSearch || isProblemSearch || isDisposalInfoDetail ? 'bg-bg-green1' : 'bg-white'} overflow-auto`}>

@@ -11,9 +11,10 @@ import ShootingPage from './pages/certification-page/shooting-page';
 import SuccessPage from './pages/certification-page/success-page';
 import DisposalInfoPage from './pages/disposal-info-page';
 import ImageSearchPage from './pages/disposal-info-page/image-search-page';
-import FailPage from './pages/certification-page/fail-page';
 import ProblemSearchPage from './pages/disposal-info-page/problem-search-page';
-import DisposalInfoDetailage from './pages/disposal-info-page/detail-page';
+import FailPage from './pages/certification-page/fail-page';
+import MyContributionPage from './pages/my-contribution-page';
+import DisposalInfoDetailPage from './pages/disposal-info-page/detail-page';
 
 const routes: RouteObject[] = [
   {
@@ -31,10 +32,6 @@ const routes: RouteObject[] = [
       {
         path: 'guide',
         element: <GuidePage />,
-      },
-      {
-        path: 'login',
-        element: <LoginPage />,
       },
       {
         path: 'certification',
@@ -62,6 +59,14 @@ const routes: RouteObject[] = [
         ],
       },
       {
+        path: 'login',
+        element: <LoginPage />,
+      },
+      {
+        path: 'my-contribution',
+        element: <MyContributionPage />,
+      },
+      {
         path: 'disposal-info',
         children: [
           {
@@ -78,7 +83,7 @@ const routes: RouteObject[] = [
           },
           {
             path: 'detail',
-            element: <DisposalInfoDetailage />,
+            element: <DisposalInfoDetailPage />,
           },
         ],
       },
