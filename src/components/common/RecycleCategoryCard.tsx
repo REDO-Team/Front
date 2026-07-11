@@ -5,6 +5,8 @@ interface RecycleCategoryCardProps {
   imgSize: number;
   categorySize: number;
   nameSize: number;
+  category?: string;
+  name?: string;
   content?: string;
 }
 
