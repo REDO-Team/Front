@@ -10,7 +10,7 @@ interface RecycleCategoryCardProps {
 
 export default function RecycleCategoryCard({ padding, gap, radius, imgSize, categorySize, nameSize, content }: RecycleCategoryCardProps) {
   return (
-    <div className={`flex bg-linear-to-r from-main-green1 to-main-sky rounded-xl`} style={{ padding, gap, borderRadius: radius }}>
+    <div className={`flex bg-linear-to-r from-main-green1 to-main-sky rounded-xl shadow-md shadow-main-green1/15`} style={{ padding, gap, borderRadius: radius }}>
       <div className={`opacity-45 bg-white`} style={{ width: imgSize, height: imgSize, borderRadius: radius }}></div>
       <div className='flex flex-col'>
         <span className={`font-pretendard font-semibold text-white bg-bg-green3/50 px-2.5 py-0.75 rounded-full inline-fit`} style={{ fontSize: categorySize }}>
