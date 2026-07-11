@@ -53,7 +53,7 @@ export default function CertificationPage() {
         </div>
 
         <div className='flex flex-col w-full gap-2.5 mt-auto mb-5'>
-          <button type='button' className='font-pretendard font-bold text-xl text-white rounded-4xl bg-main-green1 px-5 py-4 w-full flex items-center justify-center relative' onClick={() => navigate('/certification/photo')}>
+          <button type='button' className='font-pretendard font-bold text-xl text-white rounded-4xl bg-main-green1 px-5 py-4 w-full flex items-center justify-center relative' onClick={() => navigate('/certification/shooting')}>
             <span>인증하기</span>
             <RightArrow className='absolute right-5' />
           </button>
