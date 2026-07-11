@@ -15,6 +15,7 @@ import ProblemSearchPage from './pages/disposal-info-page/problem-search-page';
 import FailPage from './pages/certification-page/fail-page';
 import MyContributionPage from './pages/my-contribution-page';
 import DisposalInfoDetailPage from './pages/disposal-info-page/detail-page';
+import TermsPage from './pages/signup/terms-page';
 
 const routes: RouteObject[] = [
   {
@@ -65,6 +66,15 @@ const routes: RouteObject[] = [
       {
         path: 'my-contribution',
         element: <MyContributionPage />,
+      },
+      {
+        path: 'signup',
+        children: [
+          {
+            path: 'terms',
+            element: <TermsPage />,
+          },
+        ],
       },
       {
         path: 'disposal-info',
