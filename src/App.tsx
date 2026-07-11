@@ -11,6 +11,7 @@ import ShootingPage from './pages/certification-page/shooting-page';
 import SuccessPage from './pages/certification-page/success-page';
 import DisposalInfoPage from './pages/disposal-info-page';
 import ImageSearchPage from './pages/disposal-info-page/image-search-page';
+import FailPage from './pages/certification-page/fail-page';
 
 const routes: RouteObject[] = [
   {
@@ -47,6 +48,10 @@ const routes: RouteObject[] = [
           {
             path: 'success',
             element: <SuccessPage />,
+          },
+          {
+            path: 'fail',
+            element: <FailPage />,
           },
         ],
       },
