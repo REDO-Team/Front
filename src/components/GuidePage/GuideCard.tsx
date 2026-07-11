@@ -35,13 +35,13 @@ export default function GuideCard({ Icon, stepNum, text, onClick, isOpen }: Guid
           {isOpen && stepNum === 1 && (
             <div className='flex flex-col gap-2.5'>
               <p className='pt-3.5 text-gray-800 font-pretendard font-medium text-[15px] break-keep'>사진 촬영, 이미지 업로드 또는 텍스트 검색 중 원하는 방법으로 분리배출 방식을 검색해주세요.</p>
-              <div className='flex gap-2.5'>
-                <figure className='flex flex-col gap-3 items-center bg-bg-green1 rounded-[20px] px-10 py-5'>
-                  <img src={ImageUpload} alt='업로드한 이미지' className='w-6 h-6' />
+              <div className='w-full flex gap-2.5'>
+                <figure className='w-full flex flex-col gap-3 items-center bg-bg-green1 rounded-[20px] px-10 py-5'>
+                  <img src={ImageUpload} alt='업로드한 이미지' className='h-6' />
                   <figcaption className='font-pretendard font-semibold text-xs text-text'>이미지 업로드</figcaption>
                 </figure>
-                <figure className='flex flex-col gap-3 items-center bg-skyblue-bg rounded-[20px] px-10 py-5'>
-                  <img src={TextSearch} alt='업로드한 이미지' className='w-6 h-6' />
+                <figure className='w-full flex flex-col gap-3 items-center bg-skyblue-bg rounded-[20px] px-10 py-5'>
+                  <img src={TextSearch} alt='업로드한 이미지' className='h-6' />
                   <figcaption className='font-pretendard font-semibold text-xs text-text'>텍스트 검색</figcaption>
                 </figure>
               </div>
