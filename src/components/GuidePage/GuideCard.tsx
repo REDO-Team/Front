@@ -4,6 +4,7 @@ import Check from '/src/assets/icons/check.svg?react';
 import FullCheck from '/src/assets/icons/full-check.svg';
 import ImageUpload from '/src/assets/icons/image-upload.svg';
 import TextSearch from '/src/assets/icons/text-search.svg';
+import RecycleCategoryCard from '../common/RecycleCategoryCard';
 
 interface GuideCardProps {
   Icon: React.FC<React.SVGProps<SVGSVGElement>>;
@@ -34,13 +35,13 @@ export default function GuideCard({ Icon, stepNum, text, onClick, isOpen }: Guid
           {isOpen && stepNum === 1 && (
             <div className='flex flex-col gap-2.5'>
               <p className='pt-3.5 text-gray-800 font-pretendard font-medium text-[15px] break-keep'>사진 촬영, 이미지 업로드 또는 텍스트 검색 중 원하는 방법으로 분리배출 방식을 검색해주세요.</p>
-              <div className='flex gap-2.5'>
-                <figure className='flex flex-col gap-3 items-center bg-bg-green1 rounded-[20px] px-10 py-5'>
-                  <img src={ImageUpload} alt='업로드한 이미지' className='w-6 h-6' />
+              <div className='w-full flex gap-2.5'>
+                <figure className='w-full flex flex-col gap-3 items-center bg-bg-green1 rounded-[20px] px-10 py-5'>
+                  <img src={ImageUpload} alt='업로드한 이미지' className='h-6' />
                   <figcaption className='font-pretendard font-semibold text-xs text-text'>이미지 업로드</figcaption>
                 </figure>
-                <figure className='flex flex-col gap-3 items-center bg-skyblue-bg rounded-[20px] px-10 py-5'>
-                  <img src={TextSearch} alt='업로드한 이미지' className='w-6 h-6' />
+                <figure className='w-full flex flex-col gap-3 items-center bg-skyblue-bg rounded-[20px] px-10 py-5'>
+                  <img src={TextSearch} alt='업로드한 이미지' className='h-6' />
                   <figcaption className='font-pretendard font-semibold text-xs text-text'>텍스트 검색</figcaption>
                 </figure>
               </div>
@@ -80,13 +81,7 @@ export default function GuideCard({ Icon, stepNum, text, onClick, isOpen }: Guid
           {isOpen && stepNum === 3 && (
             <div className='flex flex-col gap-2.5'>
               <p className='pt-3.5 text-gray-800 font-pretendard font-medium text-[15px] break-keep'>AI 분석 결과로 올바른 분리배출 방법을 확인해요. 재활용 카테고리와 배출 방법, 추가 주의사항을 안내해드려요.</p>
-              <div className='flex p-2.5 gap-2 bg-linear-to-r from-main-green1 to-main-sky rounded-xl'>
-                <div className='w-10 h-10 opacity-45 bg-white rounded-[10px]'></div>
-                <div className='flex flex-col'>
-                  <span className='font-pretendard font-semibold text-[8px] text-white bg-bg-green3/50 px-2 py-0.5 rounded-full inline-fit'>플라스틱</span>
-                  <span className='font-pretendard font-bold text-base text-white'>투명 페트병</span>
-                </div>
-              </div>
+              <RecycleCategoryCard padding={10} gap={8} radius={10} imgSize={40} categorySize={8} nameSize={16} />
               <div className='flex flex-col gap-1 pt-1'>
                 <div className='flex gap-3'>
                   <img src={FullCheck} alt='확인하기' className='w-4.5 h-4.5' />
