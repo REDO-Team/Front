@@ -20,7 +20,7 @@ export default function SuccessPage() {
       </div>
 
       <div className='flex flex-col h-full px-5'>
-        <div className='flex flex-col gap-7.5 justify-center items-center text-center'>
+        <div className='flex flex-col gap-7.5 justify-center items-center text-center flex-1'>
           <img src={FullCheck} alt='성공' className='w-20 h-20 drop-shadow-[0_0_10px_#06C65F]' />
           <div className='flex flex-col gap-2.5'>
             <p className='font-pretendard font-bold text-[22px] text-text'>인증이 완료되었어요!</p>
@@ -39,7 +39,7 @@ export default function SuccessPage() {
           <Coins className='text-main-green1 w-15 h-15' />
         </div>
 
-        <div className='flex flex-col gap-3.5 bg-white rounded-[20px] px-6.5 py-6 shadow-lg shadow-black/5 mt-2.5'>
+        <div className='flex flex-col gap-3.5 bg-white rounded-[20px] px-6.5 py-6 shadow-lg shadow-black/5 mt-2.5 mb-5'>
           <div className='flex justify-between items-center'>
             <span className='font-pretendard font-medium text-sm text-text'>인증 항목</span>
             <span className='font-pretendard font-semibold text-sm text-text'>{mock.type}</span>
