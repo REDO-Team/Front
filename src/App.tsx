@@ -11,6 +11,7 @@ import ShootingPage from './pages/certification-page/shooting-page';
 import SuccessPage from './pages/certification-page/success-page';
 import DisposalInfoPage from './pages/disposal-info-page';
 import ImageSearchPage from './pages/disposal-info-page/image-search-page';
+import ProblemSearchPage from './pages/disposal-info-page/problem-search-page';
 import FailPage from './pages/certification-page/fail-page';
 import MyContributionPage from './pages/my-contribution-page';
 
@@ -74,6 +75,10 @@ const routes: RouteObject[] = [
           {
             path: 'image-search',
             element: <ImageSearchPage />,
+          },
+          {
+            path: 'problem-search',
+            element: <ProblemSearchPage />,
           },
         ],
       },
