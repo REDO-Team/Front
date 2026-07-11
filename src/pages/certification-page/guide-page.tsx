@@ -63,12 +63,12 @@ export default function CertificationGuidePage() {
           <span className='font-pretendard font-semibold text-base text-text'>촬영 예시 이미지</span>
           <div className='flex justify-center gap-2'>
             <div className='relative flex-1 flex flex-col items-center gap-2.5'>
-              <div className='min-w-37 min-h-22 rounded-[20px] bg-bg-green3 w-full'></div>
+              <div className='min-h-22 rounded-[20px] bg-bg-green3 w-full'></div>
               <img src={FullCheck} alt='옳음' className='absolute top-4 left-4.5 w-4.5 h-4.5' />
               <span className='font-pretendard font-bold text-sm text-main-green1'>좋은 예시</span>
             </div>
             <div className='relative flex-1 flex flex-col items-center gap-2.5'>
-              <div className='min-w-37 min-h-22 rounded-[20px] bg-error-bg w-full'></div>
+              <div className='min-h-22 rounded-[20px] bg-error-bg w-full'></div>
               <img src={Error} alt='틀림' className='absolute top-4 left-4.5' />
               <span className='font-pretendard font-bold text-sm text-error-text'>나쁜 예시</span>
             </div>

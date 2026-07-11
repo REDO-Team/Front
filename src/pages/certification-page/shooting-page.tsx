@@ -28,7 +28,7 @@ export default function ShootingPage() {
             <div className='bg-bg-green1 w-fit rounded-full'>
               <img src={FilledAnalysis} alt='쓰레기' />
             </div>
-            <p className='font-pretendard font-medium text-sm text-text text-center'>
+            <p className='font-pretendard font-medium text-xs text-text text-center min-[376px]:text-sm'>
               쓰레기가 <br /> 잘 보이게
             </p>
           </div>
@@ -36,15 +36,15 @@ export default function ShootingPage() {
             <div className='bg-bg-green1 w-fit rounded-full'>
               <img src={Location} alt='장소' className='w-6' />
             </div>
-            <p className='font-pretendard font-medium text-sm text-text text-center'>
+            <p className='font-pretendard font-medium text-xs text-text text-center min-[376px]:text-sm'>
               배출장소가 <br /> 보이게
             </p>
           </div>
-          <div className='flex flex-col justify-center items-center gap-2 h-18'>
+          <div className='flex flex-col items-center justify-start gap-2 h-18'>
             <div className='bg-bg-green1 w-fit rounded-full'>
               <img src={Devices} alt='화면 고정' />
             </div>
-            <p className='font-pretendard font-medium text-sm text-text text-center'>흔들리지 않게</p>
+            <p className='font-pretendard font-medium text-xs text-text text-center min-[376px]:text-sm'>흔들리지 않게</p>
           </div>
         </div>
 
