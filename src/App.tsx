@@ -16,6 +16,7 @@ import FailPage from './pages/certification-page/fail-page';
 import MyContributionPage from './pages/my-contribution-page';
 import DisposalInfoDetailPage from './pages/disposal-info-page/detail-page';
 import TermsPage from './pages/signup/terms-page';
+import SignupPage from './pages/signup/signup-page';
 
 const routes: RouteObject[] = [
   {
@@ -70,6 +71,10 @@ const routes: RouteObject[] = [
       {
         path: 'signup',
         children: [
+          {
+            index: true,
+            element: <SignupPage />,
+          },
           {
             path: 'terms',
             element: <TermsPage />,

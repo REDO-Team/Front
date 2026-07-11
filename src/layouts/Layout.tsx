@@ -7,7 +7,10 @@ const Layout = () => {
   const isHome = location.pathname === '/';
   const isSplash = !!matchPath('/splash', location.pathname);
   const isLogin = !!matchPath('/login', location.pathname);
+
+  const isSignup = !!matchPath('/signup', location.pathname);
   const isSignupTerms = !!matchPath('/signup/terms', location.pathname);
+
   const isGuide = !!matchPath('/guide', location.pathname);
 
   const isCertification = !!matchPath(
@@ -57,11 +60,13 @@ const Layout = () => {
     isHome ||
     isSplash ||
     isLogin ||
+    isSignup ||
     isSignupTerms;
 
   const hideBottomBar =
     isSplash ||
     isLogin ||
+    isSignup ||
     isSignupTerms ||
     isCertification ||
     isCertificationGuide ||
