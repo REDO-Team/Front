@@ -18,6 +18,7 @@ import DisposalInfoDetailPage from './pages/disposal-info-page/detail-page';
 import TermsPage from './pages/signup/terms-page';
 import SignupPage from './pages/signup/signup-page';
 import ProfileCreatePage from './pages/signup/profile-create-page';
+import SignupCompletePage from './pages/signup/complete-page';
 import DisposalInfoFailPage from './pages/disposal-info-page/fail-page';
 import CamearaPage from './pages/cameara-page';
 
@@ -85,6 +86,10 @@ const routes: RouteObject[] = [
           {
             path: 'profile',
             element: <ProfileCreatePage />,
+          },
+          {
+            path: 'complete',
+            element: <SignupCompletePage />,
           },
         ],
       },
