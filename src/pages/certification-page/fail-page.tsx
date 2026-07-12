@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import TopBar from '../../components/common/TopBar';
 import Close from '/src/assets/icons/close.svg';
-import Error from '/src/assets/icons/error.svg';
 import Check from '/src/assets/icons/check.svg?react';
+import FailInfo from '../../components/common/FailInfo';
 
 const mock = {
   content: '아직 내용물 또는 이물질이 남아 있는 것으로 보여요. 아래 사항을 확인한 후 다시 촬영해주세요.',
@@ -23,13 +23,7 @@ export default function FailPage() {
       </div>
 
       <div className='flex flex-col h-full px-5'>
-        <div className='flex flex-col gap-7.5 justify-center items-center text-center flex-1'>
-          <img src={Error} alt='실패' className='w-20 h-20 drop-shadow-[0_0_10px_#EA433580]' />
-          <div className='flex flex-col gap-2.5'>
-            <p className='font-pretendard font-bold text-[22px] text-text break-keep'>물품을 인식하지 못했어요!</p>
-            <p className='font-pretendard font-semibold text-base text-gray-500 break-keep'>다시 시도해주세요</p>
-          </div>
-        </div>
+        <FailInfo title='물품을 인식하지 못했어요!' content='다시 시도해주세요' />
 
         <div className='flex flex-col gap-6 mt-auto'>
           <div className='flex flex-col gap-5 px-5 py-6 bg-error-bg rounded-[20px]'>
