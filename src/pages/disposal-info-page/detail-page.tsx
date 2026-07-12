@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import TopBar from '../../components/common/TopBar';
 import Home from '/src/assets/icons/home.svg';
 import Favorites from '/src/assets/icons/favorites.svg';
@@ -20,7 +20,11 @@ const mock = [
 
 export default function DisposalInfoDetailage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+
+  const tag = location?.state;
+  console.log(tag);
 
   const handleFavorites = () => {
     setIsOpen(true);
