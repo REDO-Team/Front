@@ -21,7 +21,7 @@ export default function ImageSearchPage() {
 
   return (
     <div className='h-full'>
-      <div className='mb-8.5'>
+      <div className='mb-2.5'>
         <TopBar title='이미지 검색' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />
       </div>
 
@@ -42,7 +42,7 @@ export default function ImageSearchPage() {
           <button type='button' className='font-pretendard font-bold text-lg text-main-green2 rounded-4xl bg-white border border-[#C8F5DA] py-4 w-full flex items-center justify-center' onClick={handleGallaryClick}>
             갤러리에서 불러오기
           </button>
-          <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 px-5 py-4 w-full flex items-center justify-center' onClick={() => navigate('/camera')}>
+          <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 px-5 py-4 w-full flex items-center justify-center' onClick={() => navigate('/camera', { state: 'info' })}>
             촬영하기
           </button>
         </div>
