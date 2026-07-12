@@ -16,7 +16,7 @@ export default function TopBar({ title, leftIcon, leftText, rightIcon, onClick, 
   const navigate = useNavigate();
 
   return (
-    <header className={`${position} top-0 w-full max-w-120 flex items-center justify-between h-14 px-4 z-50 bg-${bgColor}`}>
+    <header className={`${position} top-0 w-full max-w-120 flex items-center justify-between h-14 px-4 z-50 bg-${bgColor}  ${!leftIcon && !leftText && !title ? 'justify-end' : 'justify-between'}`}>
       {/* 왼쪽 아이콘 영역 */}
       {/* 꺾새 옆에 바로 글자를 적을 때 leftIcon에서 두 덩어리로 작성해주세요! */}
       {(leftIcon || leftText) && (
@@ -44,7 +44,7 @@ export default function TopBar({ title, leftIcon, leftText, rightIcon, onClick, 
       {/* 오른쪽 아이콘 영역 */}
       {rightIcon && (
         <button type='button' onClick={onClick}>
-          <img src={rightIcon} alt='홈으로 가기' className='ml-auto flex items-center justify-end z-10 text-base font-semibold text-text' />
+          <img src={rightIcon} alt='홈으로 가기' className='ml-auto flex items-center justify-end z-10 text-base font-semibold text-text ' />
         </button>
       )}
     </header>
