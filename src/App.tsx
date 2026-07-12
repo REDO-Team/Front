@@ -17,6 +17,7 @@ import MyContributionPage from './pages/my-contribution-page';
 import DisposalInfoDetailPage from './pages/disposal-info-page/detail-page';
 import TermsPage from './pages/signup/terms-page';
 import SignupPage from './pages/signup/signup-page';
+import ProfileCreatePage from './pages/signup/profile-create-page';
 import DisposalInfoFailPage from './pages/disposal-info-page/fail-page';
 import CamearaPage from './pages/cameara-page';
 
@@ -80,6 +81,10 @@ const routes: RouteObject[] = [
           {
             path: 'terms',
             element: <TermsPage />,
+          },
+          {
+            path: 'profile',
+            element: <ProfileCreatePage />,
           },
         ],
       },
