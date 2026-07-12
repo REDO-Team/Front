@@ -27,14 +27,16 @@ const Layout = () => {
 
   const isMyContribution = !!matchPath('/my-contribution', location.pathname);
 
-  const hideTopBar = isHome || isSplash || isLogin || isSignup || isSignupTerms;
+  const isCamera = !!matchPath('/camera', location.pathname);
 
-  const hideBottomBar = isSplash || isLogin || isSignup || isSignupTerms || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isCertificationFail || isImageSearch || isProblemSearch || isMyContribution || isDisposalInfoFail || isDisposalInfoDetail;
+  const hideTopBar = isHome || isSplash || isLogin || isSignup || isSignupTerms || isCamera;
+
+  const hideBottomBar = isSplash || isLogin || isSignup || isSignupTerms || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isCertificationFail || isImageSearch || isProblemSearch || isMyContribution || isDisposalInfoFail || isDisposalInfoDetail || isCamera || isDisposalInfo;
 
   const hasGreenBackground = isGuide || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isDisposalInfo || isDisposalInfoDetail || isImageSearch || isProblemSearch || isDisposalInfoFail;
 
   return (
-    <div className={`min-h-screen overflow-auto ${hasGreenBackground ? 'bg-bg-green1' : 'bg-white'}`}>
+    <div className={`min-h-screen overflow-auto ${hasGreenBackground ? 'bg-bg-green1' : isCamera ? 'bg-black' : 'bg-white'}`}>
       <div className='mx-auto min-h-screen w-full max-w-120'>
         <div className={`mx-auto flex w-full max-w-120 flex-col ${hideTopBar ? 'min-h-dvh' : 'h-[calc(100dvh-56px)] pt-14'}`}>
           <main className='flex flex-1 flex-col'>
