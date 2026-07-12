@@ -18,6 +18,7 @@ import DisposalInfoDetailPage from './pages/disposal-info-page/detail-page';
 import TermsPage from './pages/signup/terms-page';
 import SignupPage from './pages/signup/signup-page';
 import DisposalInfoFailPage from './pages/disposal-info-page/fail-page';
+import CamearaPage from './pages/cameara-page';
 
 const routes: RouteObject[] = [
   {
@@ -106,6 +107,10 @@ const routes: RouteObject[] = [
             element: <DisposalInfoFailPage />,
           },
         ],
+      },
+      {
+        path: 'camera',
+        element: <CamearaPage />,
       },
     ],
   },
