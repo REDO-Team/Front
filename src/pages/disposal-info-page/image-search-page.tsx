@@ -2,9 +2,22 @@ import { useNavigate } from 'react-router-dom';
 import Home from '/src/assets/icons/home.svg';
 import TopBar from '../../components/common/TopBar';
 import ShootCard from '../../components/common/ShootCard';
+import { useRef } from 'react';
 
 export default function ImageSearchPage() {
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const handleGallaryClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleSelectImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    console.log(file);
+  };
 
   return (
     <div className='h-full'>
@@ -23,8 +36,10 @@ export default function ImageSearchPage() {
           </ul>
         </div>
 
+        <input type='file' accept='image/*' className='hidden' ref={fileInputRef} onChange={handleSelectImage} />
+
         <div className='w-full flex flex-col gap-2.5 mt-auto'>
-          <button type='button' className='font-pretendard font-bold text-lg text-main-green2 rounded-4xl bg-white border border-[#C8F5DA] py-4 w-full flex items-center justify-center'>
+          <button type='button' className='font-pretendard font-bold text-lg text-main-green2 rounded-4xl bg-white border border-[#C8F5DA] py-4 w-full flex items-center justify-center' onClick={handleGallaryClick}>
             갤러리에서 불러오기
           </button>
           <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 px-5 py-4 w-full flex items-center justify-center' onClick={() => navigate('/camera')}>
