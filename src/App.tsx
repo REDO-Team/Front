@@ -1,26 +1,31 @@
-import { createBrowserRouter, RouterProvider, type RouteObject } from 'react-router-dom';
-import './App.css';
-import Layout from './layouts/Layout';
-import HomePage from './pages/home-page';
-import SplashPage from './pages/splash-page';
-import GuidePage from './pages/guide-page';
-import CertificationPage from './pages/certification-page';
-import LoginPage from './pages/login/login-page';
-import CertificationGuidePage from './pages/certification-page/guide-page';
-import ShootingPage from './pages/certification-page/shooting-page';
-import SuccessPage from './pages/certification-page/success-page';
-import DisposalInfoPage from './pages/disposal-info-page';
-import ImageSearchPage from './pages/disposal-info-page/image-search-page';
-import ProblemSearchPage from './pages/disposal-info-page/problem-search-page';
-import FailPage from './pages/certification-page/fail-page';
-import MyContributionPage from './pages/my-contribution-page';
-import DisposalInfoDetailPage from './pages/disposal-info-page/detail-page';
-import TermsPage from './pages/signup/terms-page';
-import SignupPage from './pages/signup/signup-page';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  type RouteObject,
+} from "react-router-dom";
+import "./App.css";
+import Layout from "./layouts/Layout";
+import HomePage from "./pages/home-page";
+import SplashPage from "./pages/splash-page";
+import GuidePage from "./pages/guide-page";
+import CertificationPage from "./pages/certification-page";
+import LoginPage from "./pages/login/login-page";
+import CertificationGuidePage from "./pages/certification-page/guide-page";
+import ShootingPage from "./pages/certification-page/shooting-page";
+import SuccessPage from "./pages/certification-page/success-page";
+import DisposalInfoPage from "./pages/disposal-info-page";
+import ImageSearchPage from "./pages/disposal-info-page/image-search-page";
+import ProblemSearchPage from "./pages/disposal-info-page/problem-search-page";
+import FailPage from "./pages/certification-page/fail-page";
+import MyContributionPage from "./pages/my-contribution-page";
+import DisposalInfoDetailPage from "./pages/disposal-info-page/detail-page";
+import TermsPage from "./pages/signup/terms-page";
+import SignupPage from "./pages/signup/signup-page";
+import CommunityMainPage from "./pages/community/Main";
 
 const routes: RouteObject[] = [
   {
-    path: '/',
+    path: "/",
     element: <Layout />,
     children: [
       {
@@ -28,79 +33,83 @@ const routes: RouteObject[] = [
         element: <HomePage />,
       },
       {
-        path: 'splash',
+        path: "splash",
         element: <SplashPage />,
       },
       {
-        path: 'guide',
+        path: "guide",
         element: <GuidePage />,
       },
       {
-        path: 'certification',
+        path: "certification",
         children: [
           {
             index: true,
             element: <CertificationPage />,
           },
           {
-            path: 'guide',
+            path: "guide",
             element: <CertificationGuidePage />,
           },
           {
-            path: 'shooting',
+            path: "shooting",
             element: <ShootingPage />,
           },
           {
-            path: 'success',
+            path: "success",
             element: <SuccessPage />,
           },
           {
-            path: 'fail',
+            path: "fail",
             element: <FailPage />,
           },
         ],
       },
       {
-        path: 'login',
+        path: "login",
         element: <LoginPage />,
       },
       {
-        path: 'my-contribution',
+        path: "my-contribution",
         element: <MyContributionPage />,
       },
       {
-        path: 'signup',
+        path: "signup",
         children: [
           {
             index: true,
             element: <SignupPage />,
           },
           {
-            path: 'terms',
+            path: "terms",
             element: <TermsPage />,
           },
         ],
       },
       {
-        path: 'disposal-info',
+        path: "disposal-info",
         children: [
           {
             index: true,
             element: <DisposalInfoPage />,
           },
           {
-            path: 'image-search',
+            path: "image-search",
             element: <ImageSearchPage />,
           },
           {
-            path: 'problem-search',
+            path: "problem-search",
             element: <ProblemSearchPage />,
           },
           {
-            path: 'detail',
+            path: "detail",
             element: <DisposalInfoDetailPage />,
           },
         ],
+      },
+      {
+        path: "community",
+        element: <CommunityMainPage />,
       },
     ],
   },
