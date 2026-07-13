@@ -11,7 +11,7 @@ export default function DisposalInfoPage() {
 
   return (
     <div className='h-full'>
-      <div className='mb-25'>
+      <div className='mt-10'>
         <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />
       </div>
 

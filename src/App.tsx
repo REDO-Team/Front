@@ -21,7 +21,12 @@ import MyContributionPage from "./pages/my-contribution-page";
 import DisposalInfoDetailPage from "./pages/disposal-info-page/detail-page";
 import TermsPage from "./pages/signup/terms-page";
 import SignupPage from "./pages/signup/signup-page";
-import CommunityMainPage from "./pages/community/Main";
+import ProfileCreatePage from "./pages/signup/profile-create-page";
+import SignupCompletePage from "./pages/signup/complete-page";
+import DisposalInfoFailPage from "./pages/disposal-info-page/fail-page";
+import CamearaPage from "./pages/cameara-page";
+import AllContributionPage from "./pages/all-contribution-page";
+import CommunityMainPage from "./pages/community/main-page";
 
 const routes: RouteObject[] = [
   {
@@ -74,6 +79,10 @@ const routes: RouteObject[] = [
         element: <MyContributionPage />,
       },
       {
+        path: "all-contribution",
+        element: <AllContributionPage />,
+      },
+      {
         path: "signup",
         children: [
           {
@@ -83,6 +92,14 @@ const routes: RouteObject[] = [
           {
             path: "terms",
             element: <TermsPage />,
+          },
+          {
+            path: "profile",
+            element: <ProfileCreatePage />,
+          },
+          {
+            path: "complete",
+            element: <SignupCompletePage />,
           },
         ],
       },
@@ -105,7 +122,15 @@ const routes: RouteObject[] = [
             path: "detail",
             element: <DisposalInfoDetailPage />,
           },
+          {
+            path: "fail",
+            element: <DisposalInfoFailPage />,
+          },
         ],
+      },
+      {
+        path: "camera",
+        element: <CamearaPage />,
       },
       {
         path: "community",

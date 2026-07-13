@@ -8,8 +8,10 @@ const Layout = () => {
   const isSplash = !!matchPath('/splash', location.pathname);
   const isLogin = !!matchPath('/login', location.pathname);
 
-  const isSignup = !!matchPath('/signup', location.pathname);
-  const isSignupTerms = !!matchPath('/signup/terms', location.pathname);
+  const isSignup = !!matchPath(
+    { path: '/signup/*', end: false },
+    location.pathname,
+  );
 
   const isGuide = !!matchPath('/guide', location.pathname);
 
@@ -42,6 +44,10 @@ const Layout = () => {
     '/disposal-info/detail',
     location.pathname,
   );
+  const isDisposalInfoFail = !!matchPath(
+    '/disposal-info/fail',
+    location.pathname,
+  );
   const isImageSearch = !!matchPath(
     '/disposal-info/image-search',
     location.pathname,
@@ -55,19 +61,24 @@ const Layout = () => {
     '/my-contribution',
     location.pathname,
   );
+  const isAllContribution = !!matchPath(
+    '/all-contribution',
+    location.pathname,
+  );
+
+  const isCamera = !!matchPath('/camera', location.pathname);
 
   const hideTopBar =
     isHome ||
     isSplash ||
     isLogin ||
     isSignup ||
-    isSignupTerms;
+    isCamera;
 
   const hideBottomBar =
     isSplash ||
     isLogin ||
     isSignup ||
-    isSignupTerms ||
     isCertification ||
     isCertificationGuide ||
     isCertificationShoot ||
@@ -75,7 +86,12 @@ const Layout = () => {
     isCertificationFail ||
     isImageSearch ||
     isProblemSearch ||
-    isMyContribution;
+    isMyContribution ||
+    isAllContribution ||
+    isDisposalInfoFail ||
+    isDisposalInfoDetail ||
+    isCamera ||
+    isDisposalInfo;
 
   const hasGreenBackground =
     isGuide ||
@@ -83,11 +99,13 @@ const Layout = () => {
     isCertificationGuide ||
     isCertificationShoot ||
     isCertificationSuccess ||
-    isCertificationFail ||
     isDisposalInfo ||
     isDisposalInfoDetail ||
     isImageSearch ||
-    isProblemSearch;
+    isProblemSearch ||
+    isDisposalInfoFail ||
+    isCamera ||
+    isAllContribution;
 
   return (
     <div

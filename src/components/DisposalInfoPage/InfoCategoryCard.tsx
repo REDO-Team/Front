@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import RightArrow from '/src/assets/icons/right-arrow.svg';
+import RightArrow from '/src/assets/icons/right-arrow.svg?react';
 
 interface InfoCategoryCardProps {
   img: string;
@@ -15,7 +15,7 @@ export default function InfoCategoryCard({ img, color, shadow, title, content, t
 
   return (
     <div
-      className='w-full flex justify-between items-center p-5 rounded-[20px] bg-white shadow shadow-black/5'
+      className='w-full flex justify-between items-center p-5 rounded-[20px] bg-white shadow shadow-black/3'
       onClick={() => {
         navigate(`${to}`);
       }}
@@ -35,7 +35,7 @@ export default function InfoCategoryCard({ img, color, shadow, title, content, t
           <p className='font-pretendard font-bold text-sm text-gray-500 break-keep'>{content}</p>
         </div>
       </div>
-      <img src={RightArrow} alt='상세보기' />
+      <RightArrow className='text-gray-400' />
     </div>
   );
 }
