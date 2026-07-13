@@ -22,3 +22,30 @@ export interface MyContributionData {
   remainingCount: number | null;
   items: ContributionItem[];
 }
+
+export type ContributionActivityType =
+  | 'PRODUCT_IN_PROGRESS'
+  | 'PRODUCT_REMAINING'
+  | 'RECYCLING_COMPLETED'
+  | 'FIRST_RECYCLING';
+
+export type ContributionProductType =
+  | 'TOILET_PAPER'
+  | 'NOTE'
+  | 'BOTTLE'
+  | 'BAG'
+  | 'FLOWERPOT'
+  | 'CLOTHES'
+  | 'SNEAKERS'
+  | 'BENCH';
+
+/** 전체 기여도 화면에 표시할 사용자 활동 한 건을 표현합니다. */
+export interface ContributionActivity {
+  id: number;
+  type: ContributionActivityType;
+  nickname: string;
+  productType?: ContributionProductType;
+  productName?: string;
+  remainingCount?: number;
+  recyclingCount?: number;
+}

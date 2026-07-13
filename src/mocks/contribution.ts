@@ -1,4 +1,5 @@
 import type {
+  ContributionActivity,
   ContributionItem,
   MyContributionData,
 } from '../types/contribution';
@@ -78,3 +79,44 @@ export const MY_CONTRIBUTION: MyContributionData = {
   remainingCount: 2,
   items: CONTRIBUTION_ITEMS,
 };
+
+/** 전체 기여도 API 연결 전 화면에 고정해서 표시할 사용자 수입니다. */
+export const ALL_CONTRIBUTION_USER_COUNT = 522;
+
+/** 전체 기여도 API 연결 전 화면에 순서대로 표시할 활동 목록입니다. */
+export const CONTRIBUTION_ACTIVITIES: ContributionActivity[] = [
+  {
+    id: 1,
+    type: 'PRODUCT_IN_PROGRESS',
+    nickname: '우주',
+    productType: 'SNEAKERS',
+    productName: '신발',
+  },
+  {
+    id: 2,
+    type: 'PRODUCT_REMAINING',
+    nickname: '리도',
+    productType: 'BENCH',
+    productName: '벤치',
+    remainingCount: 3,
+  },
+  {
+    id: 3,
+    type: 'RECYCLING_COMPLETED',
+    nickname: '채채',
+    recyclingCount: 5,
+  },
+  {
+    id: 4,
+    type: 'FIRST_RECYCLING',
+    nickname: '분리수거하자',
+  },
+  {
+    id: 5,
+    type: 'PRODUCT_REMAINING',
+    nickname: '귀차나',
+    productType: 'CLOTHES',
+    productName: '의류',
+    remainingCount: 1,
+  },
+];
