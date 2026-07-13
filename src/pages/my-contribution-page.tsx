@@ -122,7 +122,11 @@ export default function MyContributionPage() {
   </div>
 </div>
 
-<button className='mx-5 mb-8 flex h-12 w-full items-center justify-center rounded-full bg-main-green1 text-base font-bold text-white shadow-[0_5px_12px_rgba(0,0,0,0.08)]'>
+<button
+  type='button'
+  onClick={() => navigate('/all-contribution')}
+  className='mx-5 mb-8 flex h-12 w-full items-center justify-center rounded-full bg-main-green1 text-base font-bold text-white shadow-[0_5px_12px_rgba(0,0,0,0.08)]'
+>
     <p>함께 만드는 변화 보러가기</p>
 </button>
 

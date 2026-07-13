@@ -61,6 +61,10 @@ const Layout = () => {
     '/my-contribution',
     location.pathname,
   );
+  const isAllContribution = !!matchPath(
+    '/all-contribution',
+    location.pathname,
+  );
 
   const isCamera = !!matchPath('/camera', location.pathname);
 
@@ -83,6 +87,7 @@ const Layout = () => {
     isImageSearch ||
     isProblemSearch ||
     isMyContribution ||
+    isAllContribution ||
     isDisposalInfoFail ||
     isDisposalInfoDetail ||
     isCamera ||
@@ -99,7 +104,8 @@ const Layout = () => {
     isImageSearch ||
     isProblemSearch ||
     isDisposalInfoFail ||
-    isCamera;
+    isCamera ||
+    isAllContribution;
 
   return (
     <div

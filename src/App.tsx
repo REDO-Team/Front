@@ -21,6 +21,7 @@ import ProfileCreatePage from './pages/signup/profile-create-page';
 import SignupCompletePage from './pages/signup/complete-page';
 import DisposalInfoFailPage from './pages/disposal-info-page/fail-page';
 import CamearaPage from './pages/cameara-page';
+import AllContributionPage from './pages/all-contribution-page';
 
 const routes: RouteObject[] = [
   {
@@ -71,6 +72,10 @@ const routes: RouteObject[] = [
       {
         path: 'my-contribution',
         element: <MyContributionPage />,
+      },
+      {
+        path: 'all-contribution',
+        element: <AllContributionPage />,
       },
       {
         path: 'signup',
