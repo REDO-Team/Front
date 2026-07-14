@@ -13,6 +13,7 @@ import {
   HOME_USER,
 } from '../mocks/home';
 import type { HomeServiceMenuItem } from '../types/home';
+import { useNavigate } from 'react-router-dom';
 
 const SERVICE_MENU_ICON_SRC: Record<HomeServiceMenuItem['icon'], string> = {
   trash: TrashIcon,
@@ -29,6 +30,7 @@ const REWARD_IMAGE_STYLE = {
 } as const;
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const formattedPoint = HOME_POINT_SUMMARY.totalPoint.toLocaleString();
   const communityPreview = HOME_COMMUNITY_PREVIEWS[0];
 
@@ -93,9 +95,11 @@ export default function HomePage() {
               <button
                 key={menu.id}
                 type='button'
+                onClick={() => {
+                  if (menu.id === 'reward-save') navigate(menu.path);
+                }}
                 className='flex h-[100px] flex-col items-center justify-center rounded-[22px] bg-white px-3 shadow-[0_9px_18px_rgba(0,0,0,0.08)]'
               >
-                {/* TODO: 별도 이슈에서 메뉴별 라우팅 이동을 연결합니다. */}
                 <img
                   src={SERVICE_MENU_ICON_SRC[menu.icon]}
                   alt=''

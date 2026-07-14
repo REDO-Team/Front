@@ -27,6 +27,9 @@ import DisposalInfoFailPage from "./pages/disposal-info-page/fail-page";
 import CamearaPage from "./pages/cameara-page";
 import AllContributionPage from "./pages/all-contribution-page";
 import CommunityMainPage from "./pages/community/main-page";
+import RewardHomePage from "./pages/reward-page/reward-home-page";
+import RewardHistoryPage from "./pages/reward-page/reward-history-page";
+import RewardStorePage from "./pages/reward-page/reward-store-page";
 
 const routes: RouteObject[] = [
   {
@@ -135,6 +138,23 @@ const routes: RouteObject[] = [
       {
         path: "community",
         element: <CommunityMainPage />,
+      },
+      {
+        path: "reward",
+        children: [
+          {
+            index: true,
+            element: <RewardHomePage />,
+          },
+          {
+            path: "history",
+            element: <RewardHistoryPage />,
+          },
+          {
+            path: "store",
+            element: <RewardStorePage />,
+          },
+        ],
       },
     ],
   },

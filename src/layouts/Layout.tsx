@@ -67,6 +67,10 @@ const Layout = () => {
   );
 
   const isCamera = !!matchPath('/camera', location.pathname);
+  const isReward = !!matchPath(
+    { path: '/reward/*', end: false },
+    location.pathname,
+  );
 
   const hideTopBar =
     isHome ||
@@ -91,7 +95,8 @@ const Layout = () => {
     isDisposalInfoFail ||
     isDisposalInfoDetail ||
     isCamera ||
-    isDisposalInfo;
+    isDisposalInfo ||
+    isReward;
 
   const hasGreenBackground =
     isGuide ||
@@ -105,7 +110,8 @@ const Layout = () => {
     isProblemSearch ||
     isDisposalInfoFail ||
     isCamera ||
-    isAllContribution;
+    isAllContribution ||
+    isReward;
 
   return (
     <div
