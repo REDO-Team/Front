@@ -30,6 +30,7 @@ import CommunityMainPage from "./pages/community/main-page";
 import RewardHomePage from "./pages/reward-page/reward-home-page";
 import RewardHistoryPage from "./pages/reward-page/reward-history-page";
 import RewardStorePage from "./pages/reward-page/reward-store-page";
+import RewardProductDetailPage from "./pages/reward-page/reward-product-detail-page";
 
 const routes: RouteObject[] = [
   {
@@ -155,6 +156,10 @@ const routes: RouteObject[] = [
             element: <RewardStorePage />,
           },
         ],
+      },
+      {
+        path: "rewards/products/:productId",
+        element: <RewardProductDetailPage />,
       },
     ],
   },
