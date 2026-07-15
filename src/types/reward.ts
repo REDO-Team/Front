@@ -23,4 +23,7 @@ export interface RewardProduct {
     name: string;
     type: RewardProductType;
     point: number;
+    description?: string;
+    usageGuide?: string;
+    validityPeriod?: string;
 }
