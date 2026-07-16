@@ -19,11 +19,13 @@ interface PurchaseSectionProps {
 
 interface PartnerPurchaseSectionProps extends PurchaseSectionProps {
   shippingAddress: RewardShippingAddress | null;
+  onAddAddress: () => void;
 }
 
 function PartnerPurchaseSection({
   product,
   shippingAddress,
+  onAddAddress,
 }: PartnerPurchaseSectionProps) {
   void product;
 
@@ -31,6 +33,7 @@ function PartnerPurchaseSection({
     return (
       <button
         type='button'
+        onClick={onAddAddress}
         className='mt-3 flex min-h-17 w-full items-center rounded-[22px] bg-white px-5 py-4 text-left shadow-[0_6px_16px_rgba(0,0,0,0.04)]'
       >
         <img src={Location} alt='' className='h-7 w-6 shrink-0' />
@@ -162,6 +165,9 @@ export default function RewardCheckoutPage() {
         <PartnerPurchaseSection
           product={product}
           shippingAddress={mockRecentShippingAddress}
+          onAddAddress={() =>
+            navigate(`/rewards/address-complete/${product.id}`)
+          }
         />
       ) : (
         <GifticonPurchaseSection product={product} />
@@ -201,6 +207,7 @@ export default function RewardCheckoutPage() {
       <div className='mt-auto pt-8'>
         <button
           type='button'
+          onClick={() => navigate(`/rewards/use-complete/${product.id}`)}
           className='w-full rounded-full bg-main-green1 py-3 text-white'
         >
           포인트 사용하기

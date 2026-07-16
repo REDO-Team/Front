@@ -32,6 +32,8 @@ import RewardHistoryPage from "./pages/reward-page/reward-history-page";
 import RewardStorePage from "./pages/reward-page/reward-store-page";
 import RewardProductDetailPage from "./pages/reward-page/reward-product-detail-page";
 import RewardCheckoutPage from "./pages/reward-page/reward-purchase-page";
+import RewardAddressCompletePage from "./pages/reward-page/reward-address-complete-page";
+import RewardUseCompletePage from "./pages/reward-page/reward-use-complete-page";
 
 const routes: RouteObject[] = [
   {
@@ -165,6 +167,14 @@ const routes: RouteObject[] = [
       {
         path: "rewards/checkout/:productId",
         element: <RewardCheckoutPage />,
+      },
+      {
+        path: "rewards/address-complete/:productId",
+        element: <RewardAddressCompletePage />,
+      },
+      {
+        path: "rewards/use-complete/:productId",
+        element: <RewardUseCompletePage />,
       },
     ],
   },

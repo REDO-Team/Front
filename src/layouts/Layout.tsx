@@ -79,13 +79,23 @@ const Layout = () => {
     '/rewards/checkout/:productId',
     location.pathname,
   );
+  const isRewardAddressComplete = !!matchPath(
+    '/rewards/address-complete/:productId',
+    location.pathname,
+  );
+  const isRewardUseComplete = !!matchPath(
+    '/rewards/use-complete/:productId',
+    location.pathname,
+  );
 
   const hideTopBar =
     isHome ||
     isSplash ||
     isLogin ||
     isSignup ||
-    isCamera;
+    isCamera ||
+    isRewardAddressComplete ||
+    isRewardUseComplete;
 
   const hideBottomBar =
     isSplash ||
@@ -106,7 +116,9 @@ const Layout = () => {
     isDisposalInfo ||
     isReward ||
     isRewardProductDetail ||
-    isRewardCheckout;
+    isRewardCheckout ||
+    isRewardAddressComplete ||
+    isRewardUseComplete;
 
   const hasGreenBackground =
     isGuide ||
@@ -123,7 +135,9 @@ const Layout = () => {
     isAllContribution ||
     isReward ||
     isRewardProductDetail ||
-    isRewardCheckout;
+    isRewardCheckout ||
+    isRewardAddressComplete ||
+    isRewardUseComplete;
 
   return (
     <div
