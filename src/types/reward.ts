@@ -27,3 +27,9 @@ export interface RewardProduct {
     usageGuide?: string;
     validityPeriod?: string;
 }
+
+export interface RewardShippingAddress {
+    id: number;
+    name: string;
+    address: string;
+}

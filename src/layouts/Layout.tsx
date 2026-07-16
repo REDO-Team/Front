@@ -75,6 +75,10 @@ const Layout = () => {
     '/rewards/products/:productId',
     location.pathname,
   );
+  const isRewardCheckout = !!matchPath(
+    '/rewards/checkout/:productId',
+    location.pathname,
+  );
 
   const hideTopBar =
     isHome ||
@@ -101,7 +105,8 @@ const Layout = () => {
     isCamera ||
     isDisposalInfo ||
     isReward ||
-    isRewardProductDetail;
+    isRewardProductDetail ||
+    isRewardCheckout;
 
   const hasGreenBackground =
     isGuide ||
@@ -117,7 +122,8 @@ const Layout = () => {
     isCamera ||
     isAllContribution ||
     isReward ||
-    isRewardProductDetail;
+    isRewardProductDetail ||
+    isRewardCheckout;
 
   return (
     <div

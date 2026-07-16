@@ -31,6 +31,7 @@ import RewardHomePage from "./pages/reward-page/reward-home-page";
 import RewardHistoryPage from "./pages/reward-page/reward-history-page";
 import RewardStorePage from "./pages/reward-page/reward-store-page";
 import RewardProductDetailPage from "./pages/reward-page/reward-product-detail-page";
+import RewardCheckoutPage from "./pages/reward-page/reward-purchase-page";
 
 const routes: RouteObject[] = [
   {
@@ -160,6 +161,10 @@ const routes: RouteObject[] = [
       {
         path: "rewards/products/:productId",
         element: <RewardProductDetailPage />,
+      },
+      {
+        path: "rewards/checkout/:productId",
+        element: <RewardCheckoutPage />,
       },
     ],
   },
