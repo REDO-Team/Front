@@ -1,6 +1,7 @@
 import type {
     RewardHistory,
     RewardProduct,
+    RewardShippingAddress,
     RewardSummary,
 } from '../types/reward';
 
@@ -9,6 +10,8 @@ export const mockRewardSummary: RewardSummary = {
     currentPoint: 5000,
     monthlyPoint: 1200,
 };
+
+export const mockRecentShippingAddress: RewardShippingAddress | null = null;
 
 export const mockRewardHistory: RewardHistory[] = [
     {
