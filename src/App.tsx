@@ -34,6 +34,7 @@ import RewardProductDetailPage from "./pages/reward-page/reward-product-detail-p
 import RewardCheckoutPage from "./pages/reward-page/reward-purchase-page";
 import RewardAddressCompletePage from "./pages/reward-page/reward-address-complete-page";
 import RewardUseCompletePage from "./pages/reward-page/reward-use-complete-page";
+import MyPage from './pages/my-page';
 
 const routes: RouteObject[] = [
   {
@@ -51,6 +52,10 @@ const routes: RouteObject[] = [
       {
         path: "guide",
         element: <GuidePage />,
+      },
+      {
+        path: 'my',
+        element: <MyPage />,
       },
       {
         path: "certification",
