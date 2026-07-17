@@ -1,31 +1,42 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import LeftArrowIcon from '../../assets/icons/left-arrow.svg?react';
 
 const ID_REGEX = /^[A-Za-z]{6,}$/;
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/;
 
+type UserIdStatus =
+  | 'none'
+  | 'formatError'
+  | 'available'
+  | 'duplicate';
+
 const SignupPage = () => {
+  const navigate = useNavigate();
+
+  const [userIdStatus, setUserIdStatus] =
+    useState<UserIdStatus>('none');
+
   const [userId, setUserId] = useState('');
   const [email, setEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
-  const [isUserIdTouched, setIsUserIdTouched] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [isPasswordTouched, setIsPasswordTouched] = useState(false);
   const [isPasswordConfirmTouched, setIsPasswordConfirmTouched] =
     useState(false);
 
-  const isUserIdValid = ID_REGEX.test(userId);
   const isPasswordValid = PASSWORD_REGEX.test(password);
+
   const isPasswordMatched =
     passwordConfirm !== '' && password === passwordConfirm;
 
-  const showUserIdError =
-    isUserIdTouched && userId !== '' && !isUserIdValid;
-
   const showPasswordError =
-    isPasswordTouched && password !== '' && !isPasswordValid;
+    isPasswordTouched &&
+    password !== '' &&
+    !isPasswordValid;
 
   const showPasswordSuccess =
     isPasswordConfirmTouched &&
@@ -38,12 +49,52 @@ const SignupPage = () => {
     passwordConfirm !== '' &&
     !isPasswordMatched;
 
+  const isUserIdChecked = userIdStatus === 'available';
+
   const isValid =
-    isUserIdValid &&
-    email.trim() !== '' &&
-    verificationCode.trim() !== '' &&
+    isUserIdChecked &&
+    isEmailVerified &&
     isPasswordValid &&
     isPasswordMatched;
+
+  const handleCheckId = () => {
+    if (!ID_REGEX.test(userId)) {
+      setUserIdStatus('formatError');
+      return;
+    }
+
+    // 테스트용 중복 아이디
+    if (userId === 'aadmin') {
+      setUserIdStatus('duplicate');
+      return;
+    }
+
+    setUserIdStatus('available');
+  };
+
+  const handleSendEmail = () => {
+    if (email.trim() === '') {
+      alert('이메일 주소를 입력해주세요.');
+      return;
+    }
+
+    setIsEmailVerified(false);
+    setVerificationCode('');
+
+    // 테스트용
+    alert('인증번호를 발송했습니다.\n테스트 인증번호: 123456');
+  };
+
+  const handleVerify = () => {
+    if (verificationCode === '123456') {
+      setIsEmailVerified(true);
+      alert('인증되었습니다.');
+      return;
+    }
+
+    setIsEmailVerified(false);
+    alert('인증번호가 올바르지 않습니다.');
+  };
 
   return (
     <div className='flex h-dvh w-full flex-col overflow-hidden bg-white font-pretendard text-text'>
@@ -52,6 +103,7 @@ const SignupPage = () => {
         <div className='flex h-[22px] items-center'>
           <button
             type='button'
+            onClick={() => navigate('/signup/terms')}
             aria-label='뒤로가기'
             className='flex h-6 w-6 shrink-0 items-center justify-center'
           >
@@ -82,33 +134,51 @@ const SignupPage = () => {
                 type='text'
                 value={userId}
                 onChange={(event) => {
-                  setUserId(event.target.value);
+                  const value = event.target.value;
+
+                  setUserId(value);
+
+                  if (value === '') {
+                    setUserIdStatus('none');
+                  } else if (!ID_REGEX.test(value)) {
+                    setUserIdStatus('formatError');
+                  } else {
+                    // 아이디를 수정하면 중복확인을 다시 해야 함
+                    setUserIdStatus('none');
+                  }
                 }}
-                onBlur={() => setIsUserIdTouched(true)}
                 placeholder='아이디'
                 autoComplete='username'
-                aria-invalid={showUserIdError}
-                aria-describedby={
-                  showUserIdError ? 'userId-error' : undefined
-                }
                 className='h-[48px] min-w-0 flex-1 rounded-[24px] border border-gray-200 bg-gray-50 px-[16px] text-[14px] font-medium outline-none placeholder:text-gray-400'
               />
 
               <button
                 type='button'
+                onClick={handleCheckId}
                 className='h-[48px] w-[108px] shrink-0 rounded-[24px] border border-main-green1 bg-white text-[16px] font-semibold text-main-green1 transition-colors active:bg-main-green1 active:text-white'
               >
                 중복확인
               </button>
             </div>
 
-            {showUserIdError && (
-              <p
-                id='userId-error'
-                className='mt-[10px] flex h-[17px] items-center gap-[4px] text-[14px] font-medium leading-[100%] tracking-[0] text-[#F05A5A]'
-              >
+            {userIdStatus === 'formatError' && (
+              <p className='mt-[10px] flex h-[17px] items-center gap-[4px] text-[14px] font-medium leading-[100%] tracking-[0] text-delete'>
                 <span aria-hidden='true'>ⓘ</span>
-                올바른 아이디 형식이 아닙니다.
+                영문 6자 이상으로 입력해주세요.
+              </p>
+            )}
+
+            {userIdStatus === 'duplicate' && (
+              <p className='mt-[10px] flex h-[17px] items-center gap-[4px] text-[14px] font-medium leading-[100%] tracking-[0] text-delete'>
+                <span aria-hidden='true'>ⓘ</span>
+                사용 중인 아이디입니다.
+              </p>
+            )}
+
+            {userIdStatus === 'available' && (
+              <p className='mt-[10px] flex h-[17px] items-center gap-[4px] text-[14px] font-medium leading-[100%] tracking-[0] text-main-green1'>
+                <span aria-hidden='true'>✓</span>
+                사용 가능한 아이디입니다.
               </p>
             )}
           </div>
@@ -127,7 +197,13 @@ const SignupPage = () => {
                 id='email'
                 type='email'
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+
+                  // 이메일을 수정하면 다시 인증해야 함
+                  setIsEmailVerified(false);
+                  setVerificationCode('');
+                }}
                 placeholder='이메일 입력'
                 autoComplete='email'
                 className='h-[48px] min-w-0 flex-1 rounded-[24px] border border-gray-200 bg-gray-50 px-[16px] text-[14px] font-medium outline-none placeholder:text-gray-400'
@@ -135,6 +211,7 @@ const SignupPage = () => {
 
               <button
                 type='button'
+                onClick={handleSendEmail}
                 className='h-[48px] w-[108px] shrink-0 rounded-[24px] border border-main-green1 bg-white text-[16px] font-semibold text-main-green1 transition-colors active:bg-main-green1 active:text-white'
               >
                 인증
@@ -157,20 +234,31 @@ const SignupPage = () => {
                 type='text'
                 inputMode='numeric'
                 value={verificationCode}
-                onChange={(event) =>
-                  setVerificationCode(event.target.value)
-                }
+                onChange={(event) => {
+                  setVerificationCode(event.target.value);
+
+                  // 인증번호를 수정하면 인증 상태 초기화
+                  setIsEmailVerified(false);
+                }}
                 placeholder='인증번호 입력'
                 className='h-[48px] min-w-0 flex-1 rounded-[24px] border border-gray-200 bg-gray-50 px-[16px] text-[14px] font-medium outline-none placeholder:text-gray-400'
               />
 
               <button
                 type='button'
+                onClick={handleVerify}
                 className='h-[48px] w-[108px] shrink-0 rounded-[24px] border border-main-green1 bg-white text-[16px] font-semibold text-main-green1 transition-colors active:bg-main-green1 active:text-white'
               >
                 확인
               </button>
             </div>
+
+            {isEmailVerified && (
+              <p className='mt-[10px] flex h-[17px] items-center gap-[4px] text-[14px] font-medium leading-[100%] tracking-[0] text-main-green1'>
+                <span aria-hidden='true'>✓</span>
+                이메일 인증이 완료되었습니다.
+              </p>
+            )}
           </div>
 
           {/* 비밀번호 입력 */}
@@ -203,7 +291,7 @@ const SignupPage = () => {
             {showPasswordError && (
               <p
                 id='password-error'
-                className='mt-[10px] flex h-[17px] items-center gap-[4px] text-[14px] font-medium leading-[100%] tracking-[0] text-[#F05A5A]'
+                className='mt-[10px] flex h-[17px] items-center gap-[4px] text-[14px] font-medium leading-[100%] tracking-[0] text-delete'
               >
                 <span aria-hidden='true'>ⓘ</span>
                 8~16자의 영문, 숫자를 조합해 주세요.
@@ -224,9 +312,9 @@ const SignupPage = () => {
               id='passwordConfirm'
               type='password'
               value={passwordConfirm}
-              onChange={(event) => {
-                setPasswordConfirm(event.target.value);
-              }}
+              onChange={(event) =>
+                setPasswordConfirm(event.target.value)
+              }
               onBlur={() => setIsPasswordConfirmTouched(true)}
               placeholder='비밀번호 확인 입력'
               autoComplete='new-password'
@@ -242,14 +330,14 @@ const SignupPage = () => {
             {showPasswordConfirmError ? (
               <p
                 id='password-confirm-error'
-                className='mt-[10px] flex h-[17px] items-center gap-[4px] text-[14px] font-medium leading-[100%] tracking-[0] text-[#F05A5A]'
+                className='mt-[10px] flex h-[17px] items-center gap-[4px] text-[14px] font-medium leading-[100%] tracking-[0] text-delete'
               >
                 <span aria-hidden='true'>ⓘ</span>
                 비밀번호가 일치하지 않습니다.
               </p>
             ) : (
               showPasswordSuccess && (
-                <p className='mt-[10px] flex h-[17px] items-center gap-[4px] text-[14px] font-medium leading-[100%] tracking-[0] text-[#06C65F]'>
+                <p className='mt-[10px] flex h-[17px] items-center gap-[4px] text-[14px] font-medium leading-[100%] tracking-[0] text-main-green1'>
                   <span aria-hidden='true'>✓</span>
                   사용 가능한 비밀번호입니다.
                 </p>
@@ -264,6 +352,7 @@ const SignupPage = () => {
         <button
           type='button'
           disabled={!isValid}
+          onClick={() => navigate('/signup/profile')}
           className={`h-[50px] w-full rounded-[30px] text-[16px] font-bold text-white transition-colors ${
             isValid
               ? 'bg-main-green1'

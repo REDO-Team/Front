@@ -1,10 +1,13 @@
 import {
+  type ChangeEvent,
   type ComponentType,
   type SVGProps,
   useState,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import LeftArrowIcon from '../../assets/icons/left-arrow.svg?react';
+import GalleryIcon from '../../assets/icons/gallery.svg?react';
 
 import YellowCharacter from '../../assets/icons/character/yellow-character.svg?react';
 import YellowCharacterSelected from '../../assets/icons/character/yellow-character-selected.svg?react';
@@ -75,18 +78,66 @@ const CHARACTER_ITEMS: CharacterItem[] = [
 ];
 
 const ProfileCreatePage = () => {
+  const navigate = useNavigate();
+
   const [nickname, setNickname] = useState('');
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+
   const [selectedCharacterId, setSelectedCharacterId] = useState<
     number | null
   >(null);
+
   const [gender, setGender] = useState<Gender>(null);
   const [birthDate, setBirthDate] = useState('');
+
+  const selectedCharacter = CHARACTER_ITEMS.find(
+    (character) => character.id === selectedCharacterId,
+  );
+
+  const SelectedCharacterIcon = selectedCharacter?.selectedIcon;
+
+  const isBirthDateComplete =
+    /^\d{4} \/ \d{2} \/ \d{2}$/.test(birthDate);
 
   const isValid =
     nickname.trim() !== '' &&
     selectedCharacterId !== null &&
     gender !== null &&
-    birthDate.trim() !== '';
+    isBirthDateComplete;
+
+  const handleImageChange = (
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    const imageUrl = URL.createObjectURL(file);
+    setProfileImage(imageUrl);
+  };
+
+  const handleBirthDateChange = (
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
+    const numbers = event.target.value
+      .replace(/\D/g, '')
+      .slice(0, 8);
+
+    let formatted = numbers;
+
+    if (numbers.length > 4) {
+      formatted = `${numbers.slice(0, 4)} / ${numbers.slice(4)}`;
+    }
+
+    if (numbers.length > 6) {
+      formatted = `${numbers.slice(0, 4)} / ${numbers.slice(
+        4,
+        6,
+      )} / ${numbers.slice(6, 8)}`;
+    }
+
+    setBirthDate(formatted);
+  };
 
   return (
     <div className='mx-auto flex h-dvh w-full max-w-[402px] flex-col overflow-hidden bg-white font-pretendard text-text'>
@@ -96,6 +147,7 @@ const ProfileCreatePage = () => {
           <button
             type='button'
             aria-label='뒤로가기'
+            onClick={() => navigate('/signup')}
             className='flex h-6 w-6 shrink-0 items-center justify-center'
           >
             <LeftArrowIcon className='h-[18px] w-[9px]' />
@@ -111,7 +163,35 @@ const ProfileCreatePage = () => {
       <main className='min-h-0 flex-1 overflow-y-auto px-5 pb-6'>
         {/* 프로필 이미지 */}
         <div className='mt-[35px] flex w-full justify-center'>
-          <div className='h-[122px] w-[122px] rounded-full bg-[#C4C4C4] shadow-[0_4px_4px_rgba(0,0,0,0.1)]' />
+          <div className='relative h-[122px] w-[122px]'>
+            <div className='h-full w-full overflow-hidden rounded-full bg-[#C4C4C4] shadow-[0_4px_4px_rgba(0,0,0,0.1)]'>
+              {profileImage ? (
+              <img
+              src={profileImage}
+              alt='선택한 프로필'
+              className='h-full w-full object-cover'
+              />
+              ) : SelectedCharacterIcon ? (
+                <div className='flex h-full w-full items-center justify-center'>
+                  <SelectedCharacterIcon className='h-[130px] w-[130px] shrink-0' />
+                </div>
+              ) : null}
+            </div>
+            <label
+              htmlFor='profileImage'
+              aria-label='프로필 사진 선택'
+              className='absolute bottom-[-2px] right-[-2px] flex h-[36px] w-[36px] cursor-pointer items-center justify-center'
+            >
+              <GalleryIcon className='h-[36px] w-[36px]' />
+            </label>
+            <input
+              id='profileImage'
+              type='file'
+              accept='image/*'
+              onChange={handleImageChange}
+              className='hidden'
+            />
+          </div>
         </div>
 
         <section className='mt-[20px] flex w-full flex-col'>
@@ -155,9 +235,10 @@ const ProfileCreatePage = () => {
                     type='button'
                     aria-label={`${character.label} 선택`}
                     aria-pressed={isSelected}
-                    onClick={() =>
-                      setSelectedCharacterId(character.id)
-                    }
+                    onClick={() => {
+                      setSelectedCharacterId(character.id);
+                      setProfileImage(null);
+                    }}
                     className='flex h-[70px] w-[70px] shrink-0 items-center justify-center'
                   >
                     <CharacterIcon className='h-[70px] w-[70px]' />
@@ -216,8 +297,10 @@ const ProfileCreatePage = () => {
             <input
               id='birthDate'
               type='text'
+              inputMode='numeric'
               value={birthDate}
-              onChange={(event) => setBirthDate(event.target.value)}
+              maxLength={14}
+              onChange={handleBirthDateChange}
               placeholder='YYYY / MM / DD'
               className='h-[48px] w-full rounded-[24px] border border-gray-200 bg-gray-50 px-[16px] text-[15px] font-medium leading-[18px] outline-none placeholder:text-[#ACACAC]'
             />
@@ -230,6 +313,7 @@ const ProfileCreatePage = () => {
         <button
           type='button'
           disabled={!isValid}
+          onClick={() => navigate('/signup/complete')}
           className={`h-[50px] w-full rounded-[25px] text-[16px] font-bold text-white transition-colors ${
             isValid
               ? 'bg-main-green1'
