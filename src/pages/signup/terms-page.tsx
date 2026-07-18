@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import LeftArrowIcon from '../../assets/icons/left-arrow.svg?react';
 import FullCheckIcon from '../../assets/icons/full-check.svg?react';
 import EmptyCheckIcon from '../../assets/icons/empty-check.svg?react';
@@ -58,6 +59,8 @@ const INITIAL_AGREEMENTS: Record<AgreementId, boolean> = {
 };
 
 const TermsPage = () => {
+  const navigate = useNavigate();
+
   const [agreements, setAgreements] =
     useState<Record<AgreementId, boolean>>(INITIAL_AGREEMENTS);
 
@@ -91,13 +94,14 @@ const TermsPage = () => {
   const handleOpenTerms = (notionUrl: string) => {
     window.open(notionUrl, '_blank', 'noopener,noreferrer');
   };
-
+  
   return (
     <div className='flex min-h-dvh w-full flex-col bg-white px-5 pb-[27px] font-pretendard text-text'>
       <header className='pt-[28px]'>
         <div className='flex h-[22px] items-center'>
           <button
             type='button'
+            onClick={() => navigate('/login')}
             aria-label='뒤로가기'
             className='flex h-6 w-6 items-center justify-center'
           >
@@ -168,6 +172,8 @@ const TermsPage = () => {
 
       <button
         type='button'
+        disabled={!isRequiredAgreed}
+        onClick={() => navigate('/signup')}
         className={`mt-auto h-[50px] w-full rounded-[30px] text-[16px] font-bold text-white transition-colors ${
           isRequiredAgreed ? 'bg-main-green1' : 'bg-gray-400'
         }`}

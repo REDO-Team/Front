@@ -58,7 +58,7 @@ export default function SuccessPage() {
           <button type='button' className='font-pretendard font-bold text-lg text-main-green2 rounded-4xl bg-white border border-main-green1 py-4 w-full flex items-center justify-center' onClick={() => navigate('/reward')}>
             누적 포인트 확인하기
           </button>
-          <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 px-5 py-4 w-full flex items-center justify-center' onClick={() => navigate('/store')}>
+          <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 px-5 py-4 w-full flex items-center justify-center' onClick={() => navigate('/reward/store')}>
             포인트 사용하러 가기
           </button>
         </div>

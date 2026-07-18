@@ -67,13 +67,35 @@ const Layout = () => {
   );
 
   const isCamera = !!matchPath('/camera', location.pathname);
+  const isReward = !!matchPath(
+    { path: '/reward/*', end: false },
+    location.pathname,
+  );
+  const isRewardProductDetail = !!matchPath(
+    '/rewards/products/:productId',
+    location.pathname,
+  );
+  const isRewardCheckout = !!matchPath(
+    '/rewards/checkout/:productId',
+    location.pathname,
+  );
+  const isRewardAddressComplete = !!matchPath(
+    '/rewards/address-complete/:productId',
+    location.pathname,
+  );
+  const isRewardUseComplete = !!matchPath(
+    '/rewards/use-complete/:productId',
+    location.pathname,
+  );
 
   const hideTopBar =
     isHome ||
     isSplash ||
     isLogin ||
     isSignup ||
-    isCamera;
+    isCamera ||
+    isRewardAddressComplete ||
+    isRewardUseComplete;
 
   const hideBottomBar =
     isSplash ||
@@ -91,7 +113,12 @@ const Layout = () => {
     isDisposalInfoFail ||
     isDisposalInfoDetail ||
     isCamera ||
-    isDisposalInfo;
+    isDisposalInfo ||
+    isReward ||
+    isRewardProductDetail ||
+    isRewardCheckout ||
+    isRewardAddressComplete ||
+    isRewardUseComplete;
 
   const hasGreenBackground =
     isGuide ||
@@ -105,7 +132,12 @@ const Layout = () => {
     isProblemSearch ||
     isDisposalInfoFail ||
     isCamera ||
-    isAllContribution;
+    isAllContribution ||
+    isReward ||
+    isRewardProductDetail ||
+    isRewardCheckout ||
+    isRewardAddressComplete ||
+    isRewardUseComplete;
 
   return (
     <div
