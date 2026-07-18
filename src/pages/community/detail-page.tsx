@@ -4,6 +4,8 @@ import CommentIcon from "../../assets/icons/comment";
 import { useNavigate, useParams } from "react-router-dom";
 import HomeIcon from "../../assets/icons/home.svg";
 import MoreIcon from "../../assets/icons/MoreIcon";
+import PostActionModal from "../../components/CommunityPage/PostActionModal.tsx";
+import { useState } from "react";
 
 const getCategoryStyle = (category: string) => {
   switch (category) {
@@ -48,6 +50,7 @@ const MOCK_COMMENTS = [
 ];
 
 export default function CommunityDetailPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const isMyPost = true; // 임시 변수
   const { id } = useParams();
@@ -59,10 +62,8 @@ export default function CommunityDetailPage() {
       <TopBar
         title="커뮤니티"
         leftIcon
-        rightIcon={isMyPost ? <MoreIcon /> : <HomeIcon />}
-        onClick={
-          isMyPost ? () => console.log("수정/삭제 모달") : () => navigate("/")
-        }
+        rightIcon={isMyPost ? <MoreIcon /> : HomeIcon}
+        onClick={isMyPost ? () => setIsModalOpen(true) : () => navigate("/")}
         bgColor="bg-green1"
       />
 
@@ -160,6 +161,15 @@ export default function CommunityDetailPage() {
           </button>
         </div>
       </footer>
+
+      {/* 수정/삭제 모달 */}
+      {isModalOpen && (
+        <PostActionModal
+          onClose={() => setIsModalOpen(false)}
+          onEdit={() => console.log("수정")}
+          onDelete={() => console.log("삭제")}
+        />
+      )}
     </div>
   );
 }
