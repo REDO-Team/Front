@@ -33,3 +33,28 @@ export interface RewardShippingAddress {
     name: string;
     address: string;
 }
+
+export interface ApiResponse<T> {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: T | null;
+}
+
+export interface ShippingAddress {
+    shippingAddressId: number;
+    addressType: string;
+    receiverName: string;
+    phone: string;
+    postalCode: string;
+    address1: string;
+    address2: string;
+    isDefault: boolean;
+}
+
+export interface ShippingAddressListResult {
+  shippingAddresses: ShippingAddress[];
+}
+
+export type ShippingAddressListResponse =
+  ApiResponse<ShippingAddressListResult>;

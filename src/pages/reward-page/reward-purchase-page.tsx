@@ -165,9 +165,7 @@ export default function RewardCheckoutPage() {
         <PartnerPurchaseSection
           product={product}
           shippingAddress={mockRecentShippingAddress}
-          onAddAddress={() =>
-            navigate(`/rewards/address-complete/${product.id}`)
-          }
+          onAddAddress={() => navigate('/rewards/address-list')}
         />
       ) : (
         <GifticonPurchaseSection product={product} />
