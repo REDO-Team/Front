@@ -3,6 +3,7 @@ import HeartIcon from "../../assets/icons/heart";
 import CommentIcon from "../../assets/icons/comment";
 import { useNavigate, useParams } from "react-router-dom";
 import HomeIcon from "../../assets/icons/home.svg";
+import MoreIcon from "../../assets/icons/MoreIcon";
 
 const getCategoryStyle = (category: string) => {
   switch (category) {
@@ -48,26 +49,37 @@ const MOCK_COMMENTS = [
 
 export default function CommunityDetailPage() {
   const navigate = useNavigate();
+  const isMyPost = true; // 임시 변수
   const { id } = useParams();
 
   console.log("Post ID:", id);
+
   return (
     <div className="bg-bg-green1 min-h-screen pb-24 relative font-pretendard">
       <TopBar
         title="커뮤니티"
         leftIcon
-        rightIcon={HomeIcon}
-        onClick={() => navigate("/")}
+        rightIcon={isMyPost ? <MoreIcon /> : <HomeIcon />}
+        onClick={
+          isMyPost ? () => console.log("수정/삭제 모달") : () => navigate("/")
+        }
         bgColor="bg-green1"
       />
 
       <main className="px-5 pt-4 pb-6">
-        {/* 카테고리 라벨 */}
-        <span
-          className={`inline-flex items-center justify-center px-[9px] py-[4px] rounded-[20px] text-[11px] font-bold leading-none mb-3 ${getCategoryStyle(MOCK_POST.category)}`}
-        >
-          {MOCK_POST.category}
-        </span>
+        {/* 카테고리 라벨 & 내 글 라벨*/}
+        <div className="flex items-center gap-1.5 mb-3">
+          <span
+            className={`inline-flex items-center justify-center px-[9px] py-[4px] rounded-[20px] text-[11px] font-bold leading-none ${getCategoryStyle(MOCK_POST.category)}`}
+          >
+            {MOCK_POST.category}
+          </span>
+          {isMyPost && (
+            <span className="inline-flex items-center justify-center px-[9px] py-[4px] rounded-[20px] text-[11px] font-bold leading-none text-white bg-main-green1">
+              내 글
+            </span>
+          )}
+        </div>
 
         {/* 게시글 제목 */}
         <h1 className="text-[22px] font-bold text-gray-900 leading-snug break-keep mb-4">
