@@ -108,44 +108,35 @@ export default function CommunityMainPage() {
             key={post.id}
             className="bg-white rounded-[20px] p-5 shadow-sm flex flex-col gap-3"
           >
-            {/* 카테고리 라벨, 작성 시간 */}
-            <div className="flex justify-between items-center">
-              <span
-                className={`flex items-center justify-center px-[9px] py-[4px] rounded-[20px] font-pretendard text-[11px] font-bold leading-none ${getCategoryStyle(
-                  post.category,
-                )}`}
-              >
-                {post.category}
-              </span>
-              <span className="text-[14px] font-pretendard font-semibold leading-[22px] text-gray-400">
-                {post.time}
-              </span>
-            </div>
-
-            {/* 제목, 썸네일 (조건부 렌더링) */}
-            <div className="flex justify-between items-start gap-4">
-              <h3 className="text-[16px] font-pretendard font-bold text-gray-800 leading-snug break-keep">
-                {post.title}
-              </h3>
-
-              {post.hasThumbnail && (
-                <div className="w-[60px] h-[60px] shrink-0 rounded-lg bg-main-gradient"></div>
-              )}
-            </div>
-
-            {/* 프로필, 좋아요/댓글 */}
-            <div className="flex justify-between items-center mt-2">
-              {/* 유저 프로필 */}
-              <div className="flex items-center gap-2">
-                <div
-                  className={`w-6 h-6 rounded-full ${post.authorColor}`}
-                ></div>
-                <span className="text-[14px] font-pretendard font-bold leading-[22px] text-gray-600">
-                  {post.author}
+            <div className="flex flex-col gap-1.5">
+              {/* 카테고리 라벨, 작성 시간 */}
+              <div className="flex justify-between items-center">
+                <span
+                  className={`flex items-center justify-center px-[9px] py-[4px] rounded-[20px] font-pretendard text-[11px] font-bold leading-none ${getCategoryStyle(
+                    post.category,
+                  )}`}
+                >
+                  {post.category}
+                </span>
+                <span className="text-[14px] font-pretendard font-semibold leading-[22px] text-gray-400">
+                  {post.time}
                 </span>
               </div>
 
-              {/* 좋아요, 댓글 카운트 */}
+              {/* 제목, 썸네일 (조건부 렌더링) */}
+              <div className="flex justify-between items-start gap-4">
+                <h3 className="text-[16px] font-pretendard font-bold text-gray-800 leading-snug break-keep">
+                  {post.title}
+                </h3>
+
+                {post.hasThumbnail && (
+                  <div className="w-[60px] h-[60px] shrink-0 rounded-lg bg-main-gradient"></div>
+                )}
+              </div>
+            </div>
+            <hr className="border-t-[1px] border-gray-200" />
+            {/* 좋아요, 댓글 카운트 */}
+            <div className="flex justify-between items-center">
               <div className="flex flex-row items-center gap-3 whitespace-nowrap text-[14px] font-pretendard font-semibold leading-[22px] text-gray-500">
                 <span className="flex items-center gap-1">
                   <img
@@ -162,6 +153,16 @@ export default function CommunityMainPage() {
                     className="w-[11.25px] h-[10.62px]"
                   />
                   {post.comments}
+                </span>
+              </div>
+
+              {/* 유저 프로필 */}
+              <div className="flex items-center gap-2">
+                <div
+                  className={`w-6 h-6 rounded-full ${post.authorColor}`}
+                ></div>
+                <span className="text-[14px] font-pretendard font-bold leading-[22px] text-gray-600">
+                  {post.author}
                 </span>
               </div>
             </div>
