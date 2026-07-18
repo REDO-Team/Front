@@ -35,7 +35,8 @@ import RewardCheckoutPage from "./pages/reward-page/reward-purchase-page";
 import RewardAddressCompletePage from "./pages/reward-page/reward-address-complete-page";
 import RewardAddressListPage from "./pages/reward-page/reward-address-list-page";
 import RewardUseCompletePage from "./pages/reward-page/reward-use-complete-page";
-import MyPage from './pages/my-page';
+import MyPage from "./pages/my-page";
+import CommunityDetailPage from "./pages/community/detail-page";
 
 const routes: RouteObject[] = [
   {
@@ -55,9 +56,10 @@ const routes: RouteObject[] = [
         element: <GuidePage />,
       },
       {
-        path: 'my',
+        path: "my",
         element: <MyPage />,
       },
+
       {
         path: "certification",
         children: [
@@ -146,10 +148,6 @@ const routes: RouteObject[] = [
         element: <CamearaPage />,
       },
       {
-        path: "community",
-        element: <CommunityMainPage />,
-      },
-      {
         path: "reward",
         children: [
           {
@@ -163,6 +161,19 @@ const routes: RouteObject[] = [
           {
             path: "store",
             element: <RewardStorePage />,
+          },
+        ],
+      },
+      {
+        path: "community",
+        children: [
+          {
+            index: true,
+            element: <CommunityMainPage />,
+          },
+          {
+            path: ":postId",
+            element: <CommunityDetailPage />,
           },
         ],
       },

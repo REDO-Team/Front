@@ -4,6 +4,7 @@ import PencilIcon from "../../assets/icons/pencil.svg";
 import { useState } from "react";
 import HeartIcon from "../../assets/icons/heart.svg";
 import CommentIcon from "../../assets/icons/comment.svg";
+import { useNavigate } from "react-router-dom";
 
 const CATEGORIES = ["전체보기", "정보공유", "리워드후기", "환경실천"];
 
@@ -67,6 +68,11 @@ const getCategoryStyle = (category: string) => {
   }
 };
 export default function CommunityMainPage() {
+  const navigate = useNavigate();
+
+  const handlePostClick = (postId: number) => {
+    navigate(`/community/${postId}`);
+  };
   const [selectedCategory, setSelectedCategory] = useState("전체보기");
 
   const filteredPosts =
@@ -106,6 +112,7 @@ export default function CommunityMainPage() {
         {filteredPosts.map((post) => (
           <article
             key={post.id}
+            onClick={() => handlePostClick(post.id)}
             className="bg-white rounded-[20px] p-5 shadow-sm flex flex-col gap-3"
           >
             <div className="flex flex-col gap-1.5">

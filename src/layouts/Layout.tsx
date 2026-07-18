@@ -1,95 +1,87 @@
-import { matchPath, Outlet, useLocation } from 'react-router-dom';
-import BottomBar from '../components/common/BottomBar';
+import { matchPath, Outlet, useLocation } from "react-router-dom";
+import BottomBar from "../components/common/BottomBar";
 
 const Layout = () => {
   const location = useLocation();
 
-  const isHome = location.pathname === '/';
-  const isSplash = !!matchPath('/splash', location.pathname);
-  const isLogin = !!matchPath('/login', location.pathname);
+  const isHome = location.pathname === "/";
+  const isSplash = !!matchPath("/splash", location.pathname);
+  const isLogin = !!matchPath("/login", location.pathname);
 
   const isSignup = !!matchPath(
-    { path: '/signup/*', end: false },
+    { path: "/signup/*", end: false },
     location.pathname,
   );
 
-  const isGuide = !!matchPath('/guide', location.pathname);
+  const isGuide = !!matchPath("/guide", location.pathname);
 
-  const isCertification = !!matchPath(
-    '/certification',
-    location.pathname,
-  );
+  const isCertification = !!matchPath("/certification", location.pathname);
   const isCertificationGuide = !!matchPath(
-    '/certification/guide',
+    "/certification/guide",
     location.pathname,
   );
   const isCertificationShoot = !!matchPath(
-    '/certification/shooting',
+    "/certification/shooting",
     location.pathname,
   );
   const isCertificationSuccess = !!matchPath(
-    '/certification/success',
+    "/certification/success",
     location.pathname,
   );
   const isCertificationFail = !!matchPath(
-    '/certification/fail',
+    "/certification/fail",
     location.pathname,
   );
 
-  const isDisposalInfo = !!matchPath(
-    '/disposal-info',
-    location.pathname,
-  );
+  const isDisposalInfo = !!matchPath("/disposal-info", location.pathname);
   const isDisposalInfoDetail = !!matchPath(
-    '/disposal-info/detail',
+    "/disposal-info/detail",
     location.pathname,
   );
   const isDisposalInfoFail = !!matchPath(
-    '/disposal-info/fail',
+    "/disposal-info/fail",
     location.pathname,
   );
   const isImageSearch = !!matchPath(
-    '/disposal-info/image-search',
+    "/disposal-info/image-search",
     location.pathname,
   );
   const isProblemSearch = !!matchPath(
-    '/disposal-info/problem-search',
+    "/disposal-info/problem-search",
     location.pathname,
   );
 
-  const isMyContribution = !!matchPath(
-    '/my-contribution',
-    location.pathname,
-  );
-  const isAllContribution = !!matchPath(
-    '/all-contribution',
-    location.pathname,
-  );
+  const isMyContribution = !!matchPath("/my-contribution", location.pathname);
+  const isAllContribution = !!matchPath("/all-contribution", location.pathname);
 
-  const isCamera = !!matchPath('/camera', location.pathname);
+  const isCamera = !!matchPath("/camera", location.pathname);
   const isReward = !!matchPath(
-    { path: '/reward/*', end: false },
+    { path: "/reward/*", end: false },
     location.pathname,
   );
   const isRewardProductDetail = !!matchPath(
-    '/rewards/products/:productId',
+    "/rewards/products/:productId",
     location.pathname,
   );
   const isRewardCheckout = !!matchPath(
-    '/rewards/checkout/:productId',
+    "/rewards/checkout/:productId",
     location.pathname,
   );
   const isRewardAddressComplete = !!matchPath(
-    '/rewards/address-complete/:productId',
+    "/rewards/address-complete/:productId",
     location.pathname,
   );
   const isRewardUseComplete = !!matchPath(
-    '/rewards/use-complete/:productId',
+    "/rewards/use-complete/:productId",
+    location.pathname,
+  );
+  const isCommunityDetail = !!matchPath(
+    "/community/:postId",
     location.pathname,
   );
 
   const isRewardAddressList = !!matchPath(
-    '/rewards/address-list',
+    "/rewards/address-list",
     location.pathname,
   );
 
@@ -124,6 +116,7 @@ const Layout = () => {
     isRewardCheckout ||
     isRewardAddressComplete ||
     isRewardUseComplete ||
+    isCommunityDetail ||
     isRewardAddressList;
 
   const hasGreenBackground =
@@ -149,18 +142,16 @@ const Layout = () => {
   return (
     <div
       className={`min-h-screen overflow-auto ${
-        hasGreenBackground ? 'bg-bg-green1' : 'bg-white'
+        hasGreenBackground ? "bg-bg-green1" : "bg-white"
       }`}
     >
-      <div className='mx-auto min-h-screen w-full max-w-120'>
+      <div className="mx-auto min-h-screen w-full max-w-120">
         <div
           className={`mx-auto flex w-full max-w-120 flex-col ${
-            hideTopBar
-              ? 'min-h-dvh'
-              : 'h-[calc(100dvh-56px)] pt-14'
+            hideTopBar ? "min-h-dvh" : "h-[calc(100dvh-56px)] pt-14"
           }`}
         >
-          <main className='flex flex-1 flex-col'>
+          <main className="flex flex-1 flex-col">
             <Outlet />
           </main>
 
