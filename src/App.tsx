@@ -33,6 +33,7 @@ import RewardStorePage from "./pages/reward-page/reward-store-page";
 import RewardProductDetailPage from "./pages/reward-page/reward-product-detail-page";
 import RewardCheckoutPage from "./pages/reward-page/reward-purchase-page";
 import RewardAddressCompletePage from "./pages/reward-page/reward-address-complete-page";
+import RewardAddressListPage from "./pages/reward-page/reward-address-list-page";
 import RewardUseCompletePage from "./pages/reward-page/reward-use-complete-page";
 import MyPage from "./pages/my-page";
 import CommunityDetailPage from "./pages/community/detail-page";
@@ -183,6 +184,10 @@ const routes: RouteObject[] = [
       {
         path: "rewards/checkout/:productId",
         element: <RewardCheckoutPage />,
+      },
+      {
+        path: "rewards/address-list",
+        element: <RewardAddressListPage />,
       },
       {
         path: "rewards/address-complete/:productId",

@@ -1,6 +1,8 @@
 import TopBar from "../../components/common/TopBar";
 import HeartIcon from "../../assets/icons/heart";
 import CommentIcon from "../../assets/icons/comment";
+import { useNavigate, useParams } from "react-router-dom";
+import HomeIcon from "../../assets/icons/home.svg";
 
 const getCategoryStyle = (category: string) => {
   switch (category) {
@@ -45,9 +47,19 @@ const MOCK_COMMENTS = [
 ];
 
 export default function CommunityDetailPage() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  console.log("Post ID:", id);
   return (
     <div className="bg-bg-green1 min-h-screen pb-24 relative font-pretendard">
-      <TopBar title="커뮤니티" leftIcon bgColor="bg-green1" />
+      <TopBar
+        title="커뮤니티"
+        leftIcon
+        rightIcon={HomeIcon}
+        onClick={() => navigate("/")}
+        bgColor="bg-green1"
+      />
 
       <main className="px-5 pt-4 pb-6">
         {/* 카테고리 라벨 */}

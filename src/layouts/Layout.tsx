@@ -80,6 +80,11 @@ const Layout = () => {
     location.pathname,
   );
 
+  const isRewardAddressList = !!matchPath(
+    "/rewards/address-list",
+    location.pathname,
+  );
+
   const hideTopBar =
     isHome ||
     isSplash ||
@@ -111,7 +116,8 @@ const Layout = () => {
     isRewardCheckout ||
     isRewardAddressComplete ||
     isRewardUseComplete ||
-    isCommunityDetail;
+    isCommunityDetail ||
+    isRewardAddressList;
 
   const hasGreenBackground =
     isGuide ||
@@ -130,7 +136,8 @@ const Layout = () => {
     isRewardProductDetail ||
     isRewardCheckout ||
     isRewardAddressComplete ||
-    isRewardUseComplete;
+    isRewardUseComplete ||
+    isRewardAddressList;
 
   return (
     <div
