@@ -36,6 +36,7 @@ import RewardAddressCompletePage from "./pages/reward-page/reward-address-comple
 import RewardAddressListPage from "./pages/reward-page/reward-address-list-page";
 import RewardUseCompletePage from "./pages/reward-page/reward-use-complete-page";
 import MyPage from "./pages/my-page";
+import ProfileEditPage from './pages/my-page/profile-edit-page';
 import CommunityDetailPage from "./pages/community/detail-page";
 
 const routes: RouteObject[] = [
@@ -56,10 +57,18 @@ const routes: RouteObject[] = [
         element: <GuidePage />,
       },
       {
-        path: "my",
-        element: <MyPage />,
+        path: 'my',
+        children: [
+          {
+            index: true,
+            element: <MyPage />,
+          },
+          {
+            path: 'profile',
+            element: <ProfileEditPage />,
+          },
+        ],
       },
-
       {
         path: "certification",
         children: [
