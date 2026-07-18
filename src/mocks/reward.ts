@@ -3,6 +3,7 @@ import type {
     RewardProduct,
     RewardShippingAddress,
     RewardSummary,
+    ShippingAddressListResponse,
 } from '../types/reward';
 
 export const mockRewardSummary: RewardSummary = {
@@ -162,3 +163,34 @@ export const mockRewardProducts: RewardProduct[] = [
         validityPeriod: '발급일로부터 120일',
     },
 ];
+
+
+export const MOCK_EMPTY_SHIPPING_ADDRESS_RESPONSE: ShippingAddressListResponse =
+  {
+    isSuccess: true,
+    code: 'SHIPPING_ADDRESS_200_002',
+    message: '배송지 목록 조회에 성공했습니다.',
+    result: {
+      shippingAddresses: [],
+    },
+  };
+
+export const MOCK_SHIPPING_ADDRESS_RESPONSE: ShippingAddressListResponse = {
+  isSuccess: true,
+  code: 'SHIPPING_ADDRESS_200_002',
+  message: '배송지 목록 조회에 성공했습니다.',
+  result: {
+    shippingAddresses: [
+      {
+        shippingAddressId: 3,
+        addressType: 'HOME',
+        receiverName: '허건우',
+        phone: '010-5685-9058',
+        postalCode: '14662',
+        address1: '경기도 부천시 원미구 지봉로 43',
+        address2: '가톨릭대학교 성심교정',
+        isDefault: false,
+      },
+    ],
+  },
+};
