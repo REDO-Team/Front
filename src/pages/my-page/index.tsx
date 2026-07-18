@@ -121,7 +121,7 @@ const MyPage = () => {
 
           <button
             type='button'
-            onClick={() => navigate('/my-page/profile')}
+            onClick={() => navigate('/my/profile')}
             className='ml-[14px] flex min-w-0 flex-1 items-center text-left'
           >
             <div className='min-w-0 flex-1'>

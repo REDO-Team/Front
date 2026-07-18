@@ -85,12 +85,23 @@ const Layout = () => {
     location.pathname,
   );
 
+  const isMy = !!matchPath(
+  { path: '/my/*', end: false },
+  location.pathname,
+  );
+
+  const isMyProfileEdit = !!matchPath(
+  '/my/profile',
+  location.pathname,
+  );
+
   const hideTopBar =
     isHome ||
     isSplash ||
     isLogin ||
     isSignup ||
     isCamera ||
+    isMy ||
     isRewardAddressComplete ||
     isRewardUseComplete;
 
@@ -117,6 +128,7 @@ const Layout = () => {
     isRewardAddressComplete ||
     isRewardUseComplete ||
     isCommunityDetail ||
+    isMyProfileEdit ||
     isRewardAddressList;
 
   const hasGreenBackground =
@@ -137,6 +149,7 @@ const Layout = () => {
     isRewardCheckout ||
     isRewardAddressComplete ||
     isRewardUseComplete ||
+    isMyProfileEdit ||
     isRewardAddressList;
 
   return (
