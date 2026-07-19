@@ -38,6 +38,7 @@ import RewardAddressSearchPage from "./pages/reward-page/reward-address-search-p
 import RewardUseCompletePage from "./pages/reward-page/reward-use-complete-page";
 import MyPage from "./pages/my-page";
 import ProfileEditPage from './pages/my-page/profile-edit-page';
+import MyPostsPage from './pages/my-page/my-posts-page';
 import CommunityDetailPage from "./pages/community/detail-page";
 
 const routes: RouteObject[] = [
@@ -68,6 +69,10 @@ const routes: RouteObject[] = [
             path: 'profile',
             element: <ProfileEditPage />,
           },
+          {
+            path: 'posts',
+            element: <MyPostsPage />,
+          }
         ],
       },
       {
