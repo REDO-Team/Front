@@ -59,20 +59,12 @@ const Layout = () => {
     { path: "/reward/*", end: false },
     location.pathname,
   );
-  const isRewardProductDetail = !!matchPath(
-    "/rewards/products/:productId",
-    location.pathname,
-  );
-  const isRewardCheckout = !!matchPath(
-    "/rewards/checkout/:productId",
-    location.pathname,
-  );
   const isRewardAddressComplete = !!matchPath(
-    "/rewards/address-complete/:productId",
+    "/reward/address-complete/:productId",
     location.pathname,
   );
   const isRewardUseComplete = !!matchPath(
-    "/rewards/use-complete/:productId",
+    "/reward/use-complete/:productId",
     location.pathname,
   );
   const isCommunityDetail = !!matchPath(
@@ -80,9 +72,14 @@ const Layout = () => {
     location.pathname,
   );
 
-  const isRewardAddressList = !!matchPath(
-    "/rewards/address-list",
-    location.pathname,
+  const isMy = !!matchPath(
+  { path: '/my/*', end: false },
+  location.pathname,
+  );
+
+  const isMyProfileEdit = !!matchPath(
+  '/my/profile',
+  location.pathname,
   );
 
   const hideTopBar =
@@ -91,6 +88,7 @@ const Layout = () => {
     isLogin ||
     isSignup ||
     isCamera ||
+    isMy ||
     isRewardAddressComplete ||
     isRewardUseComplete;
 
@@ -112,12 +110,8 @@ const Layout = () => {
     isCamera ||
     isDisposalInfo ||
     isReward ||
-    isRewardProductDetail ||
-    isRewardCheckout ||
-    isRewardAddressComplete ||
-    isRewardUseComplete ||
     isCommunityDetail ||
-    isRewardAddressList;
+    isMyProfileEdit;
 
   const hasGreenBackground =
     isGuide ||
@@ -133,11 +127,7 @@ const Layout = () => {
     isCamera ||
     isAllContribution ||
     isReward ||
-    isRewardProductDetail ||
-    isRewardCheckout ||
-    isRewardAddressComplete ||
-    isRewardUseComplete ||
-    isRewardAddressList;
+    isMyProfileEdit;
 
   return (
     <div
