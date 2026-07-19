@@ -39,6 +39,7 @@ import RewardUseCompletePage from "./pages/reward-page/reward-use-complete-page"
 import MyPage from "./pages/my-page";
 import ProfileEditPage from './pages/my-page/profile-edit-page';
 import MyPostsPage from './pages/my-page/my-posts-page';
+import MyCommentsPage from './pages/my-page/my-comments-page';
 import CommunityDetailPage from "./pages/community/detail-page";
 
 const routes: RouteObject[] = [
@@ -72,6 +73,10 @@ const routes: RouteObject[] = [
           {
             path: 'posts',
             element: <MyPostsPage />,
+          },
+          {
+            path: 'comments',
+            element: <MyCommentsPage />,
           }
         ],
       },

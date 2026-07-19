@@ -1,4 +1,8 @@
-import type { MyPost } from '../types/my-post';
+export interface MyPost {
+  id: number;
+  title: string;
+  createdAt: string;
+}
 
 export const MOCK_MY_POSTS: MyPost[] = [
   {
