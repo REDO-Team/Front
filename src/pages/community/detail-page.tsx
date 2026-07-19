@@ -3,6 +3,10 @@ import HeartIcon from "../../assets/icons/heart";
 import CommentIcon from "../../assets/icons/comment";
 import { useNavigate, useParams } from "react-router-dom";
 import HomeIcon from "../../assets/icons/home.svg";
+import MoreIcon from "../../assets/icons/MoreIcon";
+import PostActionModal from "../../components/CommunityPage/PostActionModal.tsx";
+import { useState } from "react";
+import Modal from "../../components/common/Modal.tsx";
 
 const getCategoryStyle = (category: string) => {
   switch (category) {
@@ -47,27 +51,42 @@ const MOCK_COMMENTS = [
 ];
 
 export default function CommunityDetailPage() {
+  const [isActionModalOpen, setIsActionModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   const navigate = useNavigate();
+  const isMyPost = true; // 임시 변수
   const { id } = useParams();
 
   console.log("Post ID:", id);
+
   return (
     <div className="bg-bg-green1 min-h-screen pb-24 relative font-pretendard">
       <TopBar
         title="커뮤니티"
         leftIcon
-        rightIcon={HomeIcon}
-        onClick={() => navigate("/")}
+        rightIcon={isMyPost ? <MoreIcon /> : HomeIcon}
+        onClick={
+          isMyPost ? () => setIsActionModalOpen(true) : () => navigate("/")
+        }
         bgColor="bg-green1"
       />
 
       <main className="px-5 pt-4 pb-6">
-        {/* 카테고리 라벨 */}
-        <span
-          className={`inline-flex items-center justify-center px-[9px] py-[4px] rounded-[20px] text-[11px] font-bold leading-none mb-3 ${getCategoryStyle(MOCK_POST.category)}`}
-        >
-          {MOCK_POST.category}
-        </span>
+        {/* 카테고리 라벨 & 내 글 라벨*/}
+        <div className="flex items-center gap-1.5 mb-3">
+          <span
+            className={`inline-flex items-center justify-center px-[9px] py-[4px] rounded-[20px] text-[11px] font-bold leading-none ${getCategoryStyle(MOCK_POST.category)}`}
+          >
+            {MOCK_POST.category}
+          </span>
+          {isMyPost && (
+            <span className="inline-flex items-center justify-center px-[9px] py-[4px] rounded-[20px] text-[11px] font-bold leading-none text-white bg-main-green1">
+              내 글
+            </span>
+          )}
+        </div>
 
         {/* 게시글 제목 */}
         <h1 className="text-[22px] font-bold text-gray-900 leading-snug break-keep mb-4">
@@ -148,6 +167,47 @@ export default function CommunityDetailPage() {
           </button>
         </div>
       </footer>
+
+      {/* 수정/삭제 모달 */}
+      {isActionModalOpen && (
+        <PostActionModal
+          onClose={() => setIsActionModalOpen(false)}
+          onEdit={() => {
+            setIsActionModalOpen(false);
+            setIsEditModalOpen(true);
+          }}
+          onDelete={() => {
+            setIsActionModalOpen(false);
+            setIsDeleteModalOpen(true);
+          }}
+        />
+      )}
+
+      {/* 수정 모달 */}
+      <Modal
+        isOpen={isEditModalOpen}
+        title="작성하신 게시글을
+        수정하시겠습니까?"
+        buttonText="수정하기"
+        onClose={() => setIsEditModalOpen(false)}
+        onConfirm={() => {
+          setIsEditModalOpen(false);
+          // navigate();
+        }}
+      />
+
+      {/* 삭제 모달 */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        title="작성하신 게시글을
+        삭제하시겠습니까?"
+        buttonText="삭제하기"
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => {
+          setIsDeleteModalOpen(false);
+          // navigate();
+        }}
+      />
     </div>
   );
 }
