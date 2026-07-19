@@ -59,29 +59,16 @@ const Layout = () => {
     { path: "/reward/*", end: false },
     location.pathname,
   );
-  const isRewardProductDetail = !!matchPath(
-    "/rewards/products/:productId",
-    location.pathname,
-  );
-  const isRewardCheckout = !!matchPath(
-    "/rewards/checkout/:productId",
-    location.pathname,
-  );
   const isRewardAddressComplete = !!matchPath(
-    "/rewards/address-complete/:productId",
+    "/reward/address-complete/:productId",
     location.pathname,
   );
   const isRewardUseComplete = !!matchPath(
-    "/rewards/use-complete/:productId",
+    "/reward/use-complete/:productId",
     location.pathname,
   );
   const isCommunityDetail = !!matchPath(
     "/community/:postId",
-    location.pathname,
-  );
-
-  const isRewardAddressList = !!matchPath(
-    "/rewards/address-list",
     location.pathname,
   );
 
@@ -123,13 +110,8 @@ const Layout = () => {
     isCamera ||
     isDisposalInfo ||
     isReward ||
-    isRewardProductDetail ||
-    isRewardCheckout ||
-    isRewardAddressComplete ||
-    isRewardUseComplete ||
     isCommunityDetail ||
-    isMyProfileEdit ||
-    isRewardAddressList;
+    isMyProfileEdit;
 
   const hasGreenBackground =
     isGuide ||
@@ -145,12 +127,7 @@ const Layout = () => {
     isCamera ||
     isAllContribution ||
     isReward ||
-    isRewardProductDetail ||
-    isRewardCheckout ||
-    isRewardAddressComplete ||
-    isRewardUseComplete ||
-    isMyProfileEdit ||
-    isRewardAddressList;
+    isMyProfileEdit;
 
   return (
     <div

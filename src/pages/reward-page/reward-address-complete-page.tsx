@@ -35,7 +35,7 @@ export default function RewardAddressCompletePage() {
 
       <button
         type='button'
-        onClick={() => navigate(`/rewards/checkout/${product.id}`, { replace: true })}
+        onClick={() => navigate(`/reward/checkout/${product.id}`, { replace: true })}
         className='h-[50px] w-full shrink-0 rounded-full bg-main-green1 text-base font-bold text-white'
       >
         확인

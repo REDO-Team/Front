@@ -34,6 +34,7 @@ import RewardProductDetailPage from "./pages/reward-page/reward-product-detail-p
 import RewardCheckoutPage from "./pages/reward-page/reward-purchase-page";
 import RewardAddressCompletePage from "./pages/reward-page/reward-address-complete-page";
 import RewardAddressListPage from "./pages/reward-page/reward-address-list-page";
+import RewardAddressSearchPage from "./pages/reward-page/reward-address-search-page";
 import RewardUseCompletePage from "./pages/reward-page/reward-use-complete-page";
 import MyPage from "./pages/my-page";
 import ProfileEditPage from './pages/my-page/profile-edit-page';
@@ -171,6 +172,30 @@ const routes: RouteObject[] = [
             path: "store",
             element: <RewardStorePage />,
           },
+          {
+            path: "products/:productId",
+            element: <RewardProductDetailPage />,
+          },
+          {
+            path: "checkout/:productId",
+            element: <RewardCheckoutPage />,
+          },
+          {
+            path: "address-list",
+            element: <RewardAddressListPage />,
+          },
+          {
+            path: "address-search",
+            element: <RewardAddressSearchPage />,
+          },
+          {
+            path: "address-complete/:productId",
+            element: <RewardAddressCompletePage />,
+          },
+          {
+            path: "use-complete/:productId",
+            element: <RewardUseCompletePage />,
+          },
         ],
       },
       {
@@ -185,26 +210,6 @@ const routes: RouteObject[] = [
             element: <CommunityDetailPage />,
           },
         ],
-      },
-      {
-        path: "rewards/products/:productId",
-        element: <RewardProductDetailPage />,
-      },
-      {
-        path: "rewards/checkout/:productId",
-        element: <RewardCheckoutPage />,
-      },
-      {
-        path: "rewards/address-list",
-        element: <RewardAddressListPage />,
-      },
-      {
-        path: "rewards/address-complete/:productId",
-        element: <RewardAddressCompletePage />,
-      },
-      {
-        path: "rewards/use-complete/:productId",
-        element: <RewardUseCompletePage />,
       },
     ],
   },

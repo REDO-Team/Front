@@ -58,3 +58,20 @@ export interface ShippingAddressListResult {
 
 export type ShippingAddressListResponse =
   ApiResponse<ShippingAddressListResult>;
+
+export interface AddressCandidates {
+  roadAddress: string;
+  jibunAddress: string;
+  postalCode: string;
+  buildingName: string | null;
+}
+
+export interface AddressSearchResult {
+  addressCandidates: AddressCandidates[];
+  page: number;
+  size: number;
+  totalCount: number;
+  hasNext: boolean;
+}
+
+export type AddressSearchResponse = ApiResponse<AddressSearchResult>;
