@@ -13,7 +13,7 @@ export default function RewardProductCard({
   return (
     <article className='min-h-[78px] rounded-[18px] bg-white p-2.5 shadow-[0_6px_16px_rgba(0,0,0,0.05)]'>
       <Link
-        to={`/rewards/products/${product.id}`}
+        to={`/reward/products/${product.id}`}
         aria-label={`${product.name} 상품 상세 보기`}
         className='flex min-h-[58px] items-center'
       >

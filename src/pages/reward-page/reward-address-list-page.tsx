@@ -54,6 +54,7 @@ export default function RewardAddressListPage() {
       
       <button
         type='button'
+        onClick={() => navigate('/reward/address-search')}
         className='mx-4 mt-4 flex h-16 w-[calc(100%-2rem)] items-center justify-center gap-3 rounded-[22px] border border-dashed border-main-green1 bg-bg-green2 font-pretendard text-base font-bold text-main-green1'
       >
         <span aria-hidden='true' className='text-[30px] font-light leading-none'>

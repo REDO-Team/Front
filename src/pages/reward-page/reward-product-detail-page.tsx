@@ -115,7 +115,7 @@ export default function RewardProductDetailPage() {
             <button
               type='button'
               aria-label={`${product.name} 포인트 사용`}
-              onClick={() => navigate(`/rewards/checkout/${product.id}`)}
+              onClick={() => navigate(`/reward/checkout/${product.id}`)}
               className='h-12 w-full rounded-full bg-main-green1 text-base font-bold text-white'
             >
               포인트 사용

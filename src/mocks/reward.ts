@@ -1,4 +1,5 @@
 import type {
+    AddressSearchResponse,
     RewardHistory,
     RewardProduct,
     RewardShippingAddress,
@@ -192,5 +193,50 @@ export const MOCK_SHIPPING_ADDRESS_RESPONSE: ShippingAddressListResponse = {
         isDefault: false,
       },
     ],
+  },
+};
+
+export const MOCK_ADDRESS_SEARCH_RESPONSE: AddressSearchResponse = {
+  isSuccess: true,
+  code: 'ADDRESS_SEARCH_200_001',
+  message: '주소 검색에 성공했습니다.',
+  result: {
+    addressCandidates: [
+      {
+        roadAddress: '경기도 부천시 원미구 지봉로 43',
+        jibunAddress:
+          '경기도 부천시 원미구 역곡동 산43-1 가톨릭대학교 성심교정',
+        postalCode: '14662',
+        buildingName: '가톨릭대학교 성심교정',
+      },
+      {
+        roadAddress: '서울특별시 종로구 지봉로 43',
+        jibunAddress: '서울특별시 종로구 창신동 243',
+        postalCode: '03104',
+        buildingName: null,
+      },
+      {
+        roadAddress: '경기도 부천시 원미구 지봉로 43-3',
+        jibunAddress: '경기도 부천시 원미구 역곡동 28-3',
+        postalCode: '14662',
+        buildingName: null,
+      },
+      {
+        roadAddress: '경기도 부천시 원미구 지봉로 43-7',
+        jibunAddress: '경기도 부천시 원미구 역곡동 28-10 우석 미소지움',
+        postalCode: '14662',
+        buildingName: '우석 미소지움',
+      },
+      {
+        roadAddress: '경기도 부천시 원미구 지봉로 43-11',
+        jibunAddress: '경기도 부천시 원미구 역곡동 28-11',
+        postalCode: '14662',
+        buildingName: null,
+      },
+    ],
+    page: 1,
+    size: 10,
+    totalCount: 5,
+    hasNext: false,
   },
 };
