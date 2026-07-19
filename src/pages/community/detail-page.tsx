@@ -6,6 +6,7 @@ import HomeIcon from "../../assets/icons/home.svg";
 import MoreIcon from "../../assets/icons/MoreIcon";
 import PostActionModal from "../../components/CommunityPage/PostActionModal.tsx";
 import { useState } from "react";
+import Modal from "../../components/common/Modal.tsx";
 
 const getCategoryStyle = (category: string) => {
   switch (category) {
@@ -50,7 +51,10 @@ const MOCK_COMMENTS = [
 ];
 
 export default function CommunityDetailPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isActionModalOpen, setIsActionModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   const navigate = useNavigate();
   const isMyPost = true; // 임시 변수
   const { id } = useParams();
@@ -63,7 +67,9 @@ export default function CommunityDetailPage() {
         title="커뮤니티"
         leftIcon
         rightIcon={isMyPost ? <MoreIcon /> : HomeIcon}
-        onClick={isMyPost ? () => setIsModalOpen(true) : () => navigate("/")}
+        onClick={
+          isMyPost ? () => setIsActionModalOpen(true) : () => navigate("/")
+        }
         bgColor="bg-green1"
       />
 
@@ -163,13 +169,45 @@ export default function CommunityDetailPage() {
       </footer>
 
       {/* 수정/삭제 모달 */}
-      {isModalOpen && (
+      {isActionModalOpen && (
         <PostActionModal
-          onClose={() => setIsModalOpen(false)}
-          onEdit={() => console.log("수정")}
-          onDelete={() => console.log("삭제")}
+          onClose={() => setIsActionModalOpen(false)}
+          onEdit={() => {
+            setIsActionModalOpen(false);
+            setIsEditModalOpen(true);
+          }}
+          onDelete={() => {
+            setIsActionModalOpen(false);
+            setIsDeleteModalOpen(true);
+          }}
         />
       )}
+
+      {/* 수정 모달 */}
+      <Modal
+        isOpen={isEditModalOpen}
+        title="작성하신 게시글을
+        수정하시겠습니까?"
+        buttonText="수정하기"
+        onClose={() => setIsEditModalOpen(false)}
+        onConfirm={() => {
+          setIsEditModalOpen(false);
+          // navigate();
+        }}
+      />
+
+      {/* 삭제 모달 */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        title="작성하신 게시글을
+        삭제하시겠습니까?"
+        buttonText="삭제하기"
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => {
+          setIsDeleteModalOpen(false);
+          // navigate();
+        }}
+      />
     </div>
   );
 }
