@@ -104,6 +104,11 @@ const Layout = () => {
   location.pathname,
   );
 
+  const isMyhistory = !!matchPath(
+  "/my/history",
+  location.pathname,
+  );
+
   const hideTopBar =
     isHome ||
     isSplash ||
@@ -137,6 +142,7 @@ const Layout = () => {
     isMycomments ||
     isMyProfileEdit ||
     isMyfavorites ||
+    isMyhistory ||
     isCommunityWrite ||
     isCommunityModify;
 
