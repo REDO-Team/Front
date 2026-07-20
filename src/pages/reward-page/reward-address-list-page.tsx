@@ -75,6 +75,11 @@ export default function RewardAddressListPage() {
               onSelect={() =>
                 setSelectedAddressId(shippingAddress.shippingAddressId)
               }
+              onEdit={() =>
+                navigate(
+                  `/reward/address-detail/${shippingAddress.shippingAddressId}/edit`,
+                )
+              }
               onDelete={() => handleDelete(shippingAddress.shippingAddressId)}
             />
           ))}
