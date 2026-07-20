@@ -7,6 +7,7 @@ import MoreIcon from "../../assets/icons/MoreIcon";
 import PostActionModal from "../../components/CommunityPage/PostActionModal.tsx";
 import { useState } from "react";
 import Modal from "../../components/common/Modal.tsx";
+import CommentItem from "./CommentItem.tsx";
 
 const getCategoryStyle = (category: string) => {
   switch (category) {
@@ -48,18 +49,35 @@ const MOCK_COMMENTS = [
     time: "26.06.27 15:00",
     content: "저도 해봤는데 진짜 편하네요 ㅎㅎ 공유 감사해요!",
   },
+  {
+    id: 3,
+    author: "리도01",
+    authorColor: "bg-main-green1",
+    time: "26.06.27 16:00",
+    content: "댓글 남겨주셔서 감사해요!\n더 좋은 정보로 찾아올게요:)",
+  },
 ];
 
 export default function CommunityDetailPage() {
+  const [comments, setComments] = useState(MOCK_COMMENTS);
   const [isActionModalOpen, setIsActionModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const isMyPost = true; // 임시 변수
+  const currentUser = "리도01"; // 현재 로그인한 사용자 (임시)
   const { id } = useParams();
 
   console.log("Post ID:", id);
+
+  const handleUpdateComment = (commentId: number, newContent: string) => {
+    setComments(comments.map(comment => comment.id === commentId ? { ...comment, content: newContent } : comment));
+  };
+
+  const handleDeleteComment = (commentId: number) => {
+    setComments(comments.filter(comment => comment.id !== commentId));
+  };
 
   return (
     <div className="bg-bg-green1 min-h-screen pb-24 relative font-pretendard">
@@ -129,23 +147,17 @@ export default function CommunityDetailPage() {
         {/* 댓글 영역 */}
         <section className="bg-white rounded-[20px] p-5 shadow-[0_4px_10px_rgba(0,0,0,0.03)] flex flex-col gap-4">
           {" "}
-          {MOCK_COMMENTS.map((comment, index) => (
+          {comments.map((comment, index) => (
             <div key={comment.id} className="flex flex-col">
-              <div className="flex items-center gap-2 mb-1.5">
-                <div
-                  className={`w-[32px] h-[32px] rounded-full ${comment.authorColor}`}
-                ></div>
-                <span className="text-[13px] font-bold text-gray-800">
-                  {comment.author}
-                </span>
-                <span className="text-[11px] font-semibold text-gray-400">
-                  {comment.time}
-                </span>
-              </div>
-              <p className="text-[15px] font-medium text-gray-800 pl-[40px] leading-snug">
-                {comment.content}
-              </p>
-              {index !== MOCK_COMMENTS.length - 1 && (
+
+             <CommentItem
+                comment={comment}
+                isMine={comment.author === currentUser} // 내 댓글 여부 전달
+                onUpdate={handleUpdateComment}
+                onDelete={handleDeleteComment}
+              />
+
+              {index !== comments.length - 1 && (
                 <hr className="border-t-[1px] border-gray-200 mt-4" />
               )}
             </div>
