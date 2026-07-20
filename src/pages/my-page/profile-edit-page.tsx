@@ -138,7 +138,7 @@ const ProfileEditPage = () => {
   };
 
   return (
-    <div className='flex min-h-dvh w-full flex-col overflow-hidden bg-bg-green1 font-pretendard text-text'>
+    <div className='flex min-h-dvh w-full flex-col overflow-hidden bg-[#F9FBFB] font-pretendard text-text'>
       {/* 자체 헤더 */}
       <header className='relative flex h-[72px] shrink-0 items-center justify-center px-5'>
         <button
@@ -160,7 +160,7 @@ const ProfileEditPage = () => {
           onClick={() => navigate('/')}
           className='absolute right-5 flex h-8 w-8 items-center justify-center'
         >
-          <Home className='h-[22px] w-[22px]' />
+          <Home className='h-[24px] w-[24px]' />
         </button>
       </header>
 
@@ -256,7 +256,7 @@ const ProfileEditPage = () => {
       </main>
 
       {/* 완료 버튼 */}
-      <div className='shrink-0 bg-bg-green1 px-5 pb-[32px] pt-[16px]'>
+      <div className='shrink-0 bg-[#F9FBFB] px-5 pb-[32px] pt-[16px]'>
         <button
           type='button'
           disabled={!isValid}

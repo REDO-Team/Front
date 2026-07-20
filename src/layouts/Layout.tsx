@@ -99,6 +99,11 @@ const Layout = () => {
   location.pathname,
   );
 
+  const isMyfavorites = !!matchPath(
+  { path: '/my/favorites', end: false },
+  location.pathname,
+  );
+
   const hideTopBar =
     isHome ||
     isSplash ||
@@ -131,6 +136,7 @@ const Layout = () => {
     isMyPosts ||
     isMycomments ||
     isMyProfileEdit ||
+    isMyfavorites ||
     isCommunityWrite ||
     isCommunityModify;
 
@@ -147,10 +153,7 @@ const Layout = () => {
     isDisposalInfoFail ||
     isCamera ||
     isAllContribution ||
-    isReward ||
-    isMyPosts ||
-    isMycomments ||
-    isMyProfileEdit;
+    isReward;
 
   return (
     <div

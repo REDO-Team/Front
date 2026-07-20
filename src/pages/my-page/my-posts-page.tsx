@@ -44,13 +44,13 @@ const MyPostsPage = () => {
   };
 
   return (
-    <div className='min-h-screen bg-bg-green1'>
+    <div className='min-h-screen bg-[#F9FBFB]'>
       <TopBar
         title='작성한 게시글'
         leftIcon
         rightIcon={HomeIcon}
         onClick={() => navigate('/')}
-        bgColor='bg-green1'
+        bgColor='#F9FBFB'
       />
 
       <main className='px-[20px] pt-[72px]'>
