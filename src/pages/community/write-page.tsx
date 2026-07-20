@@ -37,7 +37,7 @@ export default function CommunityWritePage() {
         // 서버(API)로 데이터 전송하는 로직이 들어갈 자리
         console.log("전송할 데이터:", { selectedCategory, title, content, imagePreviews });
 
-        navigate("/community");
+        navigate("/community/complete");
     };
     const removeImage = (index: number) => {
         setImagePreviews((prev) => prev.filter((_, i) => i !== index));
@@ -139,7 +139,7 @@ export default function CommunityWritePage() {
                 </a>
             </main>
 
-            <footer className="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-120 px-5 pb-8 pt-3 bg-white">
+            <footer className="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-120 px-5 pb-8 pt-3">
                 <button
                     onClick={handleSubmit}
                     disabled={!isFormValid}
