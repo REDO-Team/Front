@@ -6,7 +6,7 @@ export default function CommunityCompletePage() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-bg-green1 font-pretendard">            <div className="w-[100px] h-[100px] bg-main-green1 rounded-full flex items-center justify-center mb-8 drop-shadow-[0_0_20px_rgba(24,178,104,0.5)]">
-            <CheckIcon className="w-[30px] h-[22px]" />
+            <CheckIcon className="w-[50px] h-[50px]" />
         </div>
 
             <div className="text-center mb-[120px]">
