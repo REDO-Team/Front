@@ -43,6 +43,7 @@ import MyPostsPage from './pages/my-page/my-posts-page';
 import MyCommentsPage from './pages/my-page/my-comments-page';
 import CommunityDetailPage from "./pages/community/detail-page";
 import CommunityWritePage from "./pages/community/write-page";
+import CommunityModifyPage from "./pages/community/modity-page";
 
 const routes: RouteObject[] = [
   {
@@ -228,6 +229,10 @@ const routes: RouteObject[] = [
           {
             path: "write",
             element: <CommunityWritePage />,
+          },
+          {
+            path: "modify/:postId",
+            element: <CommunityModifyPage />,
           },
           {
             path: ":postId",
