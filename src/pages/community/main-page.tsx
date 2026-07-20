@@ -178,7 +178,9 @@ export default function CommunityMainPage() {
       </section>
 
       {/* 글쓰기 플로팅 버튼 */}
-      <button className="fixed bottom-28 right-6 z-50 flex h-[60px] w-[60px] items-center justify-center rounded-[100px] bg-main-green1 shadow-[0_4px_23px_rgba(6,198,95,0.4)]">
+      <button 
+      onClick={() => navigate("/community/write")}
+      className="fixed bottom-28 right-6 z-50 flex h-[60px] w-[60px] items-center justify-center rounded-[100px] bg-main-green1 shadow-[0_4px_23px_rgba(6,198,95,0.4)]">
         <img
           src={PencilIcon}
           alt="글쓰기"
