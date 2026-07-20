@@ -65,6 +65,7 @@ export default function CommunityDetailPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const navigate = useNavigate();
+  const {postId} = useParams();
   const isMyPost = true; // 임시 변수
   const currentUser = "리도01"; // 현재 로그인한 사용자 (임시)
   const { id } = useParams();
@@ -78,6 +79,10 @@ export default function CommunityDetailPage() {
   const handleDeleteComment = (commentId: number) => {
     setComments(comments.filter(comment => comment.id !== commentId));
   };
+
+  const handleModifyPost = () => {
+    navigate(`/community/modify/${postId}`);
+  }
 
   return (
     <div className="bg-bg-green1 min-h-screen pb-24 relative font-pretendard">
@@ -204,7 +209,7 @@ export default function CommunityDetailPage() {
         onClose={() => setIsEditModalOpen(false)}
         onConfirm={() => {
           setIsEditModalOpen(false);
-          // navigate();
+          handleModifyPost();
         }}
       />
 

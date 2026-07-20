@@ -1,13 +1,15 @@
-import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import TopBar from "../../components/common/TopBar";
 import HomeIcon from "../../assets/icons/home.svg";
 import CameraIcon from "../../assets/icons/camera";
 
 const CATEGORIES = ["정보공유", "환경실천", "리워드후기"];
 
-export default function CommunityWritePage() {
+
+export default function CommunityModifyPage() {
     const navigate = useNavigate();
+    const { postId } = useParams();
 
     const [selectedCategory, setSelectedCategory] = useState("");
     const [title, setTitle] = useState("");
@@ -34,20 +36,34 @@ export default function CommunityWritePage() {
             return;
         }
 
-        // 서버(API)로 데이터 전송하는 로직이 들어갈 자리
-        console.log("전송할 데이터:", { selectedCategory, title, content, imagePreviews });
+        // 기존 글을 수정하는 API 호출
+        console.log("업데이트할 게시글 ID:", postId);
+        console.log("수정된 데이터:", { selectedCategory, title, content, imagePreviews });
 
-        navigate("/community");
+        alert("수정이 완료되었습니다!");
+        navigate(`/community`);
     };
+
     const removeImage = (index: number) => {
         setImagePreviews((prev) => prev.filter((_, i) => i !== index));
     };
     const isFormValid = selectedCategory !== "" && title.trim() !== "" && content.trim() !== "";
 
+    // 데이터 받아오기
+    useEffect(() => {
+        const loadPostData = async () => {
+
+            setSelectedCategory("정보공유"); // 예시 데이터
+            setTitle("이렇게 하면 쉬워요!");
+            setContent("안내 가이드 따라하다가 저만의 꿀팁을 발견했어요! ...");
+
+        };
+        loadPostData();
+    }, [postId]);
     return (
         <div className="bg-bg-green1 min-h-screen pb-24 relative font-pretendard">
             <TopBar
-                title="게시글 작성"
+                title="게시글 수정"
                 leftIcon
                 rightIcon={HomeIcon}
                 onClick={() => navigate("/")}
@@ -138,7 +154,6 @@ export default function CommunityWritePage() {
                     커뮤니티 이용수칙 &gt;
                 </a>
             </main>
-
             <footer className="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-120 px-5 pb-8 pt-3 bg-white">
                 <button
                     onClick={handleSubmit}
@@ -147,9 +162,11 @@ export default function CommunityWritePage() {
             ${isFormValid ? "bg-main-green1" : "bg-gray-300 cursor-not-allowed"}
           `}
                 >
-                    게시하기
+                    수정하기
                 </button>
             </footer>
+
+
         </div>
     );
 }
