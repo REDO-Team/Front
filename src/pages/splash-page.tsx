@@ -28,9 +28,7 @@ export default function SplashPage() {
       ${fadeOut ? 'opacity-0' : 'opacity-100'}`}
     >
       <img src={SplashLogo} alt='Redo Logo' />
-      <h1 className='font-pretendard font-bold text-2xl text-center text-white'>
-        분리수거를 쉽게, <br /> 지구를 가볍게 !
-      </h1>
+      <h1 className='font-pretendard font-bold text-2xl text-center text-white'>함께하는 분리수거</h1>
     </div>
   );
 }
