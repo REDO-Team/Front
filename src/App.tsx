@@ -41,6 +41,8 @@ import MyPage from "./pages/my-page";
 import ProfileEditPage from './pages/my-page/profile-edit-page';
 import MyPostsPage from './pages/my-page/my-posts-page';
 import MyCommentsPage from './pages/my-page/my-comments-page';
+import FavoriteDisposalPage from './pages/my-page/favorite-disposal-page';
+import FavoriteDisposalDetailPage from './pages/my-page/favorite-disposal-detail-page';
 import CommunityDetailPage from "./pages/community/detail-page";
 import CommunityWritePage from "./pages/community/write-page";
 import CommunityModifyPage from "./pages/community/modity-page";
@@ -77,6 +79,14 @@ const routes: RouteObject[] = [
           {
             path: 'posts',
             element: <MyPostsPage />,
+          },
+          {
+            path: 'favorites',
+            element: <FavoriteDisposalPage />,
+          },
+          {
+            path: 'favorites/:favoriteId',
+            element: <FavoriteDisposalDetailPage />,
           },
           {
             path: 'comments',
