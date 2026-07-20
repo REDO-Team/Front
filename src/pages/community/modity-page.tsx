@@ -40,8 +40,7 @@ export default function CommunityModifyPage() {
         console.log("업데이트할 게시글 ID:", postId);
         console.log("수정된 데이터:", { selectedCategory, title, content, imagePreviews });
 
-        alert("수정이 완료되었습니다!");
-        navigate(`/community`);
+        navigate("/community/complete");
     };
 
     const removeImage = (index: number) => {
@@ -154,7 +153,7 @@ export default function CommunityModifyPage() {
                     커뮤니티 이용수칙 &gt;
                 </a>
             </main>
-            <footer className="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-120 px-5 pb-8 pt-3 bg-white">
+            <footer className="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-120 px-5 pb-8 pt-3">
                 <button
                     onClick={handleSubmit}
                     disabled={!isFormValid}

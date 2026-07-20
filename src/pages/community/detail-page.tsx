@@ -65,7 +65,7 @@ export default function CommunityDetailPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const navigate = useNavigate();
-  const {postId} = useParams();
+  const { postId } = useParams();
   const isMyPost = true; // 임시 변수
   const currentUser = "리도01"; // 현재 로그인한 사용자 (임시)
   const { id } = useParams();
@@ -155,7 +155,7 @@ export default function CommunityDetailPage() {
           {comments.map((comment, index) => (
             <div key={comment.id} className="flex flex-col">
 
-             <CommentItem
+              <CommentItem
                 comment={comment}
                 isMine={comment.author === currentUser} // 내 댓글 여부 전달
                 onUpdate={handleUpdateComment}
