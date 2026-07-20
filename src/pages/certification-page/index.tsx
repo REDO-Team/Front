@@ -6,9 +6,24 @@ import RightArrow from '/src/assets/icons/right-arrow.svg?react';
 import { useNavigate } from 'react-router-dom';
 import TopBar from '../../components/common/TopBar';
 import Home from '/src/assets/icons/home.svg';
+import { useState } from 'react';
+import Modal from '../../components/common/Modal';
+
+const mock = {
+  remain: 0,
+};
 
 export default function CertificationPage() {
   const navigate = useNavigate();
+  const [isOpenExceed, SetIsOpenExceed] = useState(false);
+
+  const handleCertificate = () => {
+    if (!mock.remain) {
+      SetIsOpenExceed(true);
+    } else {
+      navigate('/certification/shooting');
+    }
+  };
 
   return (
     <div className='h-full'>
@@ -47,13 +62,14 @@ export default function CertificationPage() {
               <span className='font-pretendard font-semibold text-base text-text'>잔여 인증 횟수</span>
             </div>
             <span className='font-pretendard font-bold text-[22px] text-main-green1'>
-              1<span className='text-gray-600'>/3회</span>
+              {mock.remain}
+              <span className='text-gray-600'>/3회</span>
             </span>
           </div>
         </div>
 
         <div className='flex flex-col w-full gap-2.5 mt-auto mb-5'>
-          <button type='button' className='font-pretendard font-bold text-xl text-white rounded-4xl bg-main-green1 px-5 py-4 w-full flex items-center justify-center relative' onClick={() => navigate('/certification/shooting')}>
+          <button type='button' className='font-pretendard font-bold text-xl text-white rounded-4xl bg-main-green1 px-5 py-4 w-full flex items-center justify-center relative' onClick={handleCertificate}>
             <span>인증하기</span>
             <RightArrow className='absolute right-5' />
           </button>
@@ -63,6 +79,21 @@ export default function CertificationPage() {
           </button>
         </div>
       </div>
+
+      {isOpenExceed && (
+        <Modal
+          isOpen={isOpenExceed}
+          title={`인증 가능 횟수를 초과했어요. \n 하루 최대 3회까지만 인증할 수 있어요. \n 내일 다시 시도해주세요.`}
+          titleFontWeight='medium'
+          titleTextSize='15px'
+          buttonText='확인'
+          titleLineHeight='22px'
+          onClose={() => SetIsOpenExceed(false)}
+          onConfirm={() => {
+            SetIsOpenExceed(false);
+          }}
+        />
+      )}
     </div>
   );
 }
