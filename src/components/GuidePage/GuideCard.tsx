@@ -21,7 +21,7 @@ export default function GuideCard({ Icon, stepNum, text, onClick, isOpen }: Guid
         <div className={`flex justify-between items-center ${isOpen && 'pb-3.5 border-b border-gray-200'} select-none`}>
           <div className='flex gap-2.5'>
             <Icon className={`${isOpen ? 'text-main-green1' : 'text-gray-800'} w-6 h-6`} />
-            <div className={`font-pretendard font-bold text-lg whitespace-nowrap ${isOpen ? 'text-main-green1' : 'text-gray-800'}`}>
+            <div className={`font-pretendard font-semibold text-lg whitespace-nowrap ${isOpen ? 'text-main-green1' : 'text-gray-800'}`}>
               <span>STEP {stepNum}.</span>
               <span>&nbsp;{text}</span>
             </div>

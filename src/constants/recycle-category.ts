@@ -2,6 +2,7 @@ import Paper from '/src/assets/icons/paper.svg?react';
 import Plastic from '/src/assets/icons/plastic.svg?react';
 import Can from '/src/assets/icons/can.svg?react';
 import Glass from '/src/assets/icons/glass.svg?react';
+import Trash from '/src/assets/icons/etc-trash.svg?react';
 
 export const CATEGORY_LIST = [
   {
@@ -19,6 +20,10 @@ export const CATEGORY_LIST = [
   {
     icon: Glass,
     category: '유리',
+  },
+  {
+    icon: Trash,
+    category: '기타',
   },
 ];
 
@@ -38,5 +43,9 @@ export const CATEGORY_DETAILS = [
   {
     category: '유리',
     details: ['유리병', '유리 용기', '기타', '내열/특수 유리'],
+  },
+  {
+    category: '기타',
+    details: ['일반쓰레기', '비닐', '스티로폼'],
   },
 ];

@@ -3,7 +3,7 @@ import TopBar from '../../components/common/TopBar';
 import Home from '/src/assets/icons/home.svg';
 import ChatBox from '../../components/DisposalInfoPage/ChatBox';
 import ChatInput from '../../components/DisposalInfoPage/ChatInput';
-import { useEffect, useState, type KeyboardEvent } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 
 const INPUT_BAR_H = 106;
 
@@ -27,7 +27,17 @@ export default function ProblemSearchPage() {
       // user: '이거 어떻게 버리는지 모르겠어',
     },
   ]);
+  const [loading, setLoading] = useState(false);
   const [kb, setKb] = useState(0);
+
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+    });
+  }, [messages, loading]);
 
   useEffect(() => {
     const vv = window.visualViewport;
@@ -64,28 +74,38 @@ export default function ProblemSearchPage() {
     setnewMessage('');
 
     // 데이터 호출 예시
+    setLoading(true);
     setTimeout(() => {
       setMessages((prev) => [...prev, { isMine: false, message: ChatMessages[0].msg }]);
-    }, 1000);
+      setLoading(false);
+    }, 5000);
   };
 
+  useEffect(() => {
+    console.log('loading:', loading);
+  }, [loading]);
+
   return (
-    <div className='h-full overflow-x-hidden'>
+    <div className='h-full overflow-x-hidden flex'>
       <div className='mb-5'>
         <TopBar title='문제 상황 검색' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />
       </div>
 
-      <div
-        className='flex flex-col px-6.5 flex-1 overflow-y-auto'
-        style={{
-          paddingBottom: `calc(${INPUT_BAR_H}px + ${kb}px + 8px)`,
-        }}
-      >
+      <div className='flex flex-col px-6.5 flex-1 overflow-y-auto'>
         <div className='flex flex-col gap-6'>
           {messages.map((m, idx) => {
             return <ChatBox key={idx} isMine={m.isMine} message={m.message} />;
           })}
         </div>
+        {loading && <ChatBox isMine={false} message='' loading />}
+
+        <div
+          ref={bottomRef}
+          style={{
+            height: `calc(${INPUT_BAR_H}px + ${kb}px + 8px)`,
+            flexShrink: 0,
+          }}
+        ></div>
       </div>
 
       <div
