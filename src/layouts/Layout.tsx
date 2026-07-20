@@ -71,6 +71,13 @@ const Layout = () => {
     "/community/:postId",
     location.pathname,
   );
+  const isCommunityWrite = !!matchPath(
+    "/community/write",
+    location.pathname,);
+  const isCommunityModify = !!matchPath(
+    "/community/modify/:postId",
+    location.pathname,
+  );
 
   const isMy = !!matchPath(
   { path: '/my/*', end: false },
@@ -123,7 +130,9 @@ const Layout = () => {
     isCommunityDetail ||
     isMyPosts ||
     isMycomments ||
-    isMyProfileEdit;
+    isMyProfileEdit ||
+    isCommunityWrite ||
+    isCommunityModify;
 
   const hasGreenBackground =
     isGuide ||
