@@ -11,7 +11,7 @@ import { useState } from 'react';
 const mock = [
   {
     category: '플라스틱',
-    name: '일반쓰레기',
+    name: '투명 페트병',
     content: '분리배출이 가능한 품목이에요',
     guide: ['비닐 라벨을 뜯어 따로 분리해요', '내용물을 비우고 물로 헹궈요', '찌그러뜨려 부피를 줄여요', '투명 페트병 전용함에 배출해요'],
     info: '라벨 뚜껑은 비닐/플라스틱으로 따로 버려요',
@@ -41,7 +41,7 @@ export default function DisposalInfoDetailage() {
   return (
     <div className='h-full'>
       <div className='mb-6'>
-        <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />
+        <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' navigateBack='disposal-info' />
       </div>
       <div className='flex flex-col h-full px-5'>
         <RecycleCategoryCard padding={20} gap={12} radius={20} imgSize={80} categorySize={12} nameSize={24} category={mock[0].category} name={mock[0].name} content={mock[0].content} />

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import TopBar from '../../components/common/TopBar';
-import Close from '/src/assets/icons/close.svg';
+import Home from '/src/assets/icons/home.svg';
 import FailInfo from '../../components/common/FailInfo';
 import FailCheckList from '../../components/CertificationPage/FailCheckList';
 
@@ -20,7 +20,7 @@ export default function FailPage() {
   return (
     <div className='h-full'>
       <div className='mb-10'>
-        <TopBar title='인증하기' leftIcon rightIcon={Close} onClick={() => navigate('/')} />
+        <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} navigateBack='certification' />
       </div>
 
       <div className='flex flex-col h-full px-5'>
