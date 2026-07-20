@@ -1,10 +1,14 @@
 import Info from '/src/assets/icons/info.svg?react';
-import Check from '/src/assets/icons/check.svg?react';
 import FullCheck from '/src/assets/icons/full-check.svg';
 import Error from '/src/assets/icons/error.svg';
 import { useNavigate } from 'react-router-dom';
 import TopBar from '../../components/common/TopBar';
 import Home from '/src/assets/icons/home.svg';
+import WrongEx from '/src/assets/images/wrong-ex.png';
+import CorrectEx from '/src/assets/images/correct-ex.png';
+import GuideCard from '../../components/CertificationPage/GuideCard';
+
+const CERTIFICATION_GUIDE = ['하루 최대 3회까지 인증 및 리워드 적립 가능', '실시간 촬영만 인증 가능', '1회 인증 후 5분 뒤 재인증 가능', '동일 품목은 하루 1회만 인증 가능'];
 
 export default function CertificationGuidePage() {
   const navigate = useNavigate();
@@ -34,10 +38,9 @@ export default function CertificationGuidePage() {
               </div>
             </div>
 
-            <div className='flex gap-1.5 items-center rounded-[20px] px-3 py-2.5 bg-white/30'>
-              <Check className='text-white w-4 h-4' />
-              <p className='font-pretendard font-bold text-sm text-white break-keep'>하루 최대 3회까지 인증 및 리워드 적립 가능</p>
-            </div>
+            {CERTIFICATION_GUIDE.map((guide, idx) => {
+              return <GuideCard key={idx} content={guide} />;
+            })}
           </div>
         </div>
 
@@ -63,12 +66,12 @@ export default function CertificationGuidePage() {
           <span className='font-pretendard font-semibold text-base text-text'>촬영 예시 이미지</span>
           <div className='flex justify-center gap-2'>
             <div className='relative flex-1 flex flex-col items-center gap-2.5'>
-              <div className='min-h-22 rounded-[20px] bg-bg-green3 w-full'></div>
+              <img src={CorrectEx} alt='옳은 분리배출 예시' className='min-h-22 rounded-[20px] w-full' />
               <img src={FullCheck} alt='옳음' className='absolute top-4 left-4.5 w-4.5 h-4.5' />
               <span className='font-pretendard font-bold text-sm text-main-green1'>좋은 예시</span>
             </div>
             <div className='relative flex-1 flex flex-col items-center gap-2.5'>
-              <div className='min-h-22 rounded-[20px] bg-error-bg w-full'></div>
+              <img src={WrongEx} alt='잘못된 분리배출 예시' className='min-h-22 rounded-[20px] w-full' />
               <img src={Error} alt='틀림' className='absolute top-4 left-4.5' />
               <span className='font-pretendard font-bold text-sm text-error-text'>나쁜 예시</span>
             </div>

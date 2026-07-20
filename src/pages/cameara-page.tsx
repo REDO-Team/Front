@@ -5,6 +5,7 @@ import TopBar from '../components/common/TopBar';
 import Webcam from 'react-webcam';
 import { useRef, useState } from 'react';
 import PhotoAnalysisLoading from '../components/common/PhotoAnalysisLoading';
+// import { useCertificationStore } from '../store/certificationStore';
 
 export default function CamearaPage() {
   const navigate = useNavigate();
@@ -15,12 +16,14 @@ export default function CamearaPage() {
     loading,
     // setLoading
   ] = useState(false);
+  // const setCertified = useCertificationStore((state) => state.setCertified);
 
   const handleCapture = () => {
     const img = webcamRef.current?.getScreenshot();
     setImgSrc(img);
 
     console.log(imgSrc);
+    // setCertified();
   };
 
   return (
@@ -52,7 +55,11 @@ export default function CamearaPage() {
         </div>
       )}
 
-      <div className='h-[calc(100dvh-56px)] pt-14'>{loading && <PhotoAnalysisLoading showNoti={location?.state === 'certification'} />}</div>
+      {loading && (
+        <div className='h-[calc(100dvh-56px)] pt-14'>
+          <PhotoAnalysisLoading showNoti={location?.state === 'certification'} />
+        </div>
+      )}
     </>
   );
 }

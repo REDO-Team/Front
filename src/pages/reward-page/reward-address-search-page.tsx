@@ -1,13 +1,19 @@
 import { useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Home from '../../assets/icons/home.svg';
 import Search from '../../assets/icons/search.svg?react';
 import TopBar from '../../components/common/TopBar';
 import { MOCK_ADDRESS_SEARCH_RESPONSE } from '../../mocks/reward';
 import type { AddressCandidates } from '../../types/reward';
 
+interface AddressSearchLocationState {
+  returnTo?: string;
+}
+
 export default function RewardAddressSearchPage() {
   const navigate = useNavigate();
+  const { state } = useLocation();
+  const returnTo = (state as AddressSearchLocationState | null)?.returnTo;
   const [keyword, setKeyword] = useState('');
   const [addressCandidates, setAddressCandidates] = useState<
     AddressCandidates[]
@@ -86,6 +92,11 @@ export default function RewardAddressSearchPage() {
                     </h3>
                     <button
                       type='button'
+                      onClick={() =>
+                        navigate(returnTo ?? '/reward/address-detail', {
+                          state: { address },
+                        })
+                      }
                       className='flex h-12 w-[76px] shrink-0 items-center justify-center rounded-full bg-bg-green2 text-base font-bold text-main-green2'
                     >
                       선택

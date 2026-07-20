@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import TopBar from '../../components/common/TopBar';
-import Close from '/src/assets/icons/close.svg';
+import Home from '/src/assets/icons/home.svg';
 import FullCheck from '/src/assets/icons/full-check.svg';
 import Coins from '/src/assets/icons/coins.svg?react';
 
@@ -16,7 +16,7 @@ export default function SuccessPage() {
   return (
     <div className='h-full'>
       <div className='mb-10'>
-        <TopBar title='인증하기' leftIcon rightIcon={Close} onClick={() => navigate('/')} bgColor='bg-green1' />
+        <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' navigateBack='certification' />
       </div>
 
       <div className='flex flex-col h-full px-5'>

@@ -35,9 +35,12 @@ import RewardCheckoutPage from "./pages/reward-page/reward-purchase-page";
 import RewardAddressCompletePage from "./pages/reward-page/reward-address-complete-page";
 import RewardAddressListPage from "./pages/reward-page/reward-address-list-page";
 import RewardAddressSearchPage from "./pages/reward-page/reward-address-search-page";
+import RewardAddressDetailPage from "./pages/reward-page/reward-address-detail-page";
 import RewardUseCompletePage from "./pages/reward-page/reward-use-complete-page";
 import MyPage from "./pages/my-page";
 import ProfileEditPage from './pages/my-page/profile-edit-page';
+import MyPostsPage from './pages/my-page/my-posts-page';
+import MyCommentsPage from './pages/my-page/my-comments-page';
 import CommunityDetailPage from "./pages/community/detail-page";
 
 const routes: RouteObject[] = [
@@ -68,6 +71,14 @@ const routes: RouteObject[] = [
             path: 'profile',
             element: <ProfileEditPage />,
           },
+          {
+            path: 'posts',
+            element: <MyPostsPage />,
+          },
+          {
+            path: 'comments',
+            element: <MyCommentsPage />,
+          }
         ],
       },
       {
@@ -187,6 +198,14 @@ const routes: RouteObject[] = [
           {
             path: "address-search",
             element: <RewardAddressSearchPage />,
+          },
+          {
+            path: "address-detail",
+            element: <RewardAddressDetailPage />,
+          },
+          {
+            path: "address-detail/:shippingAddressId/edit",
+            element: <RewardAddressDetailPage />,
           },
           {
             path: "address-complete/:productId",

@@ -82,6 +82,16 @@ const Layout = () => {
   location.pathname,
   );
 
+  const isMyPosts = !!matchPath(
+  "/my/posts",
+  location.pathname,
+  );
+
+  const isMycomments = !!matchPath(
+  "/my/comments",
+  location.pathname,
+  );
+
   const hideTopBar =
     isHome ||
     isSplash ||
@@ -111,6 +121,8 @@ const Layout = () => {
     isDisposalInfo ||
     isReward ||
     isCommunityDetail ||
+    isMyPosts ||
+    isMycomments ||
     isMyProfileEdit;
 
   const hasGreenBackground =
@@ -127,6 +139,8 @@ const Layout = () => {
     isCamera ||
     isAllContribution ||
     isReward ||
+    isMyPosts ||
+    isMycomments ||
     isMyProfileEdit;
 
   return (
