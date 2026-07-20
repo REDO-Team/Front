@@ -13,7 +13,7 @@ export default function ShootingPage() {
 
   return (
     <div className='h-full'>
-      <div className='mb-5'>
+      <div className='pb-5'>
         <TopBar title='촬영하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />
       </div>
 
