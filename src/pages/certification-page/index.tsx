@@ -8,19 +8,26 @@ import TopBar from '../../components/common/TopBar';
 import Home from '/src/assets/icons/home.svg';
 import { useState } from 'react';
 import Modal from '../../components/common/Modal';
+// import { useCertificationStore } from '../../store/certificationStore';
 
 const mock = {
-  remain: 0,
+  remain: 1,
 };
 
 export default function CertificationPage() {
   const navigate = useNavigate();
-  const [isOpenExceed, SetIsOpenExceed] = useState(false);
+  // const canCertify = useCertificationStore((state) => state.canCertify);
+  const [isOpenExceed, SetIsOpenExceed] = useState(false); // 인증 횟수 초과 모달
+  const [isOpenWaitTime, SetIsOpenWaitTime] = useState(false); // 재인증 대기 모달
 
   const handleCertificate = () => {
     if (!mock.remain) {
       SetIsOpenExceed(true);
-    } else {
+    }
+    // else if (!canCertify()) {
+    //   SetIsOpenWaitTime(true);
+    // }
+    else {
       navigate('/certification/shooting');
     }
   };
@@ -91,6 +98,21 @@ export default function CertificationPage() {
           onClose={() => SetIsOpenExceed(false)}
           onConfirm={() => {
             SetIsOpenExceed(false);
+          }}
+        />
+      )}
+
+      {isOpenWaitTime && (
+        <Modal
+          isOpen={isOpenWaitTime}
+          title={`인증 대기 시간입니다. \n 이전 인증 후 5분이 지나야 재인증이 가능합니다.`}
+          titleFontWeight='medium'
+          titleTextSize='15px'
+          buttonText='확인'
+          titleLineHeight='22px'
+          onClose={() => SetIsOpenWaitTime(false)}
+          onConfirm={() => {
+            SetIsOpenWaitTime(false);
           }}
         />
       )}
