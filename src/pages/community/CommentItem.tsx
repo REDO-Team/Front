@@ -41,14 +41,14 @@ export default function CommentItem({ comment, isMine, onUpdate, onDelete }: Com
       <div className="flex items-center justify-between mb-1.5">
         <div className="flex items-center gap-2">
           <div className={`w-[32px] h-[32px] rounded-full ${comment.authorColor}`}></div>
-          <span className="text-[13px] font-bold text-gray-800">{comment.author}</span>
+          <span className="text-[14px] font-bold text-gray-900">{comment.author}</span>
 
           {isMine && (
             <span className="inline-flex items-center justify-center px-[6px] py-[2px] rounded-[10px] text-[10px] font-bold bg-main-green1 text-white">
               내 댓글
             </span>
           )}
-          <span className="text-[11px] font-semibold text-gray-400">{comment.time}</span>
+          <span className="text-[12px] font-semibold text-gray-400">{comment.time}</span>
         </div>
 
         {isMine && !isEditing && (

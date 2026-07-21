@@ -131,12 +131,12 @@ export default function CommunityDetailPage() {
           </div>
         </div>
 
-        <hr className="border-t-[1px] border-gray-300 mb-4" />
-
         {/* 본문 내용 */}
-        <p className="text-[16px] font-medium text-gray-900 leading-relaxed whitespace-pre-wrap break-keep mb-6">
-          {MOCK_POST.content}
-        </p>
+        <div className="bg-white rounded-[20px] p-5 shadow-[0_4px_10px_rgba(0,0,0,0.03)] mb-6">
+          <p className="text-[16px] font-medium text-gray-900 leading-relaxed whitespace-pre-wrap break-keep mb-6">
+            {MOCK_POST.content}
+          </p>
+        </div>
 
         <div className="flex flex-row items-center gap-3 whitespace-nowrap text-[14px] font-semibold leading-[22px] text-gray-500 mb-4">
           <span className="flex items-center gap-1 text-gray-900">
@@ -150,7 +150,7 @@ export default function CommunityDetailPage() {
         </div>
 
         {/* 댓글 영역 */}
-        <section className="bg-white rounded-[20px] p-5 shadow-[0_4px_10px_rgba(0,0,0,0.03)] flex flex-col gap-4">
+        <section className="flex flex-col gap-3">
           {" "}
           {comments.map((comment, index) => (
             <div key={comment.id} className="flex flex-col">
@@ -163,7 +163,7 @@ export default function CommunityDetailPage() {
               />
 
               {index !== comments.length - 1 && (
-                <hr className="border-t-[1px] border-gray-200 mt-4" />
+                <hr className="border-t-[1px] border-gray-300 mt-4" />
               )}
             </div>
           ))}
