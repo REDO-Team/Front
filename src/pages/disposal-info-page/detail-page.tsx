@@ -81,7 +81,7 @@ export default function DisposalInfoDetailage() {
             buttonText='보러 가기'
             onClose={() => setIsOpen(false)}
             onConfirm={() => {
-              navigate('/'); //즐겨찾기 페이지로 이동
+              navigate('/my/favorites'); //즐겨찾기 페이지로 이동
             }}
           />
         )}
