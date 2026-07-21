@@ -52,7 +52,7 @@ export default function CommentItem({ comment, isMine, onUpdate, onDelete }: Com
         </div>
 
         {isMine && !isEditing && (
-          <div className="flex items-center gap-2 text-[12px] font-medium">
+          <div className="flex items-center gap-2 text-[14px] font-semibold">
             <button className="text-gray-600" onClick={() => setIsEditModalOpen(true)}>수정</button>
             <button className="text-[#E25655]" onClick={() => setIsDeleteModalOpen(true)}>삭제</button>
           </div>

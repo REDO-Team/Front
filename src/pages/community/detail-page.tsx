@@ -64,6 +64,8 @@ export default function CommunityDetailPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+  const [isLiked, setIsLiked] = useState(false);
+
   const navigate = useNavigate();
   const { postId } = useParams();
   const isMyPost = true; // 임시 변수
@@ -143,8 +145,12 @@ export default function CommunityDetailPage() {
             <CommentIcon className="w-[13px] h-[13px] text-main-green1" />
             댓글 {MOCK_POST.comments}
           </span>
-          <button className="flex items-center gap-1 text-gray-900">
-            <HeartIcon className="w-[17px] h-[15px] text-gray-500" />
+          <button
+            className="flex items-center gap-1 text-gray-900"
+            onClick={() => setIsLiked(!isLiked)}
+          >
+            <HeartIcon className={`w-[17px] h-[15px] ${!isLiked && "text-gray-500"}`}
+              isFilled={isLiked} />
             좋아요
           </button>
         </div>
