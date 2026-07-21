@@ -4,8 +4,6 @@ import Seed from '/src/assets/icons/seed.svg';
 import Seedling from '/src/assets/icons/seedling.svg';
 import RightArrow from '/src/assets/icons/right-arrow.svg?react';
 import { useNavigate } from 'react-router-dom';
-import TopBar from '../../components/common/TopBar';
-import Home from '/src/assets/icons/home.svg';
 import { useState } from 'react';
 import Modal from '../../components/common/Modal';
 // import { useCertificationStore } from '../../store/certificationStore';
@@ -33,11 +31,7 @@ export default function CertificationPage() {
   };
 
   return (
-    <div className='h-full'>
-      <div className='mb-10.5'>
-        <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />
-      </div>
-
+    <div className='h-full pt-5'>
       <div className='flex flex-col items-center px-6.5 h-full'>
         <div className='relative w-47.5 h-47.5'>
           <img src={Scan} alt='스캔' className='absolute inset-0 w-full h-full' />

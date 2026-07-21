@@ -1,6 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import TopBar from '../../components/common/TopBar';
-import Home from '/src/assets/icons/home.svg';
 import ShootCard from '../../components/common/ShootCard';
 import NotiCard from '../../components/CertificationPage/NotiCard';
 import FilledAnalysis from '/src/assets/icons/filled-analysis.svg';
@@ -12,11 +10,7 @@ export default function ShootingPage() {
   const navigate = useNavigate();
 
   return (
-    <div className='h-full'>
-      <div className='pb-5'>
-        <TopBar title='촬영하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />
-      </div>
-
+    <div className='h-full pt-5'>
       <div className='flex flex-col h-full px-6.5'>
         <ShootCard />
         <div className='mt-5 mb-4'>

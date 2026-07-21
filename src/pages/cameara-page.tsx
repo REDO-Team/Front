@@ -12,10 +12,7 @@ export default function CamearaPage() {
   const location = useLocation();
   const webcamRef = useRef<Webcam | null>(null);
   const [imgSrc, setImgSrc] = useState<string | null | undefined>(null);
-  const [
-    loading,
-    // setLoading
-  ] = useState(false);
+  const [loading, setLoading] = useState(false);
   // const setCertified = useCertificationStore((state) => state.setCertified);
 
   const handleCapture = () => {
@@ -23,6 +20,15 @@ export default function CamearaPage() {
     setImgSrc(img);
 
     console.log(imgSrc);
+
+    setLoading(true);
+    setTimeout(() => {
+      if (location?.state === 'certification') {
+        navigate('/certification/success');
+      } else {
+        navigate('/disposal-info/detail');
+      }
+    }, 5000);
     // setCertified();
   };
 

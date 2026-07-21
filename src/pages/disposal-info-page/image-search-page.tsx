@@ -1,6 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import Home from '/src/assets/icons/home.svg';
-import TopBar from '../../components/common/TopBar';
 import ShootCard from '../../components/common/ShootCard';
 import { useRef } from 'react';
 
@@ -20,11 +18,7 @@ export default function ImageSearchPage() {
   };
 
   return (
-    <div className='h-full'>
-      <div className='mb-2.5'>
-        <TopBar title='이미지 검색' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />
-      </div>
-
+    <div className='h-full pt-5'>
       <div className='flex flex-col h-full px-6.5'>
         <ShootCard />
 

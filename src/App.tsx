@@ -35,12 +35,19 @@ import RewardCheckoutPage from "./pages/reward-page/reward-purchase-page";
 import RewardAddressCompletePage from "./pages/reward-page/reward-address-complete-page";
 import RewardAddressListPage from "./pages/reward-page/reward-address-list-page";
 import RewardAddressSearchPage from "./pages/reward-page/reward-address-search-page";
+import RewardAddressDetailPage from "./pages/reward-page/reward-address-detail-page";
 import RewardUseCompletePage from "./pages/reward-page/reward-use-complete-page";
 import MyPage from "./pages/my-page";
 import ProfileEditPage from './pages/my-page/profile-edit-page';
 import MyPostsPage from './pages/my-page/my-posts-page';
 import MyCommentsPage from './pages/my-page/my-comments-page';
+import FavoriteDisposalPage from './pages/my-page/favorite-disposal-page';
+import FavoriteDisposalDetailPage from './pages/my-page/favorite-disposal-detail-page';
+import RewardUseHistoryPage from './pages/my-page/reward-use-history-page';
 import CommunityDetailPage from "./pages/community/detail-page";
+import CommunityWritePage from "./pages/community/write-page";
+import CommunityModifyPage from "./pages/community/modity-page";
+import CommunityCompletePage from "./pages/community/complete-page";
 
 const routes: RouteObject[] = [
   {
@@ -73,6 +80,18 @@ const routes: RouteObject[] = [
           {
             path: 'posts',
             element: <MyPostsPage />,
+          },
+          {
+            path: 'favorites',
+            element: <FavoriteDisposalPage />,
+          },
+          {
+            path: 'favorites/:favoriteId',
+            element: <FavoriteDisposalDetailPage />,
+          },
+          {
+            path: 'history',
+            element: <RewardUseHistoryPage />,
           },
           {
             path: 'comments',
@@ -199,6 +218,14 @@ const routes: RouteObject[] = [
             element: <RewardAddressSearchPage />,
           },
           {
+            path: "address-detail",
+            element: <RewardAddressDetailPage />,
+          },
+          {
+            path: "address-detail/:shippingAddressId/edit",
+            element: <RewardAddressDetailPage />,
+          },
+          {
             path: "address-complete/:productId",
             element: <RewardAddressCompletePage />,
           },
@@ -216,9 +243,21 @@ const routes: RouteObject[] = [
             element: <CommunityMainPage />,
           },
           {
+            path: "write",
+            element: <CommunityWritePage />,
+          },
+          {
+            path: "modify/:postId",
+            element: <CommunityModifyPage />,
+          },
+          {
             path: ":postId",
             element: <CommunityDetailPage />,
           },
+          {
+            path: "complete",
+            element: <CommunityCompletePage />,
+          }
         ],
       },
     ],

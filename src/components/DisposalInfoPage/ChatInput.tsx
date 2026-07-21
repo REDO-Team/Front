@@ -18,7 +18,7 @@ export default function ChatInput({ message, onChange, onKeyDown, onSubmit }: Ch
         질문 입력
       </label>
       <input type='text' name='messsage' id='messsage' placeholder='궁금한 점을 입력해주세요' className='flex-1 font-pretendard font-bold text-sm text-gray-500 border border-gray-200 rounded-full px-5 py-4 focus:outline-none focus:border-main-green1 disabled:bg-gray-100 disabled:cursor-not-allowed' value={message} onChange={(e) => onChange(e.target.value)} onKeyDown={onKeyDown} />
-      <button type='submit' className='flex justify-center items-center px-5 py-4 gap-0.5 font-pretendard font-bold text-lg text-white bg-main-green1 rounded-full shrink-0 cursor-pointer disabled:cursor-not-allowed' disabled>
+      <button type='submit' className='flex justify-center items-center px-5 py-4 gap-0.5 font-pretendard font-bold text-lg text-white bg-main-green1 rounded-full shrink-0 cursor-pointer disabled:cursor-not-allowed' disabled={!message.trim()}>
         전송
       </button>
     </form>

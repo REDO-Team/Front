@@ -114,7 +114,7 @@ const MyPage = () => {
 
   return (
     <>
-      <div className='flex min-h-full w-full flex-col overflow-y-auto bg-white px-5 pb-[100px] font-pretendard text-text'>
+      <div className='flex min-h-screen w-full flex-col overflow-y-auto bg-[#F9FBFB] px-5 pb-[100px] font-pretendard text-text'>
         {/* 프로필 */}
         <section className='mt-[24px] flex h-[80px] w-full items-center'>
           <div className='h-[80px] w-[80px] shrink-0 rounded-full bg-gradient-to-br from-main-green1 to-main-sky' />
