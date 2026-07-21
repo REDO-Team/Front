@@ -1,6 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import TopBar from '../../components/common/TopBar';
-import Home from '/src/assets/icons/home.svg';
 import FailInfo from '../../components/common/FailInfo';
 import FailCheckList from '../../components/CertificationPage/FailCheckList';
 
@@ -18,11 +16,7 @@ export default function FailPage() {
     .filter(Boolean);
 
   return (
-    <div className='h-full'>
-      <div className='mb-10'>
-        <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} navigateBack='certification' />
-      </div>
-
+    <div className='h-full pt-5'>
       <div className='flex flex-col h-full px-5'>
         <FailInfo title={mock.isRetry ? '오늘 이미 인증한 품목이에요!' : '물품을 인식하지 못했어요!'} content={mock.isRetry ? '다른 품목으로 다시 시도해주세요' : '다시 시도해주세요'} />
 

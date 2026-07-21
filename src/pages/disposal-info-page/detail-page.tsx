@@ -1,6 +1,4 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import TopBar from '../../components/common/TopBar';
-import Home from '/src/assets/icons/home.svg';
 import Favorites from '/src/assets/icons/favorites.svg';
 import FullCheck from '/src/assets/icons/full-check.svg?react';
 import Info from '/src/assets/icons/info.svg?react';
@@ -39,10 +37,7 @@ export default function DisposalInfoDetailage() {
   };
 
   return (
-    <div className='h-full'>
-      <div className='mb-6'>
-        <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' navigateBack='disposal-info' />
-      </div>
+    <div className='h-full pt-5'>
       <div className='flex flex-col h-full px-5'>
         <RecycleCategoryCard padding={20} gap={12} radius={20} imgSize={80} categorySize={12} nameSize={24} category={mock[0].category} name={mock[0].name} content={mock[0].content} />
 
@@ -86,7 +81,7 @@ export default function DisposalInfoDetailage() {
             buttonText='보러 가기'
             onClose={() => setIsOpen(false)}
             onConfirm={() => {
-              navigate('/'); //즐겨찾기 페이지로 이동
+              navigate('/my/favorites'); //즐겨찾기 페이지로 이동
             }}
           />
         )}
