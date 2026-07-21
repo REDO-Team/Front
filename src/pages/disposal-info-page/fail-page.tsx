@@ -1,6 +1,3 @@
-import { useNavigate } from 'react-router-dom';
-import TopBar from '../../components/common/TopBar';
-import Home from '/src/assets/icons/home.svg';
 import Info from '/src/assets/icons/info.svg?react';
 import Check from '/src/assets/icons/check.svg?react';
 import FailInfo from '../../components/common/FailInfo';
@@ -9,7 +6,6 @@ import { useState } from 'react';
 import { CATEGORY_LIST } from '../../constants/recycle-category';
 
 export default function DisposalInfoFailPage() {
-  const navigate = useNavigate();
   const [openCard, setOpenCard] = useState<string>('');
 
   const handleCategoryCard = (category: string) => {
@@ -18,10 +14,6 @@ export default function DisposalInfoFailPage() {
 
   return (
     <div className='h-full'>
-      <div className='mb-10'>
-        <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />
-      </div>
-
       <div className='flex flex-col h-full px-5'>
         <FailInfo title='물품을 정확하게 인식하지 못했어요' content={`더 정확한 안내를 위해 \n 카테고리를 선택해주세요.`} />
 

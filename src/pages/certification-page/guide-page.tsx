@@ -2,8 +2,6 @@ import Info from '/src/assets/icons/info.svg?react';
 import FullCheck from '/src/assets/icons/full-check.svg';
 import Error from '/src/assets/icons/error.svg';
 import { useNavigate } from 'react-router-dom';
-import TopBar from '../../components/common/TopBar';
-import Home from '/src/assets/icons/home.svg';
 import WrongEx from '/src/assets/images/wrong-ex.png';
 import CorrectEx from '/src/assets/images/correct-ex.png';
 import GuideCard from '../../components/CertificationPage/GuideCard';
@@ -14,11 +12,7 @@ export default function CertificationGuidePage() {
   const navigate = useNavigate();
 
   return (
-    <div className='h-full'>
-      <div className='mb-5'>
-        <TopBar title='인증 가이드' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />
-      </div>
-
+    <div className='h-full pt-5'>
       <div className='px-5 h-full flex flex-col'>
         <div className='flex flex-col p-5 gap-3.5 bg-linear-to-r from-main-green1 to-main-sky rounded-[20px] shadow-md shadow-main-green1/15'>
           <div className='flex items-center gap-1.5'>
@@ -78,7 +72,7 @@ export default function CertificationGuidePage() {
           </div>
         </div>
 
-        <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 py-3.5 w-full text-center mt-auto' onClick={() => navigate('/certification/shooting')}>
+        <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 py-3.5 w-full text-center mt-6' onClick={() => navigate('/certification/shooting')}>
           인증하기
         </button>
       </div>

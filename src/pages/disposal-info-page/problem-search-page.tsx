@@ -1,6 +1,3 @@
-import { useNavigate } from 'react-router-dom';
-import TopBar from '../../components/common/TopBar';
-import Home from '/src/assets/icons/home.svg';
 import ChatBox from '../../components/DisposalInfoPage/ChatBox';
 import ChatInput from '../../components/DisposalInfoPage/ChatInput';
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
@@ -18,7 +15,6 @@ const ChatMessages = [
 ];
 
 export default function ProblemSearchPage() {
-  const navigate = useNavigate();
   const [newMessage, setnewMessage] = useState<string>('');
   const [messages, setMessages] = useState<{ isMine: boolean; message: string }[]>([
     {
@@ -86,11 +82,7 @@ export default function ProblemSearchPage() {
   }, [loading]);
 
   return (
-    <div className='h-full overflow-x-hidden flex'>
-      <div className='mb-5'>
-        <TopBar title='문제 상황 검색' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />
-      </div>
-
+    <div className='h-full overflow-x-hidden flex mt-5'>
       <div className='flex flex-col px-6.5 flex-1 overflow-y-auto'>
         <div className='flex flex-col gap-6'>
           {messages.map((m, idx) => {

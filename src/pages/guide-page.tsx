@@ -8,7 +8,6 @@ import Camera from '/src/assets/icons/camera.svg?react';
 import Coins from '/src/assets/icons/coins.svg?react';
 import ChartBar from '/src/assets/icons/chart-bar.svg?react';
 import { useState } from 'react';
-import TopBar from '../components/common/TopBar';
 
 const GuideLine = [
   {
@@ -56,11 +55,7 @@ export default function GuidePage() {
   };
 
   return (
-    <div className='h-full '>
-      <div className='mb-2.5'>
-        <TopBar title='이용 가이드' leftIcon bgColor='bg-green1' />
-      </div>
-
+    <div className='h-full bg-bg-green1 pt-5'>
       <div className='h-full px-5 pb-25'>
         <div className='flex justify-between mb-7'>
           <div className='max-w-64 flex-col gap-1.5'>

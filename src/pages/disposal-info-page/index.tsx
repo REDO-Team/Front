@@ -1,20 +1,11 @@
-import { useNavigate } from 'react-router-dom';
-import TopBar from '../../components/common/TopBar';
-import Home from '/src/assets/icons/home.svg';
 import BigLogo from '/src/assets/icons/Big-logo.svg';
 import ImageSearch from '/src/assets/icons/image-search.svg';
 import ProblemSearch from '/src/assets/icons/problem-search.svg';
 import InfoCategoryCard from '../../components/DisposalInfoPage/InfoCategoryCard';
 
 export default function DisposalInfoPage() {
-  const navigate = useNavigate();
-
   return (
-    <div className='h-full'>
-      <div className='mt-10'>
-        <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />
-      </div>
-
+    <div className='h-full pt-5'>
       <div className='flex flex-col h-full px-5'>
         <div className='flex flex-col items-center gap-7.5'>
           <img src={BigLogo} alt='logo' className='w-30 h-30' />
