@@ -18,8 +18,8 @@ export default function DisposalInfoFailPage() {
         <FailInfo title='물품을 정확하게 인식하지 못했어요' content={`더 정확한 안내를 위해 \n 카테고리를 선택해주세요.`} />
 
         <div className='flex flex-col gap-3 mb-6'>
-          {CATEGORY_LIST.map((c) => {
-            return <CategoryCard Icon={c.icon} category={c.category} onClick={() => handleCategoryCard(c.category)} isOpen={c.category === openCard} />;
+          {CATEGORY_LIST.map((c, idx) => {
+            return <CategoryCard key={idx} Icon={c.icon} category={c.category} onClick={() => handleCategoryCard(c.category)} isOpen={c.category === openCard} />;
           })}
         </div>
 
