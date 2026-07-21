@@ -41,18 +41,18 @@ export default function CommentItem({ comment, isMine, onUpdate, onDelete }: Com
       <div className="flex items-center justify-between mb-1.5">
         <div className="flex items-center gap-2">
           <div className={`w-[32px] h-[32px] rounded-full ${comment.authorColor}`}></div>
-          <span className="text-[13px] font-bold text-gray-800">{comment.author}</span>
+          <span className="text-[14px] font-bold text-gray-900">{comment.author}</span>
 
           {isMine && (
             <span className="inline-flex items-center justify-center px-[6px] py-[2px] rounded-[10px] text-[10px] font-bold bg-main-green1 text-white">
               내 댓글
             </span>
           )}
-          <span className="text-[11px] font-semibold text-gray-400">{comment.time}</span>
+          <span className="text-[12px] font-semibold text-gray-400">{comment.time}</span>
         </div>
 
         {isMine && !isEditing && (
-          <div className="flex items-center gap-2 text-[12px] font-medium">
+          <div className="flex items-center gap-2 text-[14px] font-semibold">
             <button className="text-gray-600" onClick={() => setIsEditModalOpen(true)}>수정</button>
             <button className="text-[#E25655]" onClick={() => setIsDeleteModalOpen(true)}>삭제</button>
           </div>
@@ -64,7 +64,7 @@ export default function CommentItem({ comment, isMine, onUpdate, onDelete }: Com
           <textarea
             value={editContent}
             onChange={(e) => setEditContent(e.target.value)}
-            className="w-full bg-white border border-gray-200 rounded-[10px] p-3 text-[14px] text-gray-800 outline-none resize-none min-h-[80px]"
+            className="w-full bg-white border border-main-green1 rounded-[20px] px-[14px] py-[10px] text-[15px] text-gray-800 font-medium outline-none resize-none min-h-[63px]"
           />
           <div className="flex justify-end gap-2 mt-2">
             <button
