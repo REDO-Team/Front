@@ -4,8 +4,8 @@
 
 > 분리수거 정보를 쉽고 빠르게 제공하고, 실천에 대한 보상을 통해 사용자의 행동을 유도하는 서비스입니다.
 
-- 기간 : 2026.06.29 ~ 2026.08.
-- 인원 : Frontend4명
+- 기간 : 2026.06.29 ~ 2026.08.20
+- 인원 : Frontend 4명
 - 목적 : AI 기반 정보 제공과 리워드 시스템을 결합하여 분리수거를 일상의 습관으로 만들어 지속적인 환경 보호 참여를 이끌어내는 것
 - 주요 기능
   - 회원가입 및 로그인
@@ -74,23 +74,23 @@
  ┃ ┣ 📂workflows
  ┃ ┗ 📜PULL_REQUEST_TEMPLATE.md
  ┣ 📂public
- ┣ 📂src
- ┃ ┣ 📂apis
- ┃ ┣ 📂assets
- ┃ ┃ ┣ 📂fonts
- ┃ ┃ ┣ 📂icons
- ┃ ┃ ┗ 📂images
- ┃ ┣ 📂components
- ┃ ┃ ┗ 📂common
- ┃ ┣ 📂hooks
- ┃ ┣ 📂pages
- ┃ ┣ 📂store
- ┃ ┣ 📂types
- ┃ ┣ 📂utils
- ┃ ┣ 📜App.css
- ┃ ┣ 📜App.tsx
- ┃ ┣ 📜index.css
- ┃ ┗ 📜main.tsx
+ 📦src
+ ┣ 📂apis
+ ┣ 📂assets
+ ┃ ┣ 📂fonts
+ ┃ ┣ 📂icons
+ ┃ ┗ 📂images
+ ┣ 📂components
+ ┣ 📂layouts
+ ┣ 📂mocks
+ ┣ 📂pages
+ ┣ 📂store
+ ┣ 📂types
+ ┣ 📂utils
+ ┣ 📜App.css
+ ┣ 📜App.tsx
+ ┣ 📜index.css
+ ┗ 📜main.tsx
  ┣ 📜.gitignore
  ┣ 📜eslint.config.js
  ┣ 📜index.html
