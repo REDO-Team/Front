@@ -64,7 +64,7 @@ export default function CommentItem({ comment, isMine, onUpdate, onDelete }: Com
           <textarea
             value={editContent}
             onChange={(e) => setEditContent(e.target.value)}
-            className="w-full bg-white border border-gray-200 rounded-[10px] p-3 text-[14px] text-gray-800 outline-none resize-none min-h-[80px]"
+            className="w-full bg-white border border-main-green1 rounded-[20px] px-[14px] py-[10px] text-[15px] text-gray-800 font-medium outline-none resize-none min-h-[63px]"
           />
           <div className="flex justify-end gap-2 mt-2">
             <button
