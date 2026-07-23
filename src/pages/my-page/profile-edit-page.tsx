@@ -163,8 +163,8 @@ const ProfileEditPage = () => {
     MOCK_MY_PAGE_USER.nickname,
   );
 
-  const [nicknameStatus, setNicknameStatus] =
-    useState<NicknameStatus>('current');
+  const nicknameStatus = getNicknameStatus(nickname);
+  const nicknameMessage = NICKNAME_MESSAGES[nicknameStatus];
 
   const [selectedCharacterId, setSelectedCharacterId] =
     useState<number | null>(getInitialCharacterId);
@@ -180,9 +180,6 @@ const ProfileEditPage = () => {
   const SelectedCharacterIcon =
     selectedCharacter?.selectedIcon;
 
-  const nicknameMessage =
-    NICKNAME_MESSAGES[nicknameStatus];
-
   const isNicknameValid =
     nicknameStatus === 'available' ||
     nicknameStatus === 'current';
@@ -197,11 +194,6 @@ const ProfileEditPage = () => {
     selectedCharacterId !== null || profileImage !== null;
 
   const isValid = isNicknameValid && isProfileSelected;
-
-  /** 닉네임 실시간 유효성 및 중복 확인 */
-  useEffect(() => {
-    setNicknameStatus(getNicknameStatus(nickname));
-  }, [nickname]);
 
   /** blob 이미지 URL 메모리 정리 */
   useEffect(() => {
