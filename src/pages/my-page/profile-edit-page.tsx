@@ -24,10 +24,24 @@ import PurpleCharacterSelected from '../../assets/icons/character/purple-charact
 import BlueCharacter from '../../assets/icons/character/blue-character.svg?react';
 import BlueCharacterSelected from '../../assets/icons/character/blue-character-selected.svg?react';
 
+import {
+  type CharacterCode,
+  isCharacterCode,
+} from '../../constants/character';
+import { MOCK_MY_PAGE_USER } from '../../mocks/my-page';
+
 type SvgComponent = ComponentType<SVGProps<SVGSVGElement>>;
+
+type NicknameStatus =
+  | 'idle'
+  | 'available'
+  | 'duplicate'
+  | 'invalid'
+  | 'current';
 
 interface CharacterItem {
   id: number;
+  code: CharacterCode;
   label: string;
   defaultIcon: SvgComponent;
   selectedIcon: SvgComponent;
@@ -36,69 +50,173 @@ interface CharacterItem {
 const CHARACTER_ITEMS: CharacterItem[] = [
   {
     id: 1,
+    code: 'YELLOW',
     label: '노란색 캐릭터',
     defaultIcon: YellowCharacter,
     selectedIcon: YellowCharacterSelected,
   },
   {
     id: 2,
+    code: 'GRAY',
     label: '회색 캐릭터',
     defaultIcon: GrayCharacter,
     selectedIcon: GrayCharacterSelected,
   },
   {
     id: 3,
+    code: 'GREEN',
     label: '초록색 캐릭터',
     defaultIcon: GreenCharacter,
     selectedIcon: GreenCharacterSelected,
   },
   {
     id: 4,
+    code: 'ORANGE',
     label: '주황색 캐릭터',
     defaultIcon: OrangeCharacter,
     selectedIcon: OrangeCharacterSelected,
   },
   {
     id: 5,
+    code: 'PURPLE',
     label: '보라색 캐릭터',
     defaultIcon: PurpleCharacter,
     selectedIcon: PurpleCharacterSelected,
   },
   {
     id: 6,
+    code: 'BLUE',
     label: '파란색 캐릭터',
     defaultIcon: BlueCharacter,
     selectedIcon: BlueCharacterSelected,
   },
 ];
 
+/** 실제 API 연결 전 사용하는 중복 닉네임 목업 */
+const DUPLICATE_NICKNAMES = [
+  '환경이',
+  '분리수거왕',
+  '리사이클',
+  '지구지킴이',
+];
+
+const NICKNAME_REGEX = /^[가-힣0-9]{2,10}$/;
+
+const NICKNAME_MESSAGES: Record<NicknameStatus, string> = {
+  idle: '한글과 숫자로 2~10자 이내로 입력해주세요.',
+  invalid: '한글과 숫자로 2~10자 이내로 입력해주세요.',
+  duplicate: '이미 사용 중인 닉네임입니다.',
+  available: '사용 가능한 닉네임입니다.',
+  current: '현재 사용 중인 닉네임입니다.',
+};
+
+const getNicknameStatus = (
+  nickname: string,
+): NicknameStatus => {
+  const trimmedNickname = nickname.trim();
+
+  if (!trimmedNickname) return 'idle';
+
+  if (!NICKNAME_REGEX.test(trimmedNickname)) {
+    return 'invalid';
+  }
+
+  if (trimmedNickname === MOCK_MY_PAGE_USER.nickname) {
+    return 'current';
+  }
+
+  if (DUPLICATE_NICKNAMES.includes(trimmedNickname)) {
+    return 'duplicate';
+  }
+
+  return 'available';
+};
+
+const getInitialCharacterId = () => {
+  const profileImageValue = MOCK_MY_PAGE_USER.profileImageUrl;
+
+  if (!isCharacterCode(profileImageValue)) {
+    return null;
+  }
+
+  return (
+    CHARACTER_ITEMS.find(
+      (character) => character.code === profileImageValue,
+    )?.id ?? null
+  );
+};
+
+const getInitialProfileImage = () => {
+  const profileImageValue = MOCK_MY_PAGE_USER.profileImageUrl;
+
+  if (!profileImageValue || isCharacterCode(profileImageValue)) {
+    return null;
+  }
+
+  return profileImageValue;
+};
+
 const ProfileEditPage = () => {
   const navigate = useNavigate();
 
-  const [nickname, setNickname] = useState('');
-  const [selectedCharacterId, setSelectedCharacterId] = useState<
-    number | null
-  >(null);
-  const [profileImage, setProfileImage] = useState<string | null>(
-    null,
+  const [nickname, setNickname] = useState(
+    MOCK_MY_PAGE_USER.nickname,
   );
+
+  const [nicknameStatus, setNicknameStatus] =
+    useState<NicknameStatus>('current');
+
+  const [selectedCharacterId, setSelectedCharacterId] =
+    useState<number | null>(getInitialCharacterId);
+
+  const [profileImage, setProfileImage] = useState<
+    string | null
+  >(getInitialProfileImage);
 
   const selectedCharacter = CHARACTER_ITEMS.find(
     (character) => character.id === selectedCharacterId,
   );
 
-  const SelectedCharacterIcon = selectedCharacter?.selectedIcon;
+  const SelectedCharacterIcon =
+    selectedCharacter?.selectedIcon;
 
-  const isValid =
-    nickname.trim() !== '' && selectedCharacterId !== null;
+  const nicknameMessage =
+    NICKNAME_MESSAGES[nicknameStatus];
 
+  const isNicknameValid =
+    nicknameStatus === 'available' ||
+    nicknameStatus === 'current';
+
+  const isNicknameError =
+    nicknameStatus === 'invalid' ||
+    nicknameStatus === 'duplicate';
+
+  const isNicknameSuccess = isNicknameValid;
+
+  const isProfileSelected =
+    selectedCharacterId !== null || profileImage !== null;
+
+  const isValid = isNicknameValid && isProfileSelected;
+
+  /** 닉네임 실시간 유효성 및 중복 확인 */
+  useEffect(() => {
+    setNicknameStatus(getNicknameStatus(nickname));
+  }, [nickname]);
+
+  /** blob 이미지 URL 메모리 정리 */
   useEffect(() => {
     return () => {
-      if (profileImage) {
+      if (profileImage?.startsWith('blob:')) {
         URL.revokeObjectURL(profileImage);
       }
     };
   }, [profileImage]);
+
+  const handleNicknameChange = (
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
+    setNickname(event.target.value.slice(0, 10));
+  };
 
   const handleImageChange = (
     event: ChangeEvent<HTMLInputElement>,
@@ -113,17 +231,18 @@ const ProfileEditPage = () => {
       return;
     }
 
-    if (profileImage) {
+    if (profileImage?.startsWith('blob:')) {
       URL.revokeObjectURL(profileImage);
     }
 
     const imageUrl = URL.createObjectURL(file);
 
     setProfileImage(imageUrl);
+    setSelectedCharacterId(null);
   };
 
   const handleCharacterSelect = (characterId: number) => {
-    if (profileImage) {
+    if (profileImage?.startsWith('blob:')) {
       URL.revokeObjectURL(profileImage);
     }
 
@@ -133,6 +252,19 @@ const ProfileEditPage = () => {
 
   const handleSave = () => {
     if (!isValid) return;
+
+    const selectedCharacterCode =
+      selectedCharacter?.code ?? null;
+
+    const updatedProfile = {
+      userId: MOCK_MY_PAGE_USER.userId,
+      nickname: nickname.trim(),
+      profileImageUrl:
+        profileImage ?? selectedCharacterCode,
+      totalPoint: MOCK_MY_PAGE_USER.totalPoint,
+    };
+
+    console.log('수정된 프로필:', updatedProfile);
 
     navigate('/my');
   };
@@ -169,17 +301,15 @@ const ProfileEditPage = () => {
         {/* 프로필 사진 및 캐릭터 */}
         <section className='flex justify-center pt-[16px]'>
           <div className='relative h-[122px] w-[122px]'>
-            <div className='h-full w-full overflow-hidden rounded-full bg-gradient-to-br from-main-green1 to-main-sky shadow-[0_4px_8px_rgba(0,0,0,0.08)]'>
+            <div className='flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-white shadow-[0_4px_8px_rgba(0,0,0,0.08)]'>
               {profileImage ? (
                 <img
                   src={profileImage}
-                  alt='선택한 프로필'
+                  alt={`${nickname} 프로필`}
                   className='h-full w-full object-cover'
                 />
               ) : SelectedCharacterIcon ? (
-                <div className='flex h-full w-full items-center justify-center'>
-                  <SelectedCharacterIcon className='h-[130px] w-[130px] shrink-0' />
-                </div>
+                <SelectedCharacterIcon className='h-full w-full translate-x-[2px] scale-[1.15]' />
               ) : null}
             </div>
 
@@ -205,7 +335,7 @@ const ProfileEditPage = () => {
         <section className='mt-[18px]'>
           <label
             htmlFor='nickname'
-            className='mb-[15px] block w-[350px] text-[16px] font-semibold leading-[15px] tracking-[0] text-[#2A2A2A]'
+            className='mb-[15px] block text-[16px] font-semibold leading-[15px] text-[#2A2A2A]'
           >
             닉네임 수정하기
           </label>
@@ -214,16 +344,46 @@ const ProfileEditPage = () => {
             id='nickname'
             type='text'
             value={nickname}
-            maxLength={20}
-            onChange={(event) => setNickname(event.target.value)}
+            minLength={2}
+            maxLength={10}
+            inputMode='text'
+            autoComplete='off'
+            onChange={handleNicknameChange}
             placeholder='닉네임을 입력해주세요'
-            className='h-[48px] w-full rounded-[24px] border border-gray-200 bg-white px-[18px] text-[14px] font-medium leading-[18px] text-gray-800 outline-none placeholder:text-gray-400 focus:border-main-green1'
+            aria-invalid={isNicknameError}
+            aria-describedby='nickname-message'
+            className={`h-[48px] w-full rounded-[24px] border bg-white px-[18px] text-[14px] font-medium leading-[18px] text-gray-800 outline-none placeholder:text-gray-400 ${
+              isNicknameError
+                ? 'border-red-400 focus:border-red-400'
+                : isNicknameSuccess
+                  ? 'border-main-green1'
+                  : 'border-gray-200 focus:border-main-green1'
+            }`}
           />
+
+          <div className='mt-[8px] flex items-start justify-between px-[4px]'>
+            <p
+              id='nickname-message'
+              className={`text-[12px] leading-[16px] ${
+                isNicknameError
+                  ? 'text-red-500'
+                  : isNicknameSuccess
+                    ? 'text-main-green1'
+                    : 'text-gray-400'
+              }`}
+            >
+              {nicknameMessage}
+            </p>
+
+            <span className='ml-3 shrink-0 text-[12px] leading-[16px] text-gray-400'>
+              {nickname.length}/10
+            </span>
+          </div>
         </section>
 
         {/* 캐릭터 선택 */}
         <fieldset className='mt-[16px] min-w-0'>
-          <legend className='mb-[15px] block w-[350px] text-[16px] font-semibold leading-[15px] tracking-[0] text-[#2A2A2A]'>
+          <legend className='mb-[15px] block text-[16px] font-semibold leading-[15px] text-[#2A2A2A]'>
             나의 캐릭터
           </legend>
 

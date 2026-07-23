@@ -11,6 +11,13 @@ import WithdrawIcon from '../../assets/icons/user-delete.svg?react';
 
 import Modal from '../../components/common/Modal';
 
+import {
+  CHARACTER_IMAGE_MAP,
+  isCharacterCode,
+} from '../../constants/character';
+
+import { MOCK_MY_PAGE_USER } from '../../mocks/my-page';
+
 interface MenuItem {
   label: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -76,9 +83,21 @@ const WITHDRAW_REASONS: WithdrawReasonItem[] = [
 const MyPage = () => {
   const navigate = useNavigate();
 
+  const user = MOCK_MY_PAGE_USER;
+
   const [modalType, setModalType] = useState<ModalType>(null);
   const [withdrawReason, setWithdrawReason] =
     useState<WithdrawReason>(null);
+
+  const profileImageValue = user.profileImageUrl;
+
+  const CharacterIcon =
+    profileImageValue && isCharacterCode(profileImageValue)
+      ? CHARACTER_IMAGE_MAP[profileImageValue]
+      : null;
+
+  const isUploadedImage =
+    profileImageValue !== null && !isCharacterCode(profileImageValue);
 
   const closeModal = () => {
     setModalType(null);
@@ -95,7 +114,6 @@ const MyPage = () => {
   };
 
   const handleLogout = () => {
-    // 백엔드 연결 후 토큰 삭제 로직 추가
     localStorage.removeItem('accessToken');
 
     closeModal();
@@ -105,7 +123,6 @@ const MyPage = () => {
   const handleWithdraw = () => {
     if (!withdrawReason) return;
 
-    // 백엔드 연결 후 회원탈퇴 API 호출
     console.log('선택한 탈퇴 사유:', withdrawReason);
 
     closeModal();
@@ -117,7 +134,17 @@ const MyPage = () => {
       <div className='flex min-h-screen w-full flex-col overflow-y-auto bg-[#F9FBFB] px-5 pb-[100px] font-pretendard text-text'>
         {/* 프로필 */}
         <section className='mt-[24px] flex h-[80px] w-full items-center'>
-          <div className='h-[80px] w-[80px] shrink-0 rounded-full bg-gradient-to-br from-main-green1 to-main-sky' />
+          <div className='flex h-[80px] w-[80px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-white'>
+            {CharacterIcon ? (
+              <CharacterIcon className='h-full w-full scale-[1.1] translate-x-[2px]' />
+            ) : isUploadedImage ? (
+              <img
+                src={profileImageValue}
+                alt={`${user.nickname} 프로필`}
+                className='h-full w-full object-cover'
+              />
+            ) : null}
+          </div>
 
           <button
             type='button'
@@ -126,7 +153,7 @@ const MyPage = () => {
           >
             <div className='min-w-0 flex-1'>
               <p className='truncate text-[20px] font-bold leading-[24px] text-gray-900'>
-                지구
+                {user.nickname}
               </p>
 
               <p className='mt-[2px] truncate text-[14px] font-medium leading-[18px] text-gray-500'>
@@ -145,7 +172,7 @@ const MyPage = () => {
           </p>
 
           <p className='mt-[2px] text-[24px] font-bold leading-[31px] tracking-[-1px] text-main-green1'>
-            5,000
+            {user.totalPoint.toLocaleString()}
             <span className='ml-[2px] text-[16px] font-bold leading-[31px] tracking-[-1px]'>
               P
             </span>
@@ -227,7 +254,6 @@ const MyPage = () => {
         buttonText='회원 탈퇴하기'
         onClose={closeModal}
         onConfirm={handleWithdraw}
-        //buttonDisabled={withdrawReason === null}
         titleLineHeight='100%'
       >
         <div className='grid grid-cols-2 gap-x-[12px] gap-y-[12px]'>

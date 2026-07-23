@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import HomeIcon from '../../assets/icons/home.svg';
 import TopBar from '../../components/common/TopBar';
+import Logo from '../../assets/icons/Big-logo.svg?react';
+
 import { MOCK_FAVORITE_DISPOSALS } from '../../mocks/favorite-disposal';
 
 const FavoriteDisposalPage = () => {
@@ -48,11 +50,12 @@ const FavoriteDisposalPage = () => {
             ))}
           </section>
         ) : (
-          <div className='flex min-h-[500px] items-center justify-center'>
-            <p className='text-[14px] font-medium text-gray-400'>
-              즐겨찾기한 배출정보가 없습니다.
-            </p>
-          </div>
+          <div className='flex min-h-[calc(100vh-72px)] flex-col items-center justify-center pb-[80px]'>
+                <Logo className='h-[146px] w-[161px]' />
+                <p className='mt-[38px] text-center text-[22px] font-bold leading-[130%] tracking-[0] text-[#6B6B6B]'>
+                    즐겨찾기한 배출정보가 없어요
+                </p>
+            </div>
         )}
       </main>
     </div>
