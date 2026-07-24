@@ -2,7 +2,7 @@ import CameraHomeIcon from '../assets/icons/camera-home.svg';
 import ChartHomeIcon from '../assets/icons/chart-home.svg';
 import CoinsIcon from '../assets/icons/coins.svg?react';
 import LogoutIcon from '../assets/icons/logout.svg';
-import RecycleIcon from '../assets/icons/recycle.svg?react';
+import BigLogo from '../assets/icons/Big-logo.svg?react';
 import RewardIcon from '../assets/icons/reward.svg';
 import TrashIcon from '../assets/icons/trash.svg';
 import { HOME_COMMUNITY_PREVIEWS, HOME_POINT_SUMMARY, HOME_REWARD_PREVIEWS, HOME_SERVICE_MENU_ITEMS, HOME_USER } from '../mocks/home';
@@ -48,7 +48,7 @@ export default function HomePage() {
 
         {/* 사용자 누적 포인트 카드입니다. */}
         <section className='relative mt-4 overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#06C65F_0%,#21D38A_48%,#66E1FF_100%)] px-6 py-4 text-white shadow-[0_8px_18px_rgba(6,198,95,0.22)]'>
-          <RecycleIcon aria-hidden='true' className='absolute -bottom-5 right-4 h-28 w-28 rotate-[-8deg] text-white/35' />
+          <BigLogo aria-hidden='true' className='pointer-events-none absolute -bottom-5 -right-1 h-[180px] w-[196px] opacity-30 brightness-0 invert' />
           <div className='relative'>
             <p className='flex items-center gap-1 text-[14px] font-semibold leading-none'>
               나의 포인트
@@ -58,8 +58,7 @@ export default function HomePage() {
               {formattedPoint}
               <span className='ml-1 text-[20px]'>P</span>
             </strong>
-            <button type='button' className='mt-4 flex h-10 w-[134px] items-center justify-center rounded-full bg-white text-[15px] font-bold text-main-green1 shadow-[0_5px_12px_rgba(0,0,0,0.08)]'>
-              {/* TODO: 별도 이슈에서 배출 인증 페이지 이동을 연결합니다. */}
+            <button type='button' onClick={() => navigate('/certification')} className='mt-4 flex h-10 w-[134px] items-center justify-center rounded-full bg-white text-[15px] font-bold text-main-green1 shadow-[0_5px_12px_rgba(0,0,0,0.08)]'>
               인증하러 가기 <span className='ml-1 text-xl leading-none'>›</span>
             </button>
           </div>
@@ -73,11 +72,7 @@ export default function HomePage() {
               <button
                 key={menu.id}
                 type='button'
-                onClick={() => {
-                  if (menu.id === 'reward-save') navigate(menu.path);
-                  if (menu.id === 'disposal-info') navigate('/disposal-info');
-                  if (menu.id === 'disposal-auth') navigate('/certification');
-                }}
+                onClick={() => navigate(menu.path)}
                 className='flex h-[100px] flex-col items-center justify-center rounded-[22px] bg-white px-3 shadow-[0_9px_18px_rgba(0,0,0,0.08)]'
               >
                 <img src={SERVICE_MENU_ICON_SRC[menu.icon]} alt='' className='h-10 w-10 object-contain' />
@@ -89,12 +84,11 @@ export default function HomePage() {
 
         {communityPreview && (
           <section className='mt-6'>
-            <button type='button' className='flex items-center text-[18px] font-bold leading-none'>
-              {/* TODO: 별도 이슈에서 커뮤니티 목록 이동을 연결합니다. */}
+            <button type='button' onClick={() => navigate('/community')} className='flex items-center text-[18px] font-bold leading-none'>
               오늘의 커뮤니티 <span className='ml-1 text-2xl leading-none'>›</span>
             </button>
 
-            <article className='mt-3 flex items-center gap-3 rounded-2xl bg-white p-3 shadow-[0_7px_16px_rgba(0,0,0,0.07)]'>
+            <button type='button' onClick={() => navigate(`/community/${communityPreview.id}`)} aria-label={`${communityPreview.title} 게시글 보기`} className='mt-3 flex w-full items-center gap-3 rounded-2xl bg-white p-3 text-left shadow-[0_7px_16px_rgba(0,0,0,0.07)]'>
               <div className='min-w-0 flex-1'>
                 <div className='flex items-center justify-between gap-3'>
                   <span className='rounded-full bg-skyblue-bg px-2 py-1 text-[10px] font-semibold text-skyblue-text'>{communityPreview.category}</span>
@@ -113,25 +107,26 @@ export default function HomePage() {
                 </div>
               </div>
               <div className='h-[58px] w-[58px] shrink-0 rounded-xl bg-[linear-gradient(145deg,#06C65F,#66E1FF)]' />
-            </article>
+            </button>
           </section>
         )}
 
         <section className='mt-5'>
-          <button type='button' className='flex items-center text-[18px] font-bold leading-none'>
-            {/* TODO: 별도 이슈에서 리워드 상점 이동을 연결합니다. */}
+          <button type='button' onClick={() => navigate('/reward/store')} className='flex items-center text-[18px] font-bold leading-none'>
             리워드 상점 <span className='ml-1 text-2xl leading-none'>›</span>
           </button>
 
           <ul className='mt-3 flex flex-col gap-3'>
             {HOME_REWARD_PREVIEWS.map((reward) => (
-              <li key={reward.id} className='flex min-h-[77px] items-center rounded-2xl bg-white px-3 py-2 shadow-[0_7px_16px_rgba(0,0,0,0.06)]'>
-                <div role='img' aria-label={reward.imageAlt} className={`relative h-[54px] w-[54px] shrink-0 overflow-hidden rounded-xl ${REWARD_IMAGE_STYLE[reward.imageVariant]}`} />
-                <div className='ml-3 min-w-0 flex-1'>
-                  <span className={`rounded-full px-2 py-1 text-[10px] font-semibold ${reward.imageVariant === 'plant' ? 'bg-skyblue-bg text-skyblue-text' : 'bg-reward-bg text-reward-text'}`}>{reward.category}</span>
-                  <p className='mt-2 truncate text-[15px] font-bold leading-none'>{reward.name}</p>
-                </div>
-                <strong className='ml-3 shrink-0 text-[16px] font-bold text-main-green1'>{reward.requiredPoint.toLocaleString()}P</strong>
+              <li key={reward.id}>
+                <button type='button' onClick={() => navigate(`/reward/products/${reward.id}`)} aria-label={`${reward.name} 상품 보기`} className='flex min-h-[77px] w-full items-center rounded-2xl bg-white px-3 py-2 text-left shadow-[0_7px_16px_rgba(0,0,0,0.06)]'>
+                  <div role='img' aria-label={reward.imageAlt} className={`relative h-[54px] w-[54px] shrink-0 overflow-hidden rounded-xl ${REWARD_IMAGE_STYLE[reward.imageVariant]}`} />
+                  <div className='ml-3 min-w-0 flex-1'>
+                    <span className={`rounded-full px-2 py-1 text-[10px] font-semibold ${reward.imageVariant === 'plant' ? 'bg-skyblue-bg text-skyblue-text' : 'bg-reward-bg text-reward-text'}`}>{reward.category}</span>
+                    <p className='mt-2 truncate text-[15px] font-bold leading-none'>{reward.name}</p>
+                  </div>
+                  <strong className='ml-3 shrink-0 text-[16px] font-bold text-main-green1'>{reward.requiredPoint.toLocaleString()}P</strong>
+                </button>
               </li>
             ))}
           </ul>
