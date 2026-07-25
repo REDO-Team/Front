@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CameraIcon from '../../assets/icons/camera';
 import { MOCK_POST } from '../../mocks/community';
 
-const CATEGORIES = ['정보공유', '환경실천', '리워드후기'];
+const CATEGORIES = ['정보공유', '리워드후기', '환경실천'];
 
 export default function CommunityModifyPage() {
   const navigate = useNavigate();
