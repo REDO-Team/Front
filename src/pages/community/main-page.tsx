@@ -4,60 +4,10 @@ import { useState } from 'react';
 import HeartIcon from '../../assets/icons/heart.svg';
 import CommentIcon from '../../assets/icons/comment.svg';
 import { useNavigate } from 'react-router-dom';
+import { MOCK_POSTS } from '../../mocks/community';
 
 const CATEGORIES = ['전체보기', '정보공유', '리워드후기', '환경실천'];
 
-// API 연결 전 테스트용 데이터
-const MOCK_POSTS = [
-  {
-    id: 1,
-    category: '정보공유',
-    time: '20분 전',
-    title: '이렇게 하면 쉬워요!',
-    content: '이렇게 하면 쉬워요!',
-    author: '리도01',
-    authorColor: 'bg-main-green1',
-    likes: 2,
-    comments: 2,
-    hasThumbnail: false,
-  },
-  {
-    id: 2,
-    category: '환경실천',
-    time: '1시간 전',
-    title: '오늘 한강에서 플로깅 했어요!',
-    content: '오랜만에 한강에 갔어요',
-    author: '리도07',
-    authorColor: 'bg-main-sky',
-    likes: 2,
-    comments: 2,
-    hasThumbnail: true,
-  },
-  {
-    id: 3,
-    category: '리워드후기',
-    time: '어제',
-    title: '리워드로 친환경 제품 사서 잘 쓰고 있어요',
-    content: '리워드로 친환경 제품 사서 잘 쓰고 있어요',
-    author: '리도12',
-    authorColor: 'bg-reward-text',
-    likes: 2,
-    comments: 2,
-    hasThumbnail: false,
-  },
-  {
-    id: 4,
-    category: '정보공유',
-    time: '2026.05.26',
-    title: '분리배출 헷갈릴 때 보는 체크리스트',
-    content: '분리배출 헷갈릴 때 보는 체크리스트',
-    author: '리도03',
-    authorColor: 'bg-main-green1',
-    likes: 2,
-    comments: 2,
-    hasThumbnail: false,
-  },
-];
 const getCategoryStyle = (category: string) => {
   switch (category) {
     case '정보공유':

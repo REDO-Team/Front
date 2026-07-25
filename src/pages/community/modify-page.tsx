@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import CameraIcon from '../../assets/icons/camera';
+import { MOCK_POST } from '../../mocks/community';
 
-const CATEGORIES = ['정보공유', '환경실천', '리워드후기'];
+const CATEGORIES = ['정보공유', '리워드후기', '환경실천'];
 
 export default function CommunityModifyPage() {
   const navigate = useNavigate();
@@ -46,9 +47,9 @@ export default function CommunityModifyPage() {
   // 데이터 받아오기
   useEffect(() => {
     const loadPostData = async () => {
-      setSelectedCategory('정보공유'); // 예시 데이터
-      setTitle('이렇게 하면 쉬워요!');
-      setContent('안내 가이드 따라하다가 저만의 꿀팁을 발견했어요! ...');
+      setSelectedCategory(MOCK_POST.category); // 예시 데이터
+      setTitle(MOCK_POST.title);
+      setContent(MOCK_POST.content);
     };
     loadPostData();
   }, [postId]);
