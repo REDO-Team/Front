@@ -68,7 +68,7 @@ export default function CommunityDetailPage() {
 
   const navigate = useNavigate();
   const { postId } = useParams();
-  const isMyPost = false; // 임시 변수
+  const isMyPost = true; // 임시 변수
   const currentUser = "리도01"; // 현재 로그인한 사용자 (임시)
   const { id } = useParams();
 
