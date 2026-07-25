@@ -32,11 +32,10 @@ export default function CommunityModifyPage() {
       return;
     }
 
-    // 기존 글을 수정하는 API 호출
     console.log('업데이트할 게시글 ID:', postId);
     console.log('수정된 데이터:', { selectedCategory, title, content, imagePreviews });
 
-    navigate('/community/complete');
+    navigate('/community/modify-complete');
   };
 
   const removeImage = (index: number) => {
@@ -80,9 +79,7 @@ export default function CommunityModifyPage() {
 
         <div className='flex gap-3 overflow-x-visible pb-2'>
           {' '}
-          {/* overflow-x-auto를 visible로 바꿔서 X가 잘리지 않게 함 */}
           <input type='file' accept='image/*' ref={fileInputRef} onChange={handleImageUpload} className='hidden' />
-          {/* 카메라 버튼 */}
           {imagePreviews.length < 5 && (
             <button onClick={() => fileInputRef.current?.click()} className='w-[80px] h-[80px] shrink-0 border-[2px] border-dashed border-[#EAEAEA] rounded-[20px] flex flex-col items-center justify-center text-gray-200 gap-1 bg-white'>
               <CameraIcon className='text-gray-500 w-[25px] h-[22px]' />
@@ -92,7 +89,6 @@ export default function CommunityModifyPage() {
           {imagePreviews.map((preview, index) => (
             <div key={index} className='relative w-[80px] h-[80px] shrink-0 mt-2'>
               {' '}
-              {/* mt-2를 추가해서 위쪽 여백 확보 */}
               <img src={preview} alt='preview' className='w-full h-full object-cover rounded-[20px]' />
               <button onClick={() => removeImage(index)} className='absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-[12px] font-bold z-10'>
                 X

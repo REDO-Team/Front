@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import FullCheck from "../../assets/icons/full-check.svg";
 
-export default function CommunityCompletePage() {
+export default function CommunityModifyCompletePage() {
     const navigate = useNavigate();
 
     return (
@@ -14,14 +14,13 @@ export default function CommunityCompletePage() {
                 />
                 <div className="text-center mb-[120px]">
                     <h1 className="text-[24px] font-bold text-gray-800 mb-2">
-                        게시글을 등록했어요!
+                        게시글을 수정했어요!
                     </h1>
                     <p className="text-[16px] font-semibold text-gray-500">
                         앞으로도 함께 소통해요
                     </p>
                 </div>
             </div>
-
 
             <footer className="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-120 px-5 pb-8 pt-3">
                 <button
@@ -32,5 +31,6 @@ export default function CommunityCompletePage() {
                 </button>
             </footer>
         </div>
+
     );
 }
