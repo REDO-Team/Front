@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../apis/api';
+
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 import Logo from '../../assets/icons/Big-logo.svg?react';
 import GoogleIcon from '/src/assets/icons/google.svg?react';
@@ -10,6 +13,7 @@ const LoginPage = () => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -17,20 +21,39 @@ const LoginPage = () => {
     id.trim() !== '' &&
     password.trim() !== '';
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setError('');
+    setIsLoading(true);
 
-    if (id === 'admin' && password === '1234') {
+    try {
+      const response = await api.post('/api/auth/login', {
+        loginId: id.trim(),
+        password,
+      });
+
+      const accessToken = response.data.result.accessToken;
+
+      localStorage.setItem('accessToken', accessToken);
+
       navigate('/');
-      return;
+    } catch {
+      setError('아이디 혹은 비밀번호가 일치하지 않습니다');
+    } finally {
+      setIsLoading(false);
     }
-
-    setError('아이디 혹은 비밀번호가 일치하지 않습니다');
   };
+
+  if (isLoading) {
+    return (
+      <div className='flex min-h-dvh items-center justify-center bg-white'>
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <div className='min-h-dvh w-full overflow-y-auto bg-white px-5'>
-      <div className='mx-auto flex min-h-dvh w-full max-w-[362px] flex-col items-center pt-[150px] py-[40px]'>
+      <div className='mx-auto flex min-h-dvh w-full max-w-[362px] flex-col items-center py-[40px] pt-[150px]'>
         {/* 로고 및 문구 */}
         <div className='flex flex-col items-center'>
           <Logo className='h-[119px] w-[130px]' />
@@ -74,10 +97,10 @@ const LoginPage = () => {
 
           <button
             type='button'
-            disabled={!isValid}
+            disabled={!isValid || isLoading}
             onClick={handleLogin}
             className={`mt-[10px] h-[50px] w-full rounded-[30px] text-[16px] font-bold text-white transition-colors ${
-              isValid
+              isValid && !isLoading
                 ? 'bg-main-green1'
                 : 'cursor-not-allowed bg-gray-400'
             }`}
