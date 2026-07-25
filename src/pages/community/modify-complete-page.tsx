@@ -1,18 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import CheckIcon from "../../assets/icons/check";
 
-export default function CommunityCompletePage() {
+export default function CommunityModifyCompletePage() {
     const navigate = useNavigate();
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-bg-green1 font-pretendard">
-            <div className="w-[100px] h-[100px] bg-main-green1 rounded-full flex items-center justify-center mb-8 drop-shadow-[0_0_20px_rgba(24,178,104,0.5)]">
-                <CheckIcon className="w-[30px] h-[22px]" />
-            </div>
+        <div className="flex flex-col items-center justify-center min-h-screen bg-bg-green1 font-pretendard">            
+        <div className="w-[100px] h-[100px] bg-main-green1 rounded-full flex items-center justify-center mb-8 drop-shadow-[0_0_20px_rgba(24,178,104,0.5)]">
+            <CheckIcon className="w-[30px] h-[22px]" />
+        </div>
 
             <div className="text-center mb-[120px]">
                 <h1 className="text-[24px] font-bold text-gray-800 mb-2">
-                    게시글을 등록했어요!
+                    게시글을 수정했어요!
                 </h1>
                 <p className="text-[16px] font-semibold text-gray-500">
                     앞으로도 함께 소통해요

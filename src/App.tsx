@@ -46,8 +46,9 @@ import FavoriteDisposalDetailPage from './pages/my-page/favorite-disposal-detail
 import RewardUseHistoryPage from './pages/my-page/reward-use-history-page';
 import CommunityDetailPage from "./pages/community/detail-page";
 import CommunityWritePage from "./pages/community/write-page";
-import CommunityModifyPage from "./pages/community/modity-page";
+import CommunityModifyPage from "./pages/community/modify-page";
 import CommunityCompletePage from "./pages/community/complete-page";
+import CommunityModifyCompletePage from "./pages/community/modify-complete-page";
 
 const routes: RouteObject[] = [
   {
@@ -257,6 +258,11 @@ const routes: RouteObject[] = [
           {
             path: "complete",
             element: <CommunityCompletePage />,
+          }
+          ,
+          {
+            path: "modify-complete",
+            element: <CommunityModifyCompletePage />,
           }
         ],
       },
