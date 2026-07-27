@@ -1,13 +1,50 @@
 export type RewardHistoryType = 'EARN' | 'USE';
 
-export type RewardProductType = 'PARTNER' | 'GIFTICON';
+export type RewardProductType = 'PARTNER_BRAND' | 'COUPON_GIFTICON';
 
 export type RewardFilterType = 'ALL' | RewardProductType;
+
+export type MockRewardProductType = 'PARTNER' | 'GIFTICON';
+
+export type RewardProductStatus = 'ACTIVE' | 'INACTIVE' | 'SOLD_OUT';
 
 export interface RewardSummary {
     nickname: string;
     currentPoint: number;
     monthlyPoint: number;
+}
+
+export interface RewardPointResponse {
+  totalPoint: number;
+  monthlyEarnedPoint: number;
+}
+
+export interface RewardProductListParams {
+  rewardProductType?: RewardProductType;
+  cursor?: number;
+  size?: number;
+}
+
+export interface RewardProductListItem {
+  rewardProductId: number;
+  rewardProductType: RewardProductType;
+  name: string;
+  imageUrl: string;
+  pricePoint: number;
+  stockQuantity: number;
+  status: RewardProductStatus;
+}
+
+export interface RewardProductListResult {
+  items: RewardProductListItem[];
+  nextCursor: number;
+  hasNext: boolean;
+}
+
+export interface RewardProductDetail extends RewardProductListItem {
+  description: string;
+  usageGuide: string;
+  validityDays: number;
 }
 
 export interface RewardHistory {
@@ -21,7 +58,7 @@ export interface RewardHistory {
 export interface RewardProduct {
     id: number;
     name: string;
-    type: RewardProductType;
+    type: MockRewardProductType;
     point: number;
     description?: string;
     usageGuide?: string;
@@ -39,6 +76,7 @@ export interface ApiResponse<T> {
   code: string;
   message: string;
   result: T | null;
+  errorDetail?: string | null;
 }
 
 export interface ShippingAddress {

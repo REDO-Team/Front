@@ -1,0 +1,49 @@
+import api from './api';
+import type {
+  ApiResponse,
+  RewardPointResponse,
+  RewardProductDetail,
+  RewardProductListParams,
+  RewardProductListResult,
+} from '../types/reward';
+
+export const getRewardPoints = async (): Promise<RewardPointResponse> => {
+  const response = await api.get<ApiResponse<RewardPointResponse>>(
+    '/api/rewards/points',
+  );
+
+  if (!response.data.result) {
+    throw new Error('포인트 조회 결과가 없습니다.');
+  }
+
+  return response.data.result;
+};
+
+export const getRewardProducts = async (
+  params?: RewardProductListParams,
+): Promise<RewardProductListResult> => {
+  const response = await api.get<ApiResponse<RewardProductListResult>>(
+    '/api/rewards/products',
+    { params },
+  );
+
+  if (!response.data.result) {
+    throw new Error('리워드 상품 목록 조회 결과가 없습니다.');
+  }
+
+  return response.data.result;
+};
+
+export const getRewardProductDetail = async (
+  rewardProductId: number,
+): Promise<RewardProductDetail> => {
+  const response = await api.get<ApiResponse<RewardProductDetail>>(
+    `/api/rewards/products/${rewardProductId}`,
+  );
+
+  if (!response.data.result) {
+    throw new Error('리워드 상품 상세 조회 결과가 없습니다.');
+  }
+
+  return response.data.result;
+};

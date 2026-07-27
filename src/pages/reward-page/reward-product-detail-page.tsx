@@ -1,24 +1,58 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import RewardPlaceholder from '../../assets/icons/reward-reward.svg';
-import { mockRewardProducts } from '../../mocks/reward';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import FailInfo from '../../components/common/FailInfo';
+import { getRewardProductDetail } from '../../apis/reward';
 
 export default function RewardProductDetailPage() {
   const navigate = useNavigate();
   const { productId } = useParams<{ productId: string }>();
   const numericProductId = Number(productId);
-  const product = Number.isSafeInteger(numericProductId) ? mockRewardProducts.find(({ id }) => id === numericProductId) : undefined;
-  const isPartner = product?.type === 'PARTNER';
+  const isValidProductId =
+    Number.isSafeInteger(numericProductId) &&
+    numericProductId > 0;
+  const { data: product, isPending, isError } = useQuery({
+    queryKey: ['rewardProduct', numericProductId],
+    queryFn: () => getRewardProductDetail(numericProductId),
+    enabled: isValidProductId,
+  });
+  const isPartner = product?.rewardProductType === 'PARTNER_BRAND';
+  const isUnavailable =
+    !product ||
+    product.stockQuantity === 0 ||
+    product.status !== 'ACTIVE';
 
   return (
     <div className='flex flex-1 flex-col bg-white px-5 pb-6 pt-4 font-pretendard'>
-      {product ? (
+      {!isValidProductId ? (
+        <FailInfo
+          title='제품을 찾을 수 없어요.'
+          content='제품 번호를 확인한 후 다시 시도해 주세요.'
+        />
+      ) : isPending ? (
+        <div className='flex flex-1 items-center justify-center'>
+          <LoadingSpinner />
+        </div>
+      ) : isError || !product ? (
+        <FailInfo
+          title='제품을 불러오지 못했어요.'
+          content='잠시 후 다시 시도해 주세요.'
+        />
+      ) : (
         <>
           <section aria-labelledby='product-name'>
-            <div role='img' aria-label={`${product.name} 상품 이미지 준비 중`} className={`flex aspect-[31/20] w-full items-center justify-center overflow-hidden rounded-xl ${isPartner ? 'bg-skyblue-bg' : 'bg-reward-bg'}`}>
-              <div className='flex flex-col items-center gap-3 text-center'>
-                <img src={RewardPlaceholder} alt='' className='h-16 w-16' />
-                <span className='text-sm font-semibold text-gray-500'>{product.name}</span>
-              </div>
+            <div className={`flex aspect-[31/20] w-full items-center justify-center overflow-hidden rounded-xl ${isPartner ? 'bg-skyblue-bg' : 'bg-reward-bg'}`}>
+              <img
+                src={product.imageUrl || RewardPlaceholder}
+                alt={`${product.name} 상품`}
+                className='h-full w-full object-cover'
+                onError={(event) => {
+                  event.currentTarget.onerror = null;
+                  event.currentTarget.src = RewardPlaceholder;
+                  event.currentTarget.className = 'h-16 w-16 object-contain';
+                }}
+              />
             </div>
 
             <span className={`mt-5 inline-flex rounded-full px-2.5 py-1.5 text-xs font-semibold leading-none ${isPartner ? 'bg-skyblue-bg text-skyblue-text' : 'bg-reward-bg text-reward-text'}`}>{isPartner ? '친환경 제품' : '기프티콘'}</span>
@@ -29,7 +63,7 @@ export default function RewardProductDetailPage() {
 
             <dl className='mt-4 flex items-center justify-end gap-2'>
               <dt className='text-sm font-medium text-gray-400'>필요 포인트</dt>
-              <dd className='text-xl font-bold text-main-green1'>{product.point.toLocaleString()}P</dd>
+              <dd className='text-xl font-bold text-main-green1'>{product.pricePoint.toLocaleString('ko-KR')}P</dd>
             </dl>
           </section>
 
@@ -54,22 +88,33 @@ export default function RewardProductDetailPage() {
 
               <dl className='mt-6 flex items-center justify-between rounded-2xl bg-bg-green1 px-5 py-4 shadow-[0_5px_14px_rgba(0,0,0,0.05)]'>
                 <dt className='text-xs font-medium text-gray-400'>유효기간</dt>
-                <dd className='text-xs font-bold text-gray-700'>{product.validityPeriod ?? '준비 중'}</dd>
+                <dd className='text-xs font-bold text-gray-700'>발급일로부터 {product.validityDays}일</dd>
               </dl>
             </section>
           )}
 
           <div className='mt-auto pt-8'>
-            <button type='button' aria-label={`${product.name} 포인트 사용`} onClick={() => navigate(`/reward/checkout/${product.id}`)} className='h-12 w-full rounded-full bg-main-green1 text-base font-bold text-white'>
-              포인트 사용
+            <button
+              type='button'
+              aria-label={`${product.name} 포인트 사용`}
+              disabled={isUnavailable}
+              onClick={() =>
+                navigate(`/reward/checkout/${product.rewardProductId}`)
+              }
+              className={`h-12 w-full rounded-full text-base font-bold text-white ${
+                isUnavailable
+                  ? 'cursor-not-allowed bg-gray-400'
+                  : 'bg-main-green1'
+              }`}
+            >
+              {product.stockQuantity === 0 || product.status === 'SOLD_OUT'
+                ? '품절'
+                : product.status !== 'ACTIVE'
+                  ? '구매 불가'
+                  : '포인트 사용'}
             </button>
           </div>
         </>
-      ) : (
-        <section className='rounded-[22px] bg-white px-5 py-12 text-center shadow-[0_8px_20px_rgba(0,0,0,0.06)]'>
-          <h1 className='text-lg font-bold text-text'>제품을 찾을 수 없어요.</h1>
-          <p className='mt-2 text-sm text-gray-500'>제품 번호를 확인한 후 다시 시도해 주세요.</p>
-        </section>
       )}
     </div>
   );
