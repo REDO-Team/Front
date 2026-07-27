@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import {checkLoginId,sendEmailVerification,verifyEmailCode,signup,} from '../../apis/auth';
 import { useNavigate } from 'react-router-dom';
 import LeftArrowIcon from '../../assets/icons/left-arrow.svg?react';
 
@@ -11,11 +13,23 @@ type UserIdStatus =
   | 'available'
   | 'duplicate';
 
+  
 const SignupPage = () => {
   const navigate = useNavigate();
 
-  const [userIdStatus, setUserIdStatus] =
-    useState<UserIdStatus>('none');
+  useEffect(() => {
+  const agreedTermsIds = sessionStorage.getItem(
+    'signupAgreedTermsIds',
+  );
+
+  if (!agreedTermsIds) {
+    navigate('/signup/terms', { replace: true });
+  }
+  }, [navigate]);
+  
+  const [isCheckingUserId, setIsCheckingUserId] = useState(false);
+  const [isSigningUp, setIsSigningUp] = useState(false);
+  const [userIdStatus, setUserIdStatus] = useState<UserIdStatus>('none');
 
   const [userId, setUserId] = useState('');
   const [email, setEmail] = useState('');
@@ -57,44 +71,99 @@ const SignupPage = () => {
     isPasswordValid &&
     isPasswordMatched;
 
-  const handleCheckId = () => {
-    if (!ID_REGEX.test(userId)) {
-      setUserIdStatus('formatError');
-      return;
-    }
+  const handleCheckId = async () => {
+  const trimmedUserId = userId.trim();
 
-    // 테스트용 중복 아이디
-    if (userId === 'aadmin') {
+  if (!ID_REGEX.test(trimmedUserId)) {
+    setUserIdStatus('formatError');
+    return;
+  }
+
+  try {
+    setIsCheckingUserId(true);
+
+    const isAvailable = await checkLoginId(trimmedUserId);
+
+    if (isAvailable) {
+      setUserIdStatus('available');
+    } else {
       setUserIdStatus('duplicate');
-      return;
     }
-
-    setUserIdStatus('available');
-  };
-
-  const handleSendEmail = () => {
-    if (email.trim() === '') {
-      alert('이메일 주소를 입력해주세요.');
-      return;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      alert(
+        error.response?.data?.message ??
+          '아이디 중복 확인에 실패했습니다.',
+      );
+    } else {
+      alert('오류가 발생했습니다.');
     }
+  } finally {
+    setIsCheckingUserId(false);
+  }
+};
+
+  const handleSendEmail = async () => {
+  if (email.trim() === '') {
+    alert('이메일 주소를 입력해주세요.');
+    return;
+  }
+
+  try {
+    await sendEmailVerification(email.trim());
 
     setIsEmailVerified(false);
     setVerificationCode('');
 
-    // 테스트용
-    alert('인증번호를 발송했습니다.\n테스트 인증번호: 123456');
-  };
+    alert('인증번호를 발송했습니다.');
+  } catch {
+    alert('인증번호 발송에 실패했습니다.');
+  }
+};
 
-  const handleVerify = () => {
-    if (verificationCode === '123456') {
-      setIsEmailVerified(true);
-      alert('인증되었습니다.');
-      return;
-    }
+  const handleVerify = async () => {
+  try {
+    await verifyEmailCode(
+      email.trim(),
+      verificationCode.trim(),
+    );
 
+    setIsEmailVerified(true);
+    alert('인증되었습니다.');
+  } catch {
     setIsEmailVerified(false);
     alert('인증번호가 올바르지 않습니다.');
-  };
+  }
+};
+
+const handleSignup = async () => {
+  if (!isValid || isSigningUp) {
+    return;
+  }
+
+  try {
+    setIsSigningUp(true);
+
+    const agreedTermsIds: number[] = JSON.parse(
+      sessionStorage.getItem('signupAgreedTermsIds') ?? '[]',
+    );
+
+    const result = await signup(
+      userId.trim(),
+      email.trim(),
+      password,
+      agreedTermsIds,
+    );
+
+    localStorage.setItem('accessToken', result.accessToken);
+
+    navigate('/signup/profile');
+  } catch {
+    alert('회원가입에 실패했습니다.');
+  } finally {
+    setIsSigningUp(false);
+  }
+};
 
   return (
     <div className='flex h-dvh w-full flex-col overflow-hidden bg-white font-pretendard text-text'>
@@ -155,9 +224,10 @@ const SignupPage = () => {
               <button
                 type='button'
                 onClick={handleCheckId}
+                disabled={isCheckingUserId}
                 className='h-[48px] w-[108px] shrink-0 rounded-[24px] border border-main-green1 bg-white text-[16px] font-semibold text-main-green1 transition-colors active:bg-main-green1 active:text-white'
               >
-                중복확인
+                {isCheckingUserId ? '확인 중...' : '중복확인'}
               </button>
             </div>
 
@@ -351,15 +421,15 @@ const SignupPage = () => {
       <div className='shrink-0 bg-white px-5 pb-[27px] pt-3'>
         <button
           type='button'
-          disabled={!isValid}
-          onClick={() => navigate('/signup/profile')}
+          disabled={!isValid || isSigningUp}
+          onClick={handleSignup}
           className={`h-[50px] w-full rounded-[30px] text-[16px] font-bold text-white transition-colors ${
-            isValid
+            isValid && !isSigningUp
               ? 'bg-main-green1'
               : 'cursor-not-allowed bg-gray-400'
           }`}
         >
-          다음
+          {isSigningUp ? '가입 중...' : '다음'}
         </button>
       </div>
     </div>
