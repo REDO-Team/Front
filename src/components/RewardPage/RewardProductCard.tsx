@@ -1,26 +1,35 @@
 import { Link } from 'react-router-dom';
-import type { RewardProduct } from '../../types/reward';
+import RewardPlaceholder from '../../assets/icons/reward-reward.svg';
+import type { RewardProductListItem } from '../../types/reward';
 
 interface RewardProductCardProps {
-  product: RewardProduct;
+  product: RewardProductListItem;
 }
 
 export default function RewardProductCard({
   product,
 }: RewardProductCardProps) {
-  const isPartner = product.type === 'PARTNER';
+  const isPartner = product.rewardProductType === 'PARTNER_BRAND';
 
   return (
     <article className='min-h-[78px] rounded-[18px] bg-white p-2.5 shadow-[0_6px_16px_rgba(0,0,0,0.05)]'>
       <Link
-        to={`/reward/products/${product.id}`}
+        to={`/reward/products/${product.rewardProductId}`}
         aria-label={`${product.name} 상품 상세 보기`}
         className='flex min-h-[58px] items-center'
       >
-        <div
-          aria-hidden='true'
-          className='h-14 w-14 shrink-0 rounded-xl bg-gray-100'
-        />
+        <div className='flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gray-100'>
+          <img
+            src={product.imageUrl || RewardPlaceholder}
+            alt={`${product.name} 상품`}
+            className='h-full w-full object-cover'
+            onError={(event) => {
+              event.currentTarget.onerror = null;
+              event.currentTarget.src = RewardPlaceholder;
+              event.currentTarget.className = 'h-9 w-9 object-contain';
+            }}
+          />
+        </div>
 
         <div className='ml-3 min-w-0 flex-1'>
           <span
@@ -38,7 +47,7 @@ export default function RewardProductCard({
         </div>
 
         <strong className='ml-3 shrink-0 text-[15px] font-bold text-main-green1'>
-          {product.point.toLocaleString()}P
+          {product.pricePoint.toLocaleString('ko-KR')}P
         </strong>
       </Link>
     </article>
