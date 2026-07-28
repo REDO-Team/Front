@@ -48,12 +48,27 @@ export interface RewardProductDetail extends RewardProductListItem {
 }
 
 export interface RewardHistory {
-    id: number;
-    title: string;
-    type: RewardHistoryType;
-    point: number;
-    createdAt: string;
+  transactionId: number;
+  title: string;
+  transactionType: RewardHistoryType;
+  amount: number;
+  certificationId: number;
+  rewardRedemptionId: number;
+  createdAt: string;
 }
+
+export interface RewardHistoryResult {
+  items: RewardHistory[];
+  nextCursor: number;
+  hasNext: boolean;
+}
+
+export interface RewardHistoryParams {
+  cursor?: number;
+  size?: number;
+}
+
+export type RewardHistoryResponse = ApiResponse<RewardHistoryResult>;
 
 export interface RewardProduct {
     id: number;

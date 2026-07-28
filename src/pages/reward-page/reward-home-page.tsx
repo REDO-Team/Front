@@ -2,15 +2,22 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import YellowCharacter from '../../assets/icons/character/yellow-character.svg';
 import RewardCard from '../../components/RewardPage/RewardCard';
-import { mockRewardHistory } from '../../mocks/reward';
 import { HOME_USER } from '../../mocks/home';
-import { getRewardPoints } from '../../apis/reward';
+import { getRewardHistory, getRewardPoints } from '../../apis/reward';
 
 export default function RewardHomePage() {
   const { nickname } = HOME_USER;
   const { data, isPending, isError } = useQuery({
     queryKey: ['rewardPoints'],
     queryFn: getRewardPoints,
+  });
+  const {
+    data: historyData,
+    isPending: isHistoryPending,
+    isError: isHistoryError,
+  } = useQuery({
+    queryKey: ['rewardHistory', { size: 4 }],
+    queryFn: () => getRewardHistory({ size: 4 }),
   });
 
   return (
@@ -57,9 +64,26 @@ export default function RewardHomePage() {
         </div>
 
         <div className='mt-3 rounded-[22px] bg-white px-4 shadow-[0_8px_20px_rgba(0,0,0,0.06)] divide-y divide-gray-200'>
-          {mockRewardHistory.slice(0, 4).map((history) => (
-            <RewardCard key={history.id} rewardHistory={history} />
-          ))}
+          {isHistoryPending ? (
+            <p className='py-10 text-center text-sm font-medium text-gray-500'>
+              리워드 내역을 불러오는 중이에요...
+            </p>
+          ) : isHistoryError || !historyData ? (
+            <p className='py-10 text-center text-sm font-medium text-gray-500'>
+              리워드 내역을 불러오지 못했어요.
+            </p>
+          ) : historyData.items.length === 0 ? (
+            <p className='py-10 text-center text-sm font-medium text-gray-500'>
+              아직 내역이 없어요.
+            </p>
+          ) : (
+            historyData.items.map((history) => (
+              <RewardCard
+                key={history.transactionId}
+                rewardHistory={history}
+              />
+            ))
+          )}
         </div>
       </section>
 

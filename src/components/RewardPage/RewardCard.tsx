@@ -7,9 +7,9 @@ interface RewardCardProps {
 }
 
 export default function RewardCard({ rewardHistory }: RewardCardProps) {
-  const { title, type, point, createdAt } = rewardHistory;
-  const isEarned = type === 'EARN';
-  const pointText = `${isEarned ? '+' : '-'}${Math.abs(point).toLocaleString()}P`;
+  const { title, transactionType, amount, createdAt } = rewardHistory;
+  const isEarned = transactionType === 'EARN';
+  const pointText = `${isEarned ? '+' : '-'}${Math.abs(amount).toLocaleString()}P`;
   const dateText = createdAt.slice(0, 10).replaceAll('-', '.');
 
   return (
