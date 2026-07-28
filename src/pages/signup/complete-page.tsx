@@ -1,8 +1,25 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CompleteCheckIcon from '../../assets/icons/signup-complete.svg?react';
 
 const SignupCompletePage = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const agreedTermsIds = sessionStorage.getItem(
+      'signupAgreedTermsIds',
+    );
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (!agreedTermsIds || !accessToken) {
+      navigate('/signup', { replace: true });
+    }
+  }, [navigate]);
+
+  const handleStart = () => {
+    sessionStorage.removeItem('signupAgreedTermsIds');
+    navigate('/', { replace: true });
+  };
 
   return (
     <div className='mx-auto flex h-dvh w-full max-w-[402px] flex-col overflow-hidden bg-white px-5 pb-[24px] font-pretendard text-text'>
@@ -24,7 +41,7 @@ const SignupCompletePage = () => {
 
       <button
         type='button'
-        onClick={() => navigate('/')}
+        onClick={handleStart}
         className='h-[50px] w-full shrink-0 rounded-[25px] bg-main-green1 text-[16px] font-bold text-white'
       >
         시작하기

@@ -1,10 +1,6 @@
-import {
-  type ChangeEvent,
-  type ComponentType,
-  type SVGProps,
-  useState,
-} from 'react';
+import { type ChangeEvent,type ComponentType,type SVGProps,useState,useEffect,} from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createProfile,uploadProfileImage,type CharacterCode,} from '../../apis/user';
 
 import LeftArrowIcon from '../../assets/icons/left-arrow.svg?react';
 import GalleryIcon from '../../assets/icons/gallery.svg?react';
@@ -33,6 +29,7 @@ type SvgComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
 interface CharacterItem {
   id: number;
+  code: CharacterCode;
   label: string;
   defaultIcon: SvgComponent;
   selectedIcon: SvgComponent;
@@ -41,36 +38,42 @@ interface CharacterItem {
 const CHARACTER_ITEMS: CharacterItem[] = [
   {
     id: 1,
+    code: 'YELLOW',
     label: '노란색 캐릭터',
     defaultIcon: YellowCharacter,
     selectedIcon: YellowCharacterSelected,
   },
   {
     id: 2,
+    code: 'GRAY',
     label: '회색 캐릭터',
     defaultIcon: GrayCharacter,
     selectedIcon: GrayCharacterSelected,
   },
   {
     id: 3,
+    code: 'GREEN',
     label: '초록색 캐릭터',
     defaultIcon: GreenCharacter,
     selectedIcon: GreenCharacterSelected,
   },
   {
     id: 4,
+    code: 'ORANGE',
     label: '주황색 캐릭터',
     defaultIcon: OrangeCharacter,
     selectedIcon: OrangeCharacterSelected,
   },
   {
     id: 5,
+    code: 'PURPLE',
     label: '보라색 캐릭터',
     defaultIcon: PurpleCharacter,
     selectedIcon: PurpleCharacterSelected,
   },
   {
     id: 6,
+    code: 'BLUE',
     label: '파란색 캐릭터',
     defaultIcon: BlueCharacter,
     selectedIcon: BlueCharacterSelected,
@@ -78,10 +81,23 @@ const CHARACTER_ITEMS: CharacterItem[] = [
 ];
 
 const ProfileCreatePage = () => {
+  const [isCreatingProfile, setIsCreatingProfile] = useState(false);
   const navigate = useNavigate();
 
+    useEffect(() => {
+    const agreedTermsIds = sessionStorage.getItem(
+      'signupAgreedTermsIds',
+    );
+
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (!agreedTermsIds || !accessToken) {
+      navigate('/signup', { replace: true });
+    }
+  }, [navigate]);
   const [nickname, setNickname] = useState('');
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
 
   const [selectedCharacterId, setSelectedCharacterId] = useState<
     number | null
@@ -96,14 +112,29 @@ const ProfileCreatePage = () => {
 
   const SelectedCharacterIcon = selectedCharacter?.selectedIcon;
 
-  const isBirthDateComplete =
-    /^\d{4} \/ \d{2} \/ \d{2}$/.test(birthDate);
+  const isValidBirthDate = (value: string) => {
+  if (!/^\d{4} \/ \d{2} \/ \d{2}$/.test(value)) {
+    return false;
+  }
 
-  const isValid =
-    nickname.trim() !== '' &&
-    selectedCharacterId !== null &&
-    gender !== null &&
-    isBirthDateComplete;
+  const [year, month, day] = value
+    .split(' / ')
+    .map(Number);
+
+  const date = new Date(year, month - 1, day);
+
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
+};
+
+const isBirthDateComplete = isValidBirthDate(birthDate);
+const isNicknameValid = /^[가-힣0-9]{2,10}$/.test(nickname.trim());
+
+  const hasProfile = selectedCharacterId !== null || profileImageFile !== null;
+  const isValid = isNicknameValid && hasProfile && gender !== null && isBirthDateComplete;
 
   const handleImageChange = (
     event: ChangeEvent<HTMLInputElement>,
@@ -113,7 +144,12 @@ const ProfileCreatePage = () => {
     if (!file) return;
 
     const imageUrl = URL.createObjectURL(file);
+
     setProfileImage(imageUrl);
+    setProfileImageFile(file);
+
+    // 직접 이미지를 선택하면 기존 캐릭터 선택 해제
+    setSelectedCharacterId(null);
   };
 
   const handleBirthDateChange = (
@@ -138,6 +174,46 @@ const ProfileCreatePage = () => {
 
     setBirthDate(formatted);
   };
+
+  const handleCreateProfile = async () => {
+  if (!isValid || isCreatingProfile || !gender) return;
+
+  try {
+    setIsCreatingProfile(true);
+
+    console.log({
+      nickname: nickname.trim(),
+  characterCode: selectedCharacter?.code ?? 'YELLOW',
+  gender: gender === 'male' ? 'MALE' : 'FEMALE',
+  birthDate: birthDate.replaceAll(' / ', '-'),
+});
+
+    await createProfile({
+      nickname: nickname.trim(),
+      characterCode: selectedCharacter?.code ?? 'YELLOW',
+      gender: gender === 'male' ? 'MALE' : 'FEMALE',
+      birthDate: birthDate.replaceAll(' / ', '-'),
+    });
+
+    if (profileImageFile) {
+      try {
+        await uploadProfileImage(profileImageFile);
+      } catch (error) {
+        console.error('프로필 이미지 업로드 실패:', error);
+        alert(
+          '프로필은 생성되었지만 이미지 업로드에 실패했습니다. 마이페이지에서 다시 등록해주세요.',
+        );
+      }
+    }
+
+    navigate('/signup/complete');
+  } catch (error) {
+    console.error('프로필 생성 실패:', error);
+    alert('프로필 생성에 실패했습니다. 다시 시도해주세요.');
+  } finally {
+    setIsCreatingProfile(false);
+  }
+};
 
   return (
     <div className='mx-auto flex h-dvh w-full max-w-[402px] flex-col overflow-hidden bg-white font-pretendard text-text'>
@@ -208,10 +284,17 @@ const ProfileCreatePage = () => {
               id='nickname'
               type='text'
               value={nickname}
+              maxLength={10}
               onChange={(event) => setNickname(event.target.value)}
               placeholder='닉네임을 입력하세요'
               className='h-[48px] w-full rounded-[24px] border border-gray-200 bg-gray-50 px-[16px] text-[15px] font-medium leading-[18px] outline-none placeholder:text-[#ACACAC]'
             />
+
+            {nickname !== '' && !isNicknameValid && (
+              <p className="mt-2 text-xs text-red-500">
+                닉네임은 한글과 숫자만 사용 가능하며 2~10글자로 입력해주세요.
+              </p>
+            )}
           </div>
 
           {/* 캐릭터 선택 */}
@@ -237,7 +320,9 @@ const ProfileCreatePage = () => {
                     aria-pressed={isSelected}
                     onClick={() => {
                       setSelectedCharacterId(character.id);
+                      // 캐릭터를 선택하면 직접 선택한 이미지 해제
                       setProfileImage(null);
+                      setProfileImageFile(null);
                     }}
                     className='flex h-[70px] w-[70px] shrink-0 items-center justify-center'
                   >
@@ -312,15 +397,15 @@ const ProfileCreatePage = () => {
       <div className='shrink-0 bg-white px-5 pb-[24px]'>
         <button
           type='button'
-          disabled={!isValid}
-          onClick={() => navigate('/signup/complete')}
+          disabled={!isValid || isCreatingProfile}
+          onClick={handleCreateProfile}
           className={`h-[50px] w-full rounded-[25px] text-[16px] font-bold text-white transition-colors ${
-            isValid
+            isValid && !isCreatingProfile
               ? 'bg-main-green1'
               : 'cursor-not-allowed bg-gray-400'
           }`}
         >
-          다음
+          {isCreatingProfile ? '생성 중...' : '다음'}
         </button>
       </div>
     </div>
