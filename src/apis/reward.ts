@@ -5,6 +5,8 @@ import type {
   RewardProductDetail,
   RewardProductListParams,
   RewardProductListResult,
+  RewardHistoryResult,
+  RewardHistoryParams,
 } from '../types/reward';
 
 export const getRewardPoints = async (): Promise<RewardPointResponse> => {
@@ -43,6 +45,21 @@ export const getRewardProductDetail = async (
 
   if (!response.data.result) {
     throw new Error('리워드 상품 상세 조회 결과가 없습니다.');
+  }
+
+  return response.data.result;
+};
+
+export const getRewardHistory = async (
+  params?: RewardHistoryParams,
+): Promise<RewardHistoryResult> => {
+  const response = await api.get<ApiResponse<RewardHistoryResult>>(
+    '/api/rewards/points/transactions',
+    { params },
+  );
+
+  if (!response.data.result) {
+    throw new Error('리워드 내역 조회 결과가 없습니다.');
   }
 
   return response.data.result;
