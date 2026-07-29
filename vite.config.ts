@@ -3,7 +3,15 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import svgr from 'vite-plugin-svgr';
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss(), svgr()],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://13.209.188.93',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });
