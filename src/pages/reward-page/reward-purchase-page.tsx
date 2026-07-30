@@ -1,11 +1,18 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import Location from '../../assets/icons/location.svg';
-import { mockRecentShippingAddress, mockRewardProducts, mockRewardSummary } from '../../mocks/reward';
-import type { RewardProduct, RewardShippingAddress } from '../../types/reward';
+import { mockRecentShippingAddress } from '../../mocks/reward';
+import type {
+  RewardProductDetail,
+  RewardShippingAddress,
+} from '../../types/reward';
 import RewardPlaceholder from '../../assets/icons/reward-reward.svg';
+import { getRewardProductDetail, getRewardPoints } from '../../apis/reward';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import FailInfo from '../../components/common/FailInfo';
 
 interface PurchaseSectionProps {
-  product: RewardProduct;
+  product: RewardProductDetail;
 }
 
 interface PartnerPurchaseSectionProps extends PurchaseSectionProps {
@@ -58,47 +65,100 @@ export default function RewardCheckoutPage() {
   const navigate = useNavigate();
   const { productId } = useParams<{ productId: string }>();
   const numericProductId = Number(productId);
-  const product = Number.isSafeInteger(numericProductId) ? mockRewardProducts.find(({ id }) => id === numericProductId) : undefined;
+  const isValidProductId =
+    Number.isSafeInteger(numericProductId) && numericProductId > 0;
+  const {
+    data: productDetail,
+    isPending: isProductPending,
+    isError: isProductError,
+  } = useQuery({
+    queryKey: ['rewardProduct', numericProductId],
+    queryFn: () => getRewardProductDetail(numericProductId),
+    enabled: isValidProductId,
+  });
+  const {
+    data: rewardPoints,
+    isPending: isPointsPending,
+    isError: isPointsError,
+  } = useQuery({
+    queryKey: ['rewardPoints'],
+    queryFn: getRewardPoints,
+  });
 
-  if (!product) {
-    return <div className='flex flex-1 flex-col bg-white px-5 pb-6 pt-4 font-pretendard'></div>;
+  if (!isValidProductId || isProductError || isPointsError) {
+    return (
+      <div className='flex flex-1 flex-col bg-white px-5 pb-6 pt-4 font-pretendard'>
+        <FailInfo
+          title='제품을 불러오지 못했어요.'
+          content='제품 번호를 확인한 후 다시 시도해 주세요.'
+        />
+      </div>
+    );
   }
 
-  const isPartner = product.type === 'PARTNER';
-  const remainingPoint = mockRewardSummary.currentPoint - product.point;
+  if (isProductPending || isPointsPending) {
+    return (
+      <div className='flex flex-1 items-center justify-center bg-white'>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (!productDetail || !rewardPoints) {
+    return (
+      <div className='flex flex-1 flex-col bg-white px-5 pb-6 pt-4 font-pretendard'>
+        <FailInfo
+          title='제품을 찾을 수 없어요.'
+          content='잠시 후 다시 시도해 주세요.'
+        />
+      </div>
+    );
+  }
+
+  const isPartner = productDetail.rewardProductType === 'PARTNER_BRAND';
+  const remainingPoint = rewardPoints.totalPoint - productDetail.pricePoint;
 
   return (
     <div className='flex flex-1 flex-col bg-bg-green1 px-5 pb-6 pt-4 font-pretendard'>
       <h1 className='text-lg font-bold text-text'>제품 내역</h1>
       <div className='mt-3 flex min-h-27 items-center gap-4 rounded-[28px] bg-white px-5 py-[18px]'>
         <div className='flex h-[70px] w-[70px] shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gray-100'>
-          <img src={RewardPlaceholder} alt='' className='h-10 w-10 object-contain' />
+          <img
+            src={productDetail.imageUrl || RewardPlaceholder}
+            alt={`${productDetail.name} 상품`}
+            className='h-full w-full object-cover'
+            onError={(event) => {
+              event.currentTarget.onerror = null;
+              event.currentTarget.src = RewardPlaceholder;
+              event.currentTarget.className = 'h-10 w-10 object-contain';
+            }}
+          />
         </div>
 
         <div className='min-w-0 flex-1'>
           <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold leading-none ${isPartner ? 'bg-skyblue-bg text-skyblue-text' : 'bg-reward-bg text-reward-text'}`}>{isPartner ? '친환경 제품' : '기프티콘'}</span>
 
-          <h2 className='mt-2 truncate text-base font-bold leading-tight text-text'>{product.name}</h2>
+          <h2 className='mt-2 truncate text-base font-bold leading-tight text-text'>{productDetail.name}</h2>
 
           <div className='mt-2 flex items-center gap-1.5'>
             <span className='text-sm font-semibold text-gray-400'>사용 포인트</span>
-            <span className='text-base font-semibold text-main-green1'>{product.point.toLocaleString()}P</span>
+            <span className='text-base font-semibold text-main-green1'>{productDetail.pricePoint.toLocaleString()}P</span>
           </div>
         </div>
       </div>
 
-      {isPartner ? <PartnerPurchaseSection product={product} shippingAddress={mockRecentShippingAddress} onAddAddress={() => navigate('/reward/address-list')} /> : <GifticonPurchaseSection product={product} />}
+      {isPartner ? <PartnerPurchaseSection product={productDetail} shippingAddress={mockRecentShippingAddress} onAddAddress={() => navigate('/reward/address-list')} /> : <GifticonPurchaseSection product={productDetail} />}
 
       <div>
         <p className='mt-2 flex text-black font-bold'>포인트 사용 내역</p>
         <div className='mt-3  min-h-27 items-center gap-4 rounded-[28px] bg-white px-5 py-[18px]'>
           <div className='flex w-full justify-between'>
             <span className='text-sm font-semibold text-gray-400'>보유 포인트</span>
-            <span className='font-bold'>{mockRewardSummary.currentPoint.toLocaleString()}P</span>
+            <span className='font-bold'>{rewardPoints.totalPoint.toLocaleString()}P</span>
           </div>
           <div className='flex w-full justify-between'>
             <span className='text-sm font-semibold text-gray-400'>사용예정 포인트</span>
-            <span className='text-red-500 font-bold'>-{product.point.toLocaleString()}P</span>
+            <span className='text-red-500 font-bold'>-{productDetail.pricePoint.toLocaleString()}P</span>
           </div>
           <div className='my-4 h-px w-full bg-gray-200' />
 
@@ -110,7 +170,7 @@ export default function RewardCheckoutPage() {
       </div>
 
       <div className='mt-auto pt-8'>
-        <button type='button' onClick={() => navigate(`/reward/use-complete/${product.id}`)} className='w-full rounded-full bg-main-green1 py-3 text-white'>
+        <button type='button' onClick={() => navigate(`/reward/use-complete/${productDetail.rewardProductId}`)} className='w-full rounded-full bg-main-green1 py-3 text-white'>
           포인트 사용하기
         </button>
       </div>

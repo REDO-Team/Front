@@ -8,6 +8,8 @@ export type MockRewardProductType = 'PARTNER' | 'GIFTICON';
 
 export type RewardProductStatus = 'ACTIVE' | 'INACTIVE' | 'SOLD_OUT';
 
+export type RewardAddressType = 'HOME' | 'COMPANY' | 'SCHOOL';
+
 export interface RewardSummary {
     nickname: string;
     currentPoint: number;
@@ -54,7 +56,7 @@ export interface RewardHistory {
   amount: number;
   certificationId: number;
   rewardRedemptionId: number;
-  createdAt: string;
+  createdAt: string;  
 }
 
 export interface RewardHistoryResult {
@@ -68,7 +70,7 @@ export interface RewardHistoryParams {
   size?: number;
 }
 
-export type RewardHistoryResponse = ApiResponse<RewardHistoryResult>;
+
 
 export interface RewardProduct {
     id: number;
@@ -96,7 +98,7 @@ export interface ApiResponse<T> {
 
 export interface ShippingAddress {
     shippingAddressId: number;
-    addressType: string;
+    addressType: RewardAddressType;
     receiverName: string;
     phone: string;
     postalCode: string;
