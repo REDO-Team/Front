@@ -1,23 +1,32 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getAccessToken } from '../../apis/token';
+
 import CompleteCheckIcon from '../../assets/icons/signup-complete.svg?react';
 
 const SignupCompletePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const agreedTermsIds = sessionStorage.getItem(
-      'signupAgreedTermsIds',
-    );
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = getAccessToken();
 
-    if (!agreedTermsIds || !accessToken) {
-      navigate('/signup', { replace: true });
+    const isProfileCompleted =
+      sessionStorage.getItem('signupProfileCompleted');
+
+    if (!accessToken) {
+      navigate('/login', { replace: true });
+      return;
+    }
+
+    if (isProfileCompleted !== 'true') {
+      navigate('/', { replace: true });
     }
   }, [navigate]);
 
   const handleStart = () => {
+    sessionStorage.removeItem('signupProfileCompleted');
     sessionStorage.removeItem('signupAgreedTermsIds');
+
     navigate('/', { replace: true });
   };
 
