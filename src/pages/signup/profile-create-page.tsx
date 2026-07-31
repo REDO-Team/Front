@@ -1,6 +1,7 @@
 import { type ChangeEvent,type ComponentType,type SVGProps,useState,useEffect,} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createProfile,uploadProfileImage,type CharacterCode,} from '../../apis/user';
+import { getAccessToken } from '../../apis/token';
 
 import LeftArrowIcon from '../../assets/icons/left-arrow.svg?react';
 import GalleryIcon from '../../assets/icons/gallery.svg?react';
@@ -85,16 +86,14 @@ const ProfileCreatePage = () => {
   const navigate = useNavigate();
 
     useEffect(() => {
-    const agreedTermsIds = sessionStorage.getItem(
-      'signupAgreedTermsIds',
-    );
+  const accessToken = getAccessToken();
 
-    const accessToken = localStorage.getItem('accessToken');
-
-    if (!agreedTermsIds || !accessToken) {
-      navigate('/signup', { replace: true });
-    }
-  }, [navigate]);
+  if (!accessToken) {
+    navigate('/login', {
+      replace: true,
+    });
+  }
+}, [navigate]);
   const [nickname, setNickname] = useState('');
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
@@ -206,7 +205,14 @@ const isNicknameValid = /^[가-힣0-9]{2,10}$/.test(nickname.trim());
       }
     }
 
-    navigate('/signup/complete');
+    sessionStorage.setItem(
+  'signupProfileCompleted',
+  'true',
+);
+
+navigate('/signup/complete', {
+  replace: true,
+});
   } catch (error) {
     console.error('프로필 생성 실패:', error);
     alert('프로필 생성에 실패했습니다. 다시 시도해주세요.');

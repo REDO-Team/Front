@@ -1,10 +1,25 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+
+import {
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
+
+import api from '../../apis/api';
+import { setAccessToken } from '../../apis/token';
+import {
+  getTerms,
+  type Term,
+} from '../../apis/terms-api';
+
 import LeftArrowIcon from '../../assets/icons/left-arrow.svg?react';
 import FullCheckIcon from '../../assets/icons/full-check.svg?react';
 import EmptyCheckIcon from '../../assets/icons/empty-check.svg?react';
 import LightRightArrowIcon from '../../assets/icons/light-right-arrow.svg?react';
-import { getTerms, type Term } from '../../apis/terms-api';
 
 const NOTION_URL_BY_CODE: Record<string, string> = {
   SERVICE:
@@ -17,39 +32,89 @@ const NOTION_URL_BY_CODE: Record<string, string> = {
     'https://app.notion.com/p/39aeb332282b8012bd2cca451c75d311?source=copy_link',
 };
 
+interface SignupLocationState {
+  signupType: 'LOCAL' | 'SOCIAL';
+  socialProvider?: string;
+  socialId?: string;
+}
+
+interface SignupResult {
+  userId: number;
+  accessToken: string;
+}
+
+interface SignupResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: SignupResult;
+}
+
 const TermsPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const signupState =
+    location.state as SignupLocationState | null;
+
+  const signupType =
+    signupState?.signupType ?? 'LOCAL';
 
   const [terms, setTerms] = useState<Term[]>([]);
-  const [agreements, setAgreements] = useState<Record<number, boolean>>(
-    {},
-  );
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
+
+  const [agreements, setAgreements] = useState<
+    Record<number, boolean>
+  >({});
+
+  const [isLoading, setIsLoading] =
+    useState(true);
+
+  const [isSubmitting, setIsSubmitting] =
+    useState(false);
+
+  const [
+    loadErrorMessage,
+    setLoadErrorMessage,
+  ] = useState('');
+
+  const [
+    submitErrorMessage,
+    setSubmitErrorMessage,
+  ] = useState('');
 
   useEffect(() => {
     const fetchTerms = async () => {
       try {
         setIsLoading(true);
-        setErrorMessage('');
+        setLoadErrorMessage('');
 
         const termsData = await getTerms();
 
-        console.log('백엔드 약관 목록:', termsData);
+        console.log(
+          '백엔드 약관 목록:',
+          termsData,
+        );
 
         setTerms(termsData);
 
-        const initialAgreements = termsData.reduce<
-          Record<number, boolean>
-        >((acc, term) => {
-          acc[term.termId] = false;
-          return acc;
-        }, {});
+        const initialAgreements =
+          termsData.reduce<
+            Record<number, boolean>
+          >((acc, term) => {
+            acc[term.termId] = false;
+            return acc;
+          }, {});
 
         setAgreements(initialAgreements);
       } catch (error) {
-        console.error('약관 조회 실패:', error);
-        setErrorMessage('약관을 불러오지 못했습니다.');
+        console.error(
+          '약관 조회 실패:',
+          error,
+        );
+
+        setLoadErrorMessage(
+          '약관을 불러오지 못했습니다.',
+        );
       } finally {
         setIsLoading(false);
       }
@@ -61,7 +126,10 @@ const TermsPage = () => {
   const isAllAgreed = useMemo(() => {
     return (
       terms.length > 0 &&
-      terms.every((term) => agreements[term.termId])
+      terms.every(
+        (term) =>
+          agreements[term.termId],
+      )
     );
   }, [terms, agreements]);
 
@@ -73,7 +141,8 @@ const TermsPage = () => {
     return (
       requiredTerms.length > 0 &&
       requiredTerms.every(
-        (term) => agreements[term.termId],
+        (term) =>
+          agreements[term.termId],
       )
     );
   }, [terms, agreements]);
@@ -89,38 +158,135 @@ const TermsPage = () => {
     }, {});
 
     setAgreements(nextAgreements);
+    setSubmitErrorMessage('');
   };
 
-  const handleToggleAgreement = (termId: number) => {
+  const handleToggleAgreement = (
+    termId: number,
+  ) => {
     setAgreements((prev) => ({
       ...prev,
       [termId]: !prev[termId],
     }));
+
+    setSubmitErrorMessage('');
   };
 
   const handleOpenTerms = (term: Term) => {
-    const notionUrl = NOTION_URL_BY_CODE[term.code];
+    const notionUrl =
+      NOTION_URL_BY_CODE[term.code];
 
-    if (notionUrl) {
-      window.open(
-        notionUrl,
-        '_blank',
-        'noopener,noreferrer',
-      );
+    if (!notionUrl) {
+      return;
     }
+
+    window.open(
+      notionUrl,
+      '_blank',
+      'noopener,noreferrer',
+    );
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    if (
+      !isRequiredAgreed ||
+      isSubmitting
+    ) {
+      return;
+    }
+
     const agreedTermsIds = terms
-      .filter((term) => agreements[term.termId])
+      .filter(
+        (term) =>
+          agreements[term.termId],
+      )
       .map((term) => term.termId);
 
-    sessionStorage.setItem(
-      'signupAgreedTermsIds',
-      JSON.stringify(agreedTermsIds),
-    );
+    // 일반 회원가입
+    if (signupType === 'LOCAL') {
+      sessionStorage.setItem(
+        'signupAgreedTermsIds',
+        JSON.stringify(
+          agreedTermsIds,
+        ),
+      );
 
-    navigate('/signup');
+      navigate('/signup');
+      return;
+    }
+
+    // 소셜 회원가입
+    const socialProvider =
+      signupState?.socialProvider;
+
+    const socialId =
+      signupState?.socialId;
+
+    if (
+      !socialProvider ||
+      !socialId
+    ) {
+      setSubmitErrorMessage(
+        '소셜 로그인 정보가 없습니다. 다시 로그인해 주세요.',
+      );
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      setSubmitErrorMessage('');
+
+      const response =
+        await api.post<SignupResponse>(
+          '/api/auth/signup',
+          {
+            signupType: 'SOCIAL',
+            socialProvider,
+            socialId,
+            agreedTermsIds,
+          },
+        );
+
+      const {
+        isSuccess,
+        message,
+        result,
+      } = response.data;
+
+      if (!isSuccess) {
+        setSubmitErrorMessage(
+          message ||
+            '회원가입에 실패했습니다.',
+        );
+        return;
+      }
+
+      if (!result?.accessToken) {
+        setSubmitErrorMessage(
+          '로그인 토큰을 발급받지 못했습니다.',
+        );
+        return;
+      }
+
+      setAccessToken(
+        result.accessToken,
+      );
+
+      navigate('/signup/profile', {
+        replace: true,
+      });
+    } catch (error) {
+      console.error(
+        '소셜 회원가입 실패:',
+        error,
+      );
+
+      setSubmitErrorMessage(
+        '회원가입 중 오류가 발생했습니다.',
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -129,7 +295,9 @@ const TermsPage = () => {
         <div className='flex h-[22px] items-center'>
           <button
             type='button'
-            onClick={() => navigate('/login')}
+            onClick={() =>
+              navigate('/login')
+            }
             aria-label='뒤로가기'
             className='flex h-6 w-6 items-center justify-center'
           >
@@ -152,10 +320,10 @@ const TermsPage = () => {
             약관을 불러오는 중입니다.
           </span>
         </div>
-      ) : errorMessage ? (
+      ) : loadErrorMessage ? (
         <div className='flex flex-1 items-center justify-center'>
           <span className='text-[14px] text-red-500'>
-            {errorMessage}
+            {loadErrorMessage}
           </span>
         </div>
       ) : (
@@ -186,29 +354,44 @@ const TermsPage = () => {
                 <button
                   type='button'
                   onClick={() =>
-                    handleToggleAgreement(term.termId)
+                    handleToggleAgreement(
+                      term.termId,
+                    )
                   }
                   aria-pressed={
-                    agreements[term.termId] ?? false
+                    agreements[
+                      term.termId
+                    ] ?? false
                   }
                   className='flex min-w-0 flex-1 items-center text-left'
                 >
-                  {agreements[term.termId] ? (
+                  {agreements[
+                    term.termId
+                  ] ? (
                     <FullCheckIcon className='h-6 w-6 shrink-0' />
                   ) : (
                     <EmptyCheckIcon className='h-6 w-6 shrink-0' />
                   )}
 
                   <span className='ml-[10px] truncate text-[16px] font-medium text-[#4A4A4A]'>
-                    [{term.isRequired ? '필수' : '선택'}]{' '}
-                    {term.title}
+                    [
+                    {term.isRequired
+                      ? '필수'
+                      : '선택'}
+                    ] {term.title}
                   </span>
                 </button>
 
-                {NOTION_URL_BY_CODE[term.code] && (
+                {NOTION_URL_BY_CODE[
+                  term.code
+                ] && (
                   <button
                     type='button'
-                    onClick={() => handleOpenTerms(term)}
+                    onClick={() =>
+                      handleOpenTerms(
+                        term,
+                      )
+                    }
                     aria-label={`${term.title} 상세보기`}
                     className='flex h-6 w-6 shrink-0 items-center justify-center'
                   >
@@ -218,6 +401,12 @@ const TermsPage = () => {
               </div>
             ))}
           </section>
+
+          {submitErrorMessage && (
+            <p className='mt-[16px] text-center text-[13px] font-medium text-red-500'>
+              {submitErrorMessage}
+            </p>
+          )}
         </>
       )}
 
@@ -225,19 +414,23 @@ const TermsPage = () => {
         type='button'
         disabled={
           isLoading ||
-          Boolean(errorMessage) ||
+          isSubmitting ||
+          Boolean(loadErrorMessage) ||
           !isRequiredAgreed
         }
         onClick={handleNext}
         className={`mt-auto h-[50px] w-full rounded-[30px] text-[16px] font-bold text-white ${
           isRequiredAgreed &&
           !isLoading &&
-          !errorMessage
+          !isSubmitting &&
+          !loadErrorMessage
             ? 'bg-main-green1'
-            : 'bg-gray-400'
+            : 'cursor-not-allowed bg-gray-400'
         }`}
       >
-        다음
+        {isSubmitting
+          ? '가입 중...'
+          : '다음'}
       </button>
     </div>
   );
