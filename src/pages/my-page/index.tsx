@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 
 import HeartIcon from '../../assets/icons/hearts.svg?react';
 import RewardHistoryIcon from '../../assets/icons/reward-history.svg?react';
@@ -16,7 +17,13 @@ import {
   isCharacterCode,
 } from '../../constants/character';
 
-import { MOCK_MY_PAGE_USER } from '../../mocks/my-page';
+import {
+  getMyInfo,
+  getWithdrawalReasons,
+  withdrawUser,
+} from '../../apis/user';
+import { logout } from '../../apis/auth';
+import { clearAuthData } from '../../apis/token';
 
 interface MenuItem {
   label: string;
@@ -25,18 +32,6 @@ interface MenuItem {
 }
 
 type ModalType = 'logout' | 'withdraw' | null;
-
-type WithdrawReason =
-  | 'rejoin'
-  | 'inconvenient'
-  | 'lackReward'
-  | 'lowUsage'
-  | null;
-
-interface WithdrawReasonItem {
-  id: Exclude<WithdrawReason, null>;
-  label: string;
-}
 
 const MENU_ITEMS: MenuItem[] = [
   {
@@ -61,33 +56,92 @@ const MENU_ITEMS: MenuItem[] = [
   },
 ];
 
-const WITHDRAW_REASONS: WithdrawReasonItem[] = [
-  {
-    id: 'rejoin',
-    label: '탈퇴 후 재가입',
-  },
-  {
-    id: 'inconvenient',
-    label: '서비스 이용 불편',
-  },
-  {
-    id: 'lackReward',
-    label: '리워드 보상 부족',
-  },
-  {
-    id: 'lowUsage',
-    label: '이용 빈도 낮음',
-  },
-];
+const labelMap: Record<number, string> = {
+  1: '탈퇴 후 재가입',
+  2: '서비스 이용 불편',
+  3: '리워드 보상 부족',
+  4: '이용 빈도 낮음',
+};
 
 const MyPage = () => {
   const navigate = useNavigate();
 
-  const user = MOCK_MY_PAGE_USER;
-
   const [modalType, setModalType] = useState<ModalType>(null);
-  const [withdrawReason, setWithdrawReason] =
-    useState<WithdrawReason>(null);
+  const [withdrawReasonId, setWithdrawReasonId] =
+    useState<number | null>(null);
+
+  const {
+    data: user,
+    isPending: isUserPending,
+    isError: isUserError,
+  } = useQuery({
+    queryKey: ['myInfo'],
+    queryFn: getMyInfo,
+  });
+
+  const {
+    data: withdrawalReasons,
+    isPending: isWithdrawalReasonPending,
+    isError: isWithdrawalReasonError,
+  } = useQuery({
+    queryKey: ['withdrawalReasons'],
+    queryFn: getWithdrawalReasons,
+    enabled: modalType === 'withdraw',
+  });
+
+  const closeModal = () => {
+    setModalType(null);
+    setWithdrawReasonId(null);
+  };
+
+  const openLogoutModal = () => {
+    setModalType('logout');
+  };
+
+  const openWithdrawModal = () => {
+    setWithdrawReasonId(null);
+    setModalType('withdraw');
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } finally {
+      clearAuthData();
+      closeModal();
+      navigate('/login', { replace: true });
+    }
+  };
+
+  const handleWithdraw = async () => {
+    if (withdrawReasonId === null) return;
+
+    try {
+      await withdrawUser(withdrawReasonId);
+
+      clearAuthData();
+      closeModal();
+      navigate('/login', { replace: true });
+    } catch (error) {
+      console.error('회원탈퇴 실패:', error);
+    }
+  };
+
+  if (isUserPending) {
+    return (
+      <div className='flex min-h-screen items-center justify-center bg-[#F9FBFB]'>
+        회원 정보를 불러오는 중이에요...
+      </div>
+    );
+  }
+
+  if (isUserError || !user) {
+    return (
+      <div className='flex min-h-screen items-center justify-center bg-[#F9FBFB]'>
+        회원 정보를 불러오지 못했어요.
+      </div>
+    );
+  }
 
   const profileImageValue = user.profileImageUrl;
 
@@ -97,37 +151,8 @@ const MyPage = () => {
       : null;
 
   const isUploadedImage =
-    profileImageValue !== null && !isCharacterCode(profileImageValue);
-
-  const closeModal = () => {
-    setModalType(null);
-    setWithdrawReason(null);
-  };
-
-  const openLogoutModal = () => {
-    setModalType('logout');
-  };
-
-  const openWithdrawModal = () => {
-    setWithdrawReason(null);
-    setModalType('withdraw');
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-
-    closeModal();
-    navigate('/login');
-  };
-
-  const handleWithdraw = () => {
-    if (!withdrawReason) return;
-
-    console.log('선택한 탈퇴 사유:', withdrawReason);
-
-    closeModal();
-    navigate('/login');
-  };
+    profileImageValue !== null &&
+    !isCharacterCode(profileImageValue);
 
   return (
     <>
@@ -136,7 +161,7 @@ const MyPage = () => {
         <section className='mt-[24px] flex h-[80px] w-full items-center'>
           <div className='flex h-[80px] w-[80px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-white'>
             {CharacterIcon ? (
-              <CharacterIcon className='h-full w-full scale-[1.1] translate-x-[2px]' />
+              <CharacterIcon className='h-full w-full translate-x-[2px] scale-[1.1]' />
             ) : isUploadedImage ? (
               <img
                 src={profileImageValue}
@@ -257,34 +282,51 @@ const MyPage = () => {
         titleLineHeight='100%'
       >
         <div className='grid grid-cols-2 gap-x-[12px] gap-y-[12px]'>
-          {WITHDRAW_REASONS.map((reason) => {
-            const isSelected = withdrawReason === reason.id;
+          {isWithdrawalReasonPending ? (
+            <p className='col-span-2 text-center text-[12px] text-gray-500'>
+              탈퇴 사유를 불러오는 중이에요.
+            </p>
+          ) : isWithdrawalReasonError ||
+            !withdrawalReasons ? (
+            <p className='col-span-2 text-center text-[12px] text-delete'>
+              탈퇴 사유를 불러오지 못했어요.
+            </p>
+          ) : (
+            withdrawalReasons
+  .filter((reason) => reason.reasonId !== 5)
+  .map((reason) => {
+              
+              const isSelected =
+                withdrawReasonId === reason.reasonId;
 
-            return (
-              <button
-                key={reason.id}
-                type='button'
-                onClick={() => setWithdrawReason(reason.id)}
-                className='flex items-center whitespace-nowrap text-left'
-              >
-                <span
-                  className={`mr-[7px] flex h-[14px] w-[14px] shrink-0 items-center justify-center rounded-full border ${
-                    isSelected
-                      ? 'border-main-green1'
-                      : 'border-gray-300'
-                  }`}
+              return (
+                <button
+                  key={reason.reasonId}
+                  type='button'
+                  onClick={() =>
+                    setWithdrawReasonId(reason.reasonId)
+                  }
+                  className='flex items-center whitespace-nowrap text-left'
                 >
-                  {isSelected && (
-                    <span className='h-[8px] w-[8px] rounded-full bg-main-green1' />
-                  )}
-                </span>
+                  <span
+                    className={`mr-[7px] flex h-[14px] w-[14px] shrink-0 items-center justify-center rounded-full border ${
+                      isSelected
+                        ? 'border-main-green1'
+                        : 'border-gray-300'
+                    }`}
+                  >
+                    {isSelected && (
+                      <span className='h-[8px] w-[8px] rounded-full bg-main-green1' />
+                    )}
+                  </span>
 
-                <span className='text-[12px] font-medium leading-[16px] text-gray-800'>
-                  {reason.label}
-                </span>
-              </button>
-            );
-          })}
+                  <span className='text-[12px] font-medium leading-[16px] text-gray-800'>
+                    {labelMap[reason.reasonId]}
+                  </span>
+                </button>
+              );
+            })
+          )}
         </div>
       </Modal>
     </>

@@ -70,3 +70,9 @@ export const signup = async (
 
   return response.data.result;
 };
+
+export const logout = async (): Promise<void> => {
+  await api.post<ApiResponse<string>>(
+    '/api/auth/logout',
+  );
+};
