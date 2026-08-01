@@ -1,13 +1,21 @@
 import BottomBar from '../../components/common/BottomBar';
 import PencilIcon from '../../assets/icons/pencil.svg';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import HeartIcon from '../../assets/icons/heart.svg';
 import CommentIcon from '../../assets/icons/comment.svg';
 import { useNavigate } from 'react-router-dom';
-import { MOCK_POSTS } from '../../mocks/community';
+import { getCommunityList } from '../../apis/community';
+//import { MOCK_POSTS } from '../../mocks/community';
 
 const CATEGORIES = ['전체보기', '정보공유', '리워드후기', '환경실천'];
 
+const formatCategory = (categoryValue: any) => {
+  const value = String(categoryValue);
+  if (value === '1') return '정보공유';
+  if (value === '2') return '리워드후기';
+  if (value === '3') return '환경실천';
+  return '전체보기';
+}
 const getCategoryStyle = (category: string) => {
   switch (category) {
     case '정보공유':
@@ -28,8 +36,26 @@ export default function CommunityMainPage() {
   };
   const [selectedCategory, setSelectedCategory] = useState('전체보기');
 
-  const filteredPosts = selectedCategory === '전체보기' ? MOCK_POSTS : MOCK_POSTS.filter((post) => post.category === selectedCategory);
 
+  const [posts, setPosts] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const data = await getCommunityList();
+        console.log('서버에서 받아온 데이터:', data);
+
+        setPosts(data.result.items);
+      } catch (error) {
+        console.error('게시글 목록 불러오기 실패', error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  const filteredPosts = selectedCategory === '전체보기'
+    ? posts : posts.filter((post) => formatCategory(post.category) === selectedCategory);
   return (
     <div className='font-pretendard bg-bg-green1 min-h-screen pb-32'>
       <section className='flex overflow-x-auto whitespace-nowrap p-4 gap-2 scrollbar-hide'>
@@ -53,7 +79,8 @@ export default function CommunityMainPage() {
       <section className='font-pretendard flex flex-col px-4 gap-4 pb-10'>
         {filteredPosts.map((post) => (
           <article key={post.id} onClick={() => handlePostClick(post.id)} className='bg-white rounded-[20px] p-5 shadow-[0_4px_10px_rgba(0,0,0,0.03)] flex flex-col gap-3'>
-            <span className={`w-fit flex items-center justify-center px-[9px] py-[4px] rounded-[20px] font-pretendard text-[11px] font-bold leading-none ${getCategoryStyle(post.category)}`}>{post.category}</span>
+            <span className={`w-fit flex items-center justify-center px-[9px] py-[4px] rounded-[20px] font-pretendard text-[11px] font-bold leading-none ${getCategoryStyle(formatCategory(post.category))}`}>
+              {formatCategory(post.category)}</span>
 
             <div className='flex justify-between items-start gap-4'>
               <div className='flex flex-col flex-1 gap-2 min-w-0'>
@@ -76,17 +103,17 @@ export default function CommunityMainPage() {
                     </span>
                     <span className='flex items-center gap-1'>
                       <img src={CommentIcon} alt='댓글' className='w-[11.25px] h-[10.62px]' />
-                      {post.comments}
+                      {post.numComments}
                     </span>
                   </div>
 
-                  {!post.hasThumbnail && <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{post.time}</span>}
+                  {!post.imageUrl && <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{post.createdAt}</span>}
                 </div>
               </div>
-              {post.hasThumbnail && (
+              {post.imageUrl && (
                 <div className='flex flex-col items-center gap-1.5 shrink-0'>
                   <div className='w-[60px] h-[60px] shrink-0 rounded-[10px] bg-gradient-to-br from-[#40DC8F] to-[#4BE1FF]'></div>
-                  <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{post.time}</span>
+                  <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{post.createdAt}</span>
                 </div>
               )}
             </div>
