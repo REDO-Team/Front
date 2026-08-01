@@ -60,3 +60,48 @@ export const uploadProfileImage = async (
 
   return response.data.result.profileImageUrl;
 };
+
+export interface MyInfo {
+  userId: number;
+  nickname: string;
+  profileImageUrl: string | null;
+  totalPoint: number;
+}
+
+export interface WithdrawalReason {
+  reasonId: number;
+  label: string;
+}
+
+interface WithdrawalReasonsResult {
+  reasons: WithdrawalReason[];
+}
+
+export const getMyInfo = async (): Promise<MyInfo> => {
+  const response = await api.get<ApiResponse<MyInfo>>(
+    '/api/users/me',
+  );
+
+  return response.data.result;
+};
+
+export const getWithdrawalReasons = async (): Promise<
+  WithdrawalReason[]
+> => {
+  const response = await api.get<
+    ApiResponse<WithdrawalReasonsResult>
+  >('/api/users/withdrawal-reasons');
+
+  return response.data.result.reasons;
+};
+
+export const withdrawUser = async (
+  reasonId: number,
+): Promise<void> => {
+  await api.post<ApiResponse<string>>(
+    '/api/users/me/withdrawal',
+    {
+      reasonId,
+    },
+  );
+};
