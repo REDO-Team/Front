@@ -1,5 +1,6 @@
 import type {
-    AddressSearchResponse,
+    AddressSearchResult,
+    ApiResponse,
     RewardProduct,
     RewardShippingAddress,
     RewardSummary,
@@ -108,7 +109,7 @@ export const MOCK_SHIPPING_ADDRESS_RESPONSE: ShippingAddressListResponse = {
   },
 };
 
-export const MOCK_ADDRESS_SEARCH_RESPONSE: AddressSearchResponse = {
+export const MOCK_ADDRESS_SEARCH_RESPONSE: ApiResponse<AddressSearchResult> = {
   isSuccess: true,
   code: 'ADDRESS_SEARCH_200_001',
   message: '주소 검색에 성공했습니다.',

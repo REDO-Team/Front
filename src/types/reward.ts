@@ -107,6 +107,18 @@ export interface ShippingAddress {
     isDefault: boolean;
 }
 
+export interface ShippingAddressRequest {
+    addressType: RewardAddressType;
+    receiverName: string;
+    phone: string;
+    postalCode: string;
+    address1: string;
+    address2: string;
+    isDefault: boolean;
+}
+
+
+
 export interface ShippingAddressListResult {
   shippingAddresses: ShippingAddress[];
 }
@@ -129,4 +141,10 @@ export interface AddressSearchResult {
   hasNext: boolean;
 }
 
-export type AddressSearchResponse = ApiResponse<AddressSearchResult>;
+export interface AddressSearchResultParams {
+  keyword: string;
+  page?: number;
+  size?: number;
+}
+
+

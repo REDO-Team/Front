@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://13.209.188.93',
+        target: 'https://redo-backend.site',
         changeOrigin: true,
         secure: false,
       },

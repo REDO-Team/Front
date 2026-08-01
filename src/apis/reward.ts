@@ -9,6 +9,9 @@ import type {
   RewardHistoryParams,
   ShippingAddress,
   ShippingAddressListResult,
+  AddressSearchResult,
+  AddressSearchResultParams,
+  ShippingAddressRequest,
 } from '../types/reward';
 
 export const getRewardPoints = async (): Promise<RewardPointResponse> => {
@@ -77,4 +80,34 @@ export const getRewardAddressList = async (): Promise<ShippingAddress[]> => {
   }
 
   return response.data.result.shippingAddresses;
+};
+
+export const getRewardAddressSearchResult = async (
+  params: AddressSearchResultParams,
+): Promise<AddressSearchResult> => {
+  const response = await api.get<ApiResponse<AddressSearchResult>>(
+    '/api/shipping-addresses/search',
+    { params },
+  );
+
+  if (!response.data.result) {
+    throw new Error('배송지 검색 결과가 없습니다.');
+  }
+
+  return response.data.result;
+};
+
+export const createRewardAddress = async (
+  request: ShippingAddressRequest
+): Promise<ShippingAddress> => {
+  const response = await api.post<ApiResponse<ShippingAddress>>(
+    '/api/shipping-addresses',
+    request
+  );
+
+  if (!response.data.result) {
+    throw new Error('배송지 생성 결과가 없습니다.');
+  }
+
+  return response.data.result;
 };

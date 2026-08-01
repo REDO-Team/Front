@@ -12,11 +12,14 @@ export default function RewardProductDetailPage() {
   const isValidProductId =
     Number.isSafeInteger(numericProductId) &&
     numericProductId > 0;
+
   const { data: product, isPending, isError } = useQuery({
     queryKey: ['rewardProduct', numericProductId],
     queryFn: () => getRewardProductDetail(numericProductId),
     enabled: isValidProductId,
   });
+
+
   const isPartner = product?.rewardProductType === 'PARTNER_BRAND';
   const isUnavailable =
     !product ||

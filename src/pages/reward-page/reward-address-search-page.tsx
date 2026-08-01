@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Search from '../../assets/icons/search.svg?react';
-import { MOCK_ADDRESS_SEARCH_RESPONSE } from '../../mocks/reward';
+import RewardAddressSearchCard from '../../components/RewardPage/RewardAddressSearchCard';
+import { getRewardAddressSearchResult } from '../../apis/reward';
 import type { AddressCandidates } from '../../types/reward';
 
 interface AddressSearchLocationState {
@@ -16,17 +17,31 @@ export default function RewardAddressSearchPage() {
   const [addressCandidates, setAddressCandidates] = useState<AddressCandidates[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const handleSearch = (event: FormEvent<HTMLFormElement>) => {
+  const handleSearch = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!keyword.trim()) {
+    const trimmedKeyword = keyword.trim();
+
+    if (!trimmedKeyword) {
       setAddressCandidates([]);
       setHasSearched(false);
       return;
     }
 
-    setAddressCandidates(MOCK_ADDRESS_SEARCH_RESPONSE.result?.addressCandidates ?? []);
-    setHasSearched(true);
+    try {
+      const result = await getRewardAddressSearchResult({
+        keyword: trimmedKeyword,
+        page: 1,
+        size: 10,
+      });
+
+      setAddressCandidates(result.addressCandidates);
+      setHasSearched(true);
+    } catch (error) {
+      console.error(error);
+      setAddressCandidates([]);
+      setHasSearched(true);
+    }
   };
 
   return (
@@ -53,34 +68,15 @@ export default function RewardAddressSearchPage() {
           {addressCandidates.length > 0 ? (
             <ul className='mt-3 flex flex-col gap-3'>
               {addressCandidates.map((address) => (
-                <li key={`${address.postalCode}-${address.roadAddress}`} className='rounded-[28px] bg-white px-5 py-6'>
-                  <div className='flex items-start gap-3'>
-                    <h3 className='min-w-0 flex-1 break-keep text-lg font-bold leading-[1.45] text-text'>
-                      {address.roadAddress}
-                      {address.buildingName && `(${address.buildingName})`}
-                    </h3>
-                    <button
-                      type='button'
-                      onClick={() =>
-                        navigate(returnTo ?? '/reward/address-detail', {
-                          state: { address },
-                        })
-                      }
-                      className='flex h-12 w-[76px] shrink-0 items-center justify-center rounded-full bg-bg-green2 text-base font-bold text-main-green2'
-                    >
-                      선택
-                    </button>
-                  </div>
-
-                  <div className='mt-5 flex items-start gap-3'>
-                    <span className='flex h-10 w-[92px] shrink-0 items-center justify-center rounded-full bg-bg-green2 text-sm font-semibold text-gray-700'>지번</span>
-                    <p className='min-w-0 pt-1 text-base font-semibold leading-[1.6] text-gray-500'>{address.jibunAddress}</p>
-                  </div>
-
-                  <div className='mt-4 flex items-center gap-3'>
-                    <span className='flex h-10 w-[92px] shrink-0 items-center justify-center rounded-full bg-bg-green2 text-sm font-semibold text-gray-700'>우편번호</span>
-                    <p className='text-base font-semibold text-gray-500'>{address.postalCode}</p>
-                  </div>
+                <li key={`${address.postalCode}-${address.roadAddress}`}>
+                  <RewardAddressSearchCard
+                    address={address}
+                    onSelect={(selectedAddress) =>
+                      navigate(returnTo ?? '/reward/address-detail', {
+                        state: { address: selectedAddress },
+                      })
+                    }
+                  />
                 </li>
               ))}
             </ul>
