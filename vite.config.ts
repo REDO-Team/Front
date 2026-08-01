@@ -10,7 +10,7 @@ export default defineConfig({
       '/api': {
         target: 'https://redo-backend.site',
         changeOrigin: true,
-        secure: true,
+        secure: false,
       },
     },
   },
