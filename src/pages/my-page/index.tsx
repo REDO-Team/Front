@@ -27,7 +27,9 @@ import { clearAuthData } from '../../apis/token';
 
 interface MenuItem {
   label: string;
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  icon: React.ComponentType<
+    React.SVGProps<SVGSVGElement>
+  >;
   path: string;
 }
 
@@ -56,7 +58,10 @@ const MENU_ITEMS: MenuItem[] = [
   },
 ];
 
-const labelMap: Record<number, string> = {
+const WITHDRAW_REASON_LABEL_MAP: Record<
+  number,
+  string
+> = {
   1: '탈퇴 후 재가입',
   2: '서비스 이용 불편',
   3: '리워드 보상 부족',
@@ -66,7 +71,8 @@ const labelMap: Record<number, string> = {
 const MyPage = () => {
   const navigate = useNavigate();
 
-  const [modalType, setModalType] = useState<ModalType>(null);
+  const [modalType, setModalType] =
+    useState<ModalType>(null);
   const [withdrawReasonId, setWithdrawReasonId] =
     useState<number | null>(null);
 
@@ -143,16 +149,13 @@ const MyPage = () => {
     );
   }
 
-  const profileImageValue = user.profileImageUrl;
+  const profileImageUrl = user.profileImageUrl;
 
   const CharacterIcon =
-    profileImageValue && isCharacterCode(profileImageValue)
-      ? CHARACTER_IMAGE_MAP[profileImageValue]
+    user.characterCode &&
+    isCharacterCode(user.characterCode)
+      ? CHARACTER_IMAGE_MAP[user.characterCode]
       : null;
-
-  const isUploadedImage =
-    profileImageValue !== null &&
-    !isCharacterCode(profileImageValue);
 
   return (
     <>
@@ -160,14 +163,14 @@ const MyPage = () => {
         {/* 프로필 */}
         <section className='mt-[24px] flex h-[80px] w-full items-center'>
           <div className='flex h-[80px] w-[80px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-white'>
-            {CharacterIcon ? (
-              <CharacterIcon className='h-full w-full translate-x-[2px] scale-[1.1]' />
-            ) : isUploadedImage ? (
+            {profileImageUrl ? (
               <img
-                src={profileImageValue}
+                src={profileImageUrl}
                 alt={`${user.nickname} 프로필`}
                 className='h-full w-full object-cover'
               />
+            ) : CharacterIcon ? (
+              <CharacterIcon className='h-full w-full translate-x-[2px] scale-[1.1]' />
             ) : null}
           </div>
 
@@ -218,7 +221,9 @@ const MyPage = () => {
                 <button
                   key={item.label}
                   type='button'
-                  onClick={() => navigate(item.path)}
+                  onClick={() =>
+                    navigate(item.path)
+                  }
                   className='flex h-[43px] w-full shrink-0 items-center text-left'
                 >
                   <Icon className='h-6 w-6 shrink-0' />
@@ -293,39 +298,48 @@ const MyPage = () => {
             </p>
           ) : (
             withdrawalReasons
-  .filter((reason) => reason.reasonId !== 5)
-  .map((reason) => {
-              
-              const isSelected =
-                withdrawReasonId === reason.reasonId;
+              .filter(
+                (reason) =>
+                  reason.reasonId !== 5,
+              )
+              .map((reason) => {
+                const isSelected =
+                  withdrawReasonId ===
+                  reason.reasonId;
 
-              return (
-                <button
-                  key={reason.reasonId}
-                  type='button'
-                  onClick={() =>
-                    setWithdrawReasonId(reason.reasonId)
-                  }
-                  className='flex items-center whitespace-nowrap text-left'
-                >
-                  <span
-                    className={`mr-[7px] flex h-[14px] w-[14px] shrink-0 items-center justify-center rounded-full border ${
-                      isSelected
-                        ? 'border-main-green1'
-                        : 'border-gray-300'
-                    }`}
+                return (
+                  <button
+                    key={reason.reasonId}
+                    type='button'
+                    onClick={() =>
+                      setWithdrawReasonId(
+                        reason.reasonId,
+                      )
+                    }
+                    className='flex items-center whitespace-nowrap text-left'
                   >
-                    {isSelected && (
-                      <span className='h-[8px] w-[8px] rounded-full bg-main-green1' />
-                    )}
-                  </span>
+                    <span
+                      className={`mr-[7px] flex h-[14px] w-[14px] shrink-0 items-center justify-center rounded-full border ${
+                        isSelected
+                          ? 'border-main-green1'
+                          : 'border-gray-300'
+                      }`}
+                    >
+                      {isSelected && (
+                        <span className='h-[8px] w-[8px] rounded-full bg-main-green1' />
+                      )}
+                    </span>
 
-                  <span className='text-[12px] font-medium leading-[16px] text-gray-800'>
-                    {labelMap[reason.reasonId]}
-                  </span>
-                </button>
-              );
-            })
+                    <span className='text-[12px] font-medium leading-[16px] text-gray-800'>
+                      {
+                        WITHDRAW_REASON_LABEL_MAP[
+                          reason.reasonId
+                        ]
+                      }
+                    </span>
+                  </button>
+                );
+              })
           )}
         </div>
       </Modal>

@@ -6,12 +6,12 @@ import PurpleCharacter from '../assets/icons/character/purple-character.svg?reac
 import BlueCharacter from '../assets/icons/character/blue-character.svg?react';
 
 export const CHARACTER_IMAGE_MAP = {
-  GREEN: GreenCharacter,
-  YELLOW: YellowCharacter,
-  GRAY: GrayCharacter,
-  ORANGE: OrangeCharacter,
-  PURPLE: PurpleCharacter,
-  BLUE: BlueCharacter,
+  '1': YellowCharacter,
+  '2': GrayCharacter,
+  '3': GreenCharacter,
+  '4': OrangeCharacter,
+  '5': PurpleCharacter,
+  '6': BlueCharacter,
 } as const;
 
 export type CharacterCode =
@@ -20,5 +20,8 @@ export type CharacterCode =
 export const isCharacterCode = (
   value: string | null,
 ): value is CharacterCode => {
-  return value !== null && value in CHARACTER_IMAGE_MAP;
+  return (
+    value !== null &&
+    value in CHARACTER_IMAGE_MAP
+  );
 };
