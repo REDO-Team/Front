@@ -1,4 +1,4 @@
-import { useState,useEffect,useRef, } from 'react';
+import { useState,useEffect,useRef,useCallback, } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../apis/api';
 import { setAccessToken } from '../../apis/token';
@@ -36,65 +36,68 @@ const LoginPage = () => {
     id.trim() !== '' &&
     password.trim() !== '';
 
-  const handleSocialLogin = async (
-  provider: SocialProvider,
-  socialAccessToken: string,
-) => {
-  setError('');
-  setIsLoading(true);
-  
-  try {
-    const response = await api.post(
-      `/api/auth/login/${provider}`,
-      {
-        accessToken: socialAccessToken,
-      },
-    );
+  const handleSocialLogin = useCallback(
+  async (
+    provider: SocialProvider,
+    socialAccessToken: string,
+  ) => {
+    setError('');
+    setIsLoading(true);
 
-    const result =
-      response.data.result as SocialLoginResult;
+    try {
+      const response = await api.post(
+        `/api/auth/login/${provider}`,
+        {
+          accessToken: socialAccessToken,
+        },
+      );
 
-    if (result.isNewUser) {
-      if (
-        !result.socialProvider ||
-        !result.socialId
-      ) {
+      const result =
+        response.data.result as SocialLoginResult;
+
+      if (result.isNewUser) {
+        if (
+          !result.socialProvider ||
+          !result.socialId
+        ) {
+          setError(
+            '소셜 회원가입 정보를 불러오지 못했습니다.',
+          );
+          return;
+        }
+
+        navigate('/signup/terms', {
+          state: {
+            signupType: 'SOCIAL',
+            socialProvider:
+              result.socialProvider,
+            socialId: result.socialId,
+          },
+        });
+
+        return;
+      }
+
+      if (!result.accessToken) {
         setError(
-          '소셜 회원가입 정보를 불러오지 못했습니다.',
+          '로그인 토큰을 발급받지 못했습니다.',
         );
         return;
       }
 
-      navigate('/signup/terms', {
-        state: {
-          signupType: 'SOCIAL',
-          socialProvider:
-            result.socialProvider,
-          socialId: result.socialId,
-        },
-      });
+      setAccessToken(result.accessToken);
 
-      return;
-    }
-
-    if (!result.accessToken) {
+      navigate('/');
+    } catch {
       setError(
-        '로그인 토큰을 발급받지 못했습니다.',
+        '소셜 로그인에 실패했습니다.',
       );
-      return;
+    } finally {
+      setIsLoading(false);
     }
-
-    setAccessToken(result.accessToken);
-
-    navigate('/');
-  } catch {
-    setError(
-      '소셜 로그인에 실패했습니다.',
-    );
-  } finally {
-    setIsLoading(false);
-  }
-};
+  },
+  [navigate],
+);
 
 const handleGoogleLogin = () => {
   setError('');
@@ -293,7 +296,7 @@ useEffect(() => {
       );
     },
   );
-}, []);
+}, [handleSocialLogin]);
 
 const handleNaverLogin = () => {
   setError('');

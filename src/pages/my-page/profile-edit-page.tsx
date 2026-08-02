@@ -17,6 +17,7 @@ import {
   updateCharacter,
   updateNickname,
   uploadProfileImage,
+  type MyInfo,
 } from '../../apis/user';
 
 import LeftArrowIcon from '../../assets/icons/left-arrow.svg?react';
@@ -45,6 +46,10 @@ interface CharacterItem {
   label: string;
   defaultIcon: SvgComponent;
   selectedIcon: SvgComponent;
+}
+
+interface ProfileEditFormProps {
+  user: MyInfo;
 }
 
 const CHARACTER_ITEMS: CharacterItem[] = [
@@ -88,26 +93,30 @@ const CHARACTER_ITEMS: CharacterItem[] = [
 
 const NICKNAME_REGEX = /^[가-힣0-9]{2,10}$/;
 
-const ProfileEditPage = () => {
+const ProfileEditForm = ({
+  user,
+}: ProfileEditFormProps) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const [nickname, setNickname] = useState('');
-  const [selectedCharacterId, setSelectedCharacterId] =
-    useState<CharacterCode | null>(null);
-  const [profileImage, setProfileImage] =
-    useState<string | null>(null);
-  const [profileImageFile, setProfileImageFile] =
-    useState<File | null>(null);
+  const [nickname, setNickname] = useState(user.nickname);
 
-  const {
-    data: user,
-    isPending: isUserPending,
-    isError: isUserError,
-  } = useQuery({
-    queryKey: ['myInfo'],
-    queryFn: getMyInfo,
-  });
+  const [
+    selectedCharacterId,
+    setSelectedCharacterId,
+  ] = useState<CharacterCode | null>(
+    user.characterCode,
+  );
+
+  const [profileImage, setProfileImage] =
+    useState<string | null>(
+      user.profileImageUrl,
+    );
+
+  const [
+    profileImageFile,
+    setProfileImageFile,
+  ] = useState<File | null>(null);
 
   const selectedCharacter = CHARACTER_ITEMS.find(
     (character) => character.id === selectedCharacterId,
@@ -124,14 +133,14 @@ const ProfileEditPage = () => {
     nickname.trim() !== '' && !isNicknameValid;
 
   const isNicknameChanged =
-    nickname.trim() !== user?.nickname;
+    nickname.trim() !== user.nickname;
 
   const isImageChanged =
     profileImageFile !== null;
 
   const isCharacterChanged =
     selectedCharacterId !== null &&
-    selectedCharacterId !== user?.characterCode;
+    selectedCharacterId !== user.characterCode;
 
   const isChanged =
     isNicknameChanged ||
@@ -143,17 +152,6 @@ const ProfileEditPage = () => {
     selectedCharacterId !== null &&
     isChanged;
 
-  // 서버에서 가져온 현재 프로필 상태 세팅
-  useEffect(() => {
-    if (!user) return;
-
-    setNickname(user.nickname);
-    setSelectedCharacterId(user.characterCode);
-    setProfileImage(user.profileImageUrl);
-    setProfileImageFile(null);
-  }, [user]);
-
-  // Blob 미리보기 URL 정리
   useEffect(() => {
     return () => {
       if (profileImage?.startsWith('blob:')) {
@@ -189,68 +187,50 @@ const ProfileEditPage = () => {
 
     setProfileImage(imageUrl);
     setProfileImageFile(file);
-
-    // 프로필 사진과 캐릭터는 별도이므로
-    // 캐릭터 선택값은 유지한다.
   };
 
   const handleCharacterSelect = (
     characterId: CharacterCode,
   ) => {
     setSelectedCharacterId(characterId);
-
-    // 캐릭터와 프로필 사진은 별도이므로
-    // 기존 사진과 선택 파일을 제거하지 않는다.
   };
 
   const updateProfileMutation = useMutation({
-    mutationFn: async () => {
-      const requests: Promise<unknown>[] = [];
+  mutationFn: async () => {
+    if (
+      isCharacterChanged &&
+      selectedCharacterId !== null
+    ) {
+      await updateCharacter(selectedCharacterId);
+    }
 
-      if (isNicknameChanged) {
-        requests.push(
-          updateNickname(nickname.trim()),
-        );
-      }
+    if (isImageChanged && profileImageFile) {
+      await uploadProfileImage(profileImageFile);
+    }
 
-      if (isImageChanged && profileImageFile) {
-        requests.push(
-          uploadProfileImage(profileImageFile),
-        );
-      }
+    if (isNicknameChanged) {
+      await updateNickname(nickname.trim());
+    }
+  },
 
-      if (
-        isCharacterChanged &&
-        selectedCharacterId !== null
-      ) {
-        requests.push(
-          updateCharacter(selectedCharacterId),
-        );
-      }
+  onSuccess: async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ['myInfo'],
+    });
 
-      await Promise.all(requests);
-    },
+    navigate('/my', {
+      replace: true,
+    });
+  },
 
-    onSuccess: async () => {
-      setProfileImageFile(null);
+  onError: (error) => {
+    console.error('프로필 수정 실패:', error);
 
-      await queryClient.invalidateQueries({
-        queryKey: ['myInfo'],
-      });
-
-      navigate('/my', {
-        replace: true,
-      });
-    },
-
-    onError: (error) => {
-      console.error('프로필 수정 실패:', error);
-
-      alert(
-        '프로필 수정에 실패했습니다. 다시 시도해주세요.',
-      );
-    },
-  });
+    alert(
+      '프로필 수정에 실패했습니다. 다시 시도해주세요.',
+    );
+  },
+});
 
   const handleSave = () => {
     if (
@@ -263,25 +243,8 @@ const ProfileEditPage = () => {
     updateProfileMutation.mutate();
   };
 
-  if (isUserPending) {
-    return (
-      <div className='flex min-h-dvh items-center justify-center bg-[#F9FBFB]'>
-        프로필 정보를 불러오는 중이에요.
-      </div>
-    );
-  }
-
-  if (isUserError || !user) {
-    return (
-      <div className='flex min-h-dvh items-center justify-center bg-[#F9FBFB]'>
-        프로필 정보를 불러오지 못했어요.
-      </div>
-    );
-  }
-
   return (
     <div className='flex min-h-dvh w-full flex-col overflow-hidden bg-[#F9FBFB] font-pretendard text-text'>
-      {/* 자체 헤더 */}
       <header className='relative flex h-[72px] shrink-0 items-center justify-center px-5'>
         <button
           type='button'
@@ -306,9 +269,7 @@ const ProfileEditPage = () => {
         </button>
       </header>
 
-      {/* 내용 */}
       <main className='min-h-0 flex-1 overflow-y-auto px-5'>
-        {/* 프로필 사진 및 캐릭터 */}
         <section className='flex justify-center pt-[16px]'>
           <div className='relative h-[122px] w-[122px]'>
             <div className='flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-white shadow-[0_4px_8px_rgba(0,0,0,0.08)]'>
@@ -341,7 +302,6 @@ const ProfileEditPage = () => {
           </div>
         </section>
 
-        {/* 닉네임 */}
         <section className='mt-[18px]'>
           <label
             htmlFor='nickname'
@@ -371,7 +331,6 @@ const ProfileEditPage = () => {
           )}
         </section>
 
-        {/* 캐릭터 선택 */}
         <fieldset className='mt-[16px] min-w-0'>
           <legend className='mb-[15px] block text-[16px] font-semibold leading-[15px] text-[#2A2A2A]'>
             나의 캐릭터
@@ -405,7 +364,6 @@ const ProfileEditPage = () => {
         </fieldset>
       </main>
 
-      {/* 완료 버튼 */}
       <div className='shrink-0 bg-[#F9FBFB] px-5 pb-[32px] pt-[16px]'>
         <button
           type='button'
@@ -427,6 +385,40 @@ const ProfileEditPage = () => {
         </button>
       </div>
     </div>
+  );
+};
+
+const ProfileEditPage = () => {
+  const {
+    data: user,
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ['myInfo'],
+    queryFn: getMyInfo,
+  });
+
+  if (isPending) {
+    return (
+      <div className='flex min-h-dvh items-center justify-center bg-[#F9FBFB]'>
+        프로필 정보를 불러오는 중이에요.
+      </div>
+    );
+  }
+
+  if (isError || !user) {
+    return (
+      <div className='flex min-h-dvh items-center justify-center bg-[#F9FBFB]'>
+        프로필 정보를 불러오지 못했어요.
+      </div>
+    );
+  }
+
+  return (
+    <ProfileEditForm
+      key={`${user.userId}-${user.nickname}-${user.characterCode}-${user.profileImageUrl ?? ''}`}
+      user={user}
+    />
   );
 };
 
