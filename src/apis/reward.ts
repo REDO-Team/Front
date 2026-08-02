@@ -111,3 +111,25 @@ export const createRewardAddress = async (
 
   return response.data.result;
 };
+
+export const deleteRewardAddress = async (
+  shippingAddressId: number,
+): Promise<void> => {
+  await api.delete(`/api/shipping-addresses/${shippingAddressId}`);
+};
+
+export const editRewardAddress = async (
+  shippingAddressId: number,
+  request: ShippingAddressRequest,
+): Promise<ShippingAddress> => {
+  const response = await api.patch<ApiResponse<ShippingAddress>>(
+    `/api/shipping-addresses/${shippingAddressId}`,
+    request,
+  );
+
+  if (!response.data.result) {
+    throw new Error('배송지 수정 결과가 없습니다.');
+  }
+
+  return response.data.result;
+};

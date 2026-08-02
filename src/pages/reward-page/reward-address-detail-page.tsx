@@ -3,8 +3,16 @@ import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Info from '../../assets/icons/info.svg?react';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
-import type { AddressCandidates, ShippingAddress } from '../../types/reward';
-import { createRewardAddress, getRewardAddressList } from '../../apis/reward';
+import type {
+  AddressCandidates,
+  ShippingAddress,
+  ShippingAddressRequest,
+} from '../../types/reward';
+import {
+  createRewardAddress,
+  editRewardAddress,
+  getRewardAddressList,
+} from '../../apis/reward';
 
 interface AddressDetailLocationState {
   address?: AddressCandidates;
@@ -64,15 +72,31 @@ function RewardAddressDetailForm({
     },
   });
 
+  const {
+    mutate: editAddress,
+    isPending: isEditing,
+    isError: isEditError,
+  } = useMutation({
+    mutationFn: ({
+      shippingAddressId,
+      request,
+    }: {
+      shippingAddressId: number;
+      request: ShippingAddressRequest;
+    }) => editRewardAddress(shippingAddressId, request),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['rewardAddressList'] });
+      navigate('/reward/address-list');
+    },
+    onError: (error) => {
+      console.error('배송지 수정에 실패했습니다.', error);
+    },
+  });
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (isEditMode) {
-      // TODO: 배송지 수정 API 연결
-      return;
-    }
-
-    createAddress({
+    const request: ShippingAddressRequest = {
       addressType,
       receiverName: receiverName.trim(),
       phone: phone.trim(),
@@ -80,8 +104,21 @@ function RewardAddressDetailForm({
       address1: selectedAddress.roadAddress,
       address2: detailAddress.trim(),
       isDefault,
-    });
+    };
+
+    if (isEditMode) {
+      editAddress({
+        shippingAddressId: Number(shippingAddressId),
+        request,
+      });
+      return;
+    }
+
+    createAddress(request);
   };
+
+  const isSaving = isCreating || isEditing;
+  const isSaveError = isEditMode ? isEditError : isCreateError;
 
   const inputClassName = 'mt-2 h-12 w-full rounded-[20px] border border-gray-200 bg-white px-6 text-[15px] font-medium text-text outline-none placeholder:text-gray-400 focus:border-main-green1';
 
@@ -152,15 +189,15 @@ function RewardAddressDetailForm({
             기본 배송지로 설정
           </label>
 
-          {isCreateError && (
+          {isSaveError && (
             <p role='alert' className='text-center text-sm font-semibold text-red-500'>
-              배송지를 저장하지 못했어요. 잠시 후 다시 시도해 주세요.
+              배송지를 {isEditMode ? '수정하지' : '저장하지'} 못했어요. 잠시 후 다시 시도해 주세요.
             </p>
           )}
         </div>
 
-        <button type='submit' disabled={isCreating} className='mt-auto h-12 w-full rounded-full bg-main-green1 text-base font-bold text-white disabled:cursor-not-allowed disabled:opacity-60'>
-          {isCreating ? '저장 중...' : isEditMode ? '수정하기' : '저장하기'}
+        <button type='submit' disabled={isSaving} className='mt-auto h-12 w-full rounded-full bg-main-green1 text-base font-bold text-white disabled:cursor-not-allowed disabled:opacity-60'>
+          {isSaving ? (isEditMode ? '수정 중...' : '저장 중...') : isEditMode ? '수정하기' : '저장하기'}
         </button>
       </form>
     </div>
