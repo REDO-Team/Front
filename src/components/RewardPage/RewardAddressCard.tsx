@@ -11,6 +11,7 @@ interface RewardAddressCardProps {
 const addressTypeLabels: Record<string, string> = {
   HOME: '집',
   COMPANY: '회사',
+  SCHOOL: '학교',
 };
 
 export default function RewardAddressCard({

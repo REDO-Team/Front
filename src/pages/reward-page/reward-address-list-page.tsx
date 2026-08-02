@@ -1,18 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import BigLogo from '../../assets/icons/Big-logo.svg';
 import RewardAddressCard from '../../components/RewardPage/RewardAddressCard';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import FailInfo from '../../components/common/FailInfo';
-import { getRewardAddressList } from '../../apis/reward';
+import Modal from '../../components/common/Modal';
+import {
+  deleteRewardAddress,
+  getRewardAddressList,
+} from '../../apis/reward';
 
 export default function RewardAddressListPage() {
   const navigate = useNavigate();
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
-  const [deletedAddressIds, setDeletedAddressIds] = useState<Set<number>>(
-    () => new Set(),
-  );
+  const [deleteAddressId, setDeleteAddressId] = useState<number | null>(null);
   const {
     data: addressList,
     isPending,
@@ -22,9 +24,7 @@ export default function RewardAddressListPage() {
     queryFn: getRewardAddressList,
   });
 
-  const shippingAddresses = (addressList ?? []).filter(
-    ({ shippingAddressId }) => !deletedAddressIds.has(shippingAddressId),
-  );
+  const shippingAddresses = addressList ?? [];
   const effectiveSelectedAddressId =
     selectedAddressId ??
     shippingAddresses.find(({ isDefault }) => isDefault)?.shippingAddressId ??
@@ -32,24 +32,24 @@ export default function RewardAddressListPage() {
     null;
   const hasShippingAddresses = shippingAddresses.length > 0;
 
-  const handleDelete = (shippingAddressId: number) => {
-    const nextAddresses = shippingAddresses.filter(
-      (address) => address.shippingAddressId !== shippingAddressId,
-    );
-
-    setDeletedAddressIds((currentIds) => {
-      const nextIds = new Set(currentIds);
-      nextIds.add(shippingAddressId);
-      return nextIds;
-    });
-
-    if (effectiveSelectedAddressId === shippingAddressId) {
-      setSelectedAddressId(
-        nextAddresses.find(({ isDefault }) => isDefault)?.shippingAddressId ??
-          nextAddresses[0]?.shippingAddressId ??
-          null,
+  const queryClient = useQueryClient();
+  const deleteAddressMutation = useMutation({
+    mutationFn: deleteRewardAddress,
+    onSuccess: (_, deletedAddressId) => {
+      setSelectedAddressId((currentAddressId) =>
+        currentAddressId === deletedAddressId ? null : currentAddressId,
       );
-    }
+      queryClient.invalidateQueries({ queryKey: ['rewardAddressList'] });
+    },
+    onError: () => {
+      alert('배송지 삭제에 실패했습니다.');
+    },
+  });
+  const handleDeleteConfirm = () => {
+    if (deleteAddressId === null) return;
+
+    deleteAddressMutation.mutate(deleteAddressId);
+    setDeleteAddressId(null);
   };
 
   if (isPending) {
@@ -89,7 +89,7 @@ export default function RewardAddressListPage() {
               isSelected={effectiveSelectedAddressId === shippingAddress.shippingAddressId}
               onSelect={() => setSelectedAddressId(shippingAddress.shippingAddressId)}
               onEdit={() => navigate(`/reward/address-detail/${shippingAddress.shippingAddressId}/edit`)}
-              onDelete={() => handleDelete(shippingAddress.shippingAddressId)}
+              onDelete={() => setDeleteAddressId(shippingAddress.shippingAddressId)}
             />
           ))}
         </section>
@@ -103,6 +103,15 @@ export default function RewardAddressListPage() {
           </p>
         </div>
       )}
+
+      <Modal
+        isOpen={deleteAddressId !== null}
+        title={'배송지를 삭제하시겠습니까?'}
+        buttonText='삭제하기'
+        buttonColor='red'
+        onClose={() => setDeleteAddressId(null)}
+        onConfirm={handleDeleteConfirm}
+      />
     </div>
   );
 }
