@@ -1,4 +1,4 @@
-import { useState,useEffect,useRef, } from 'react';
+import { useState,useEffect,useRef,useCallback, } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../apis/api';
 import { setAccessToken } from '../../apis/token';
@@ -36,65 +36,68 @@ const LoginPage = () => {
     id.trim() !== '' &&
     password.trim() !== '';
 
-  const handleSocialLogin = async (
-  provider: SocialProvider,
-  socialAccessToken: string,
-) => {
-  setError('');
-  setIsLoading(true);
-  
-  try {
-    const response = await api.post(
-      `/api/auth/login/${provider}`,
-      {
-        accessToken: socialAccessToken,
-      },
-    );
+  const handleSocialLogin = useCallback(
+  async (
+    provider: SocialProvider,
+    socialAccessToken: string,
+  ) => {
+    setError('');
+    setIsLoading(true);
 
-    const result =
-      response.data.result as SocialLoginResult;
+    try {
+      const response = await api.post(
+        `/api/auth/login/${provider}`,
+        {
+          accessToken: socialAccessToken,
+        },
+      );
 
-    if (result.isNewUser) {
-      if (
-        !result.socialProvider ||
-        !result.socialId
-      ) {
+      const result =
+        response.data.result as SocialLoginResult;
+
+      if (result.isNewUser) {
+        if (
+          !result.socialProvider ||
+          !result.socialId
+        ) {
+          setError(
+            '소셜 회원가입 정보를 불러오지 못했습니다.',
+          );
+          return;
+        }
+
+        navigate('/signup/terms', {
+          state: {
+            signupType: 'SOCIAL',
+            socialProvider:
+              result.socialProvider,
+            socialId: result.socialId,
+          },
+        });
+
+        return;
+      }
+
+      if (!result.accessToken) {
         setError(
-          '소셜 회원가입 정보를 불러오지 못했습니다.',
+          '로그인 토큰을 발급받지 못했습니다.',
         );
         return;
       }
 
-      navigate('/signup/terms', {
-        state: {
-          signupType: 'SOCIAL',
-          socialProvider:
-            result.socialProvider,
-          socialId: result.socialId,
-        },
-      });
+      setAccessToken(result.accessToken);
 
-      return;
-    }
-
-    if (!result.accessToken) {
+      navigate('/');
+    } catch {
       setError(
-        '로그인 토큰을 발급받지 못했습니다.',
+        '소셜 로그인에 실패했습니다.',
       );
-      return;
+    } finally {
+      setIsLoading(false);
     }
-
-    setAccessToken(result.accessToken);
-
-    navigate('/');
-  } catch {
-    setError(
-      '소셜 로그인에 실패했습니다.',
-    );
-  } finally {
-    setIsLoading(false);
-  }
-};
+  },
+  [navigate],
+);
 
 const handleGoogleLogin = () => {
   setError('');
@@ -217,7 +220,17 @@ useEffect(() => {
   const naverClientId =
     import.meta.env.VITE_NAVER_CLIENT_ID;
 
-  if (!naverClientId || !window.naver) {
+  if (!naverClientId) {
+    console.error(
+      'VITE_NAVER_CLIENT_ID가 설정되지 않았습니다.',
+    );
+    return;
+  }
+
+  if (!window.naver) {
+    console.error(
+      '네이버 SDK를 불러오지 못했습니다.',
+    );
     return;
   }
 
@@ -237,7 +250,53 @@ useEffect(() => {
     });
 
   naverLogin.init();
-}, []);
+
+  // 네이버 인증 후 돌아온 콜백 URL인지 확인
+  const isNaverCallback =
+    window.location.hash.includes(
+      'access_token=',
+    );
+
+  // 일반적인 /login 진입이나 로그아웃 후 이동에서는
+  // 네이버 자동 로그인을 실행하지 않음
+  if (!isNaverCallback) {
+    return;
+  }
+
+  naverLogin.getLoginStatus(
+    (status: boolean) => {
+      if (!status) {
+        setError(
+          '네이버 인증 정보를 확인하지 못했습니다.',
+        );
+        return;
+      }
+
+      const socialAccessToken =
+        naverLogin.accessToken?.accessToken;
+
+      if (!socialAccessToken) {
+        setError(
+          '네이버 인증 토큰을 가져오지 못했습니다.',
+        );
+        return;
+      }
+
+      // 콜백 토큰이 URL에 계속 남아
+      // 로그아웃 후 재로그인되는 것을 방지
+      window.history.replaceState(
+        {},
+        document.title,
+        '/login',
+      );
+
+      void handleSocialLogin(
+        'naver',
+        socialAccessToken,
+      );
+    },
+  );
+}, [handleSocialLogin]);
 
 const handleNaverLogin = () => {
   setError('');
