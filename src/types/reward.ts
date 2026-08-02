@@ -10,6 +10,7 @@ export type RewardProductStatus = 'ACTIVE' | 'INACTIVE' | 'SOLD_OUT';
 
 export type RewardAddressType = 'HOME' | 'COMPANY' | 'SCHOOL';
 
+
 export interface RewardSummary {
     nickname: string;
     currentPoint: number;
@@ -147,4 +148,17 @@ export interface AddressSearchResultParams {
   size?: number;
 }
 
+export interface RewardPurchaseRequest {
+  rewardProductId: number;
+  shippingAddressId?: number;
+  receiverName?: string;
+  receiverPhone?: string;
+}
 
+export interface RewardPurchaseResult {
+  rewardRedemptionId: number;
+  rewardProductId: number;
+  productName: string;
+  usedPoint: number;
+  remainingPoint: number;
+}

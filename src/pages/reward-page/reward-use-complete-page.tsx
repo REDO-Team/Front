@@ -1,21 +1,72 @@
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import FullCheck from '../../assets/icons/full-check.svg';
-import { mockRewardProducts } from '../../mocks/reward';
+import { getRewardProductDetail } from '../../apis/reward';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import FailInfo from '../../components/common/FailInfo';
+import type { RewardProductType } from '../../types/reward';
+
+interface RewardUseCompleteLocationState {
+  rewardProductType?: RewardProductType;
+}
 
 export default function RewardUseCompletePage() {
   const navigate = useNavigate();
+  const { state } = useLocation();
   const { productId } = useParams<{ productId: string }>();
   const numericProductId = Number(productId);
-  const product = Number.isSafeInteger(numericProductId)
-    ? mockRewardProducts.find(({ id }) => id === numericProductId)
-    : undefined;
+  const isValidProductId =
+    Number.isSafeInteger(numericProductId) && numericProductId > 0;
+  const locationProductType = (state as RewardUseCompleteLocationState | null)
+    ?.rewardProductType;
+  const {
+    data: product,
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ['rewardProduct', numericProductId],
+    queryFn: () => getRewardProductDetail(numericProductId),
+    enabled: isValidProductId && !locationProductType,
+  });
+  const rewardProductType = locationProductType ?? product?.rewardProductType;
 
-  if (!product) {
+  if (!isValidProductId) {
     return <Navigate to='/reward/store' replace />;
   }
 
+  if (!locationProductType && isPending) {
+    return (
+      <div className='flex flex-1 items-center justify-center bg-bg-green1'>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (!rewardProductType || isError) {
+    return (
+      <div className='flex flex-1 flex-col bg-bg-green1 px-5 pb-6 font-pretendard'>
+        <FailInfo
+          title='완료 정보를 불러오지 못했어요.'
+          content='리워드 스토어에서 사용 내역을 확인해 주세요.'
+        />
+        <button
+          type='button'
+          onClick={() => navigate('/reward/store', { replace: true })}
+          className='h-[50px] w-full shrink-0 rounded-full bg-main-green1 text-base font-bold text-white'
+        >
+          확인
+        </button>
+      </div>
+    );
+  }
+
   const deliveryTarget =
-    product.type === 'PARTNER' ? '배송지' : '번호';
+    rewardProductType === 'PARTNER_BRAND' ? '배송지' : '번호';
 
   return (
     <div className='flex flex-1 flex-col bg-bg-green1 px-5 pb-6 font-pretendard text-text'>
