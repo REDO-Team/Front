@@ -6,6 +6,7 @@ import RecycleCategoryCard from '../../components/common/RecycleCategoryCard';
 import Modal from '../../components/common/Modal';
 import { useState } from 'react';
 import type { Guides } from '../../types/disposal-guide';
+import { postGuideFavorite } from '../../apis/disposal-guide';
 
 export default function DisposalInfoDetailage() {
   const navigate = useNavigate();
@@ -17,8 +18,16 @@ export default function DisposalInfoDetailage() {
 
   const isRecyclePossible = guide?.name.includes('일반쓰레기');
 
-  const handleFavorites = () => {
-    setIsOpen(true);
+  const handleFavorites = async () => {
+    try {
+      const data = await postGuideFavorite(guide?.guideId);
+      console.log(data);
+
+      setIsOpen(true);
+    } catch (e) {
+      alert('접속이 원활하지 않습니다. 잠시 후 다시 시도해 주세요.');
+      console.error('guide favorite post error', e);
+    }
   };
 
   const handleNavigate = () => {
