@@ -32,7 +32,7 @@ export default function DisposalInfoDetailage() {
   return (
     <div className='h-full pt-5'>
       <div className='flex flex-col h-full px-5'>
-        <RecycleCategoryCard padding={20} gap={12} radius={20} imgSize={80} categorySize={12} nameSize={24} category={guide?.recycleCategory} name={guide?.name} content={isRecyclePossible ? '분리배출이 불가능한 품목이에요' : '분리배출이 가능한 품목이에요'} image={guide.imageKey} />
+        <RecycleCategoryCard padding={20} gap={12} radius={20} imgSize={80} categorySize={12} nameSize={24} category={guide?.recycleCategory} name={guide?.name} content={isRecyclePossible ? '분리배출이 불가능한 품목이에요' : '분리배출이 가능한 품목이에요'} />
 
         <div className='flex flex-col gap-3 mt-7.5'>
           <p className='font-pretendard font-bold text-lg text-text'>이렇게 배출해주세요</p>
