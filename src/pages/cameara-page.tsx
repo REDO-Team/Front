@@ -5,31 +5,50 @@ import TopBar from '../components/common/TopBar';
 import Webcam from 'react-webcam';
 import { useRef, useState } from 'react';
 import PhotoAnalysisLoading from '../components/common/PhotoAnalysisLoading';
+import { postGuideImageSearch } from '../apis/disposal-guide';
 // import { useCertificationStore } from '../store/certificationStore';
+
+const base64ToFile = async (base64String: string, filename = 'capture.jpg'): Promise<File> => {
+  const response = await fetch(base64String);
+  const blob = await response.blob();
+  return new File([blob], filename, { type: blob.type });
+};
 
 export default function CamearaPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const webcamRef = useRef<Webcam | null>(null);
-  const [imgSrc, setImgSrc] = useState<string | null | undefined>(null);
   const [loading, setLoading] = useState(false);
   // const setCertified = useCertificationStore((state) => state.setCertified);
 
-  const handleCapture = () => {
+  const handleCapture = async () => {
     const img = webcamRef.current?.getScreenshot();
-    setImgSrc(img);
 
-    console.log(imgSrc);
+    if (!img) return;
 
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const file = await base64ToFile(img);
+
+      const data = await postGuideImageSearch(file);
+
+      // 인증
       if (location?.state === 'certification') {
+        // // setCertified();
         navigate('/certification/success');
-      } else {
-        navigate('/disposal-info/detail');
       }
-    }, 5000);
-    // setCertified();
+      // 배출 정보 검색
+      else {
+        navigate('/disposal-info/detail', {
+          state: {
+            guide: data.result?.guideDetail,
+          },
+        });
+      }
+    } catch (e) {
+      alert('접속이 원활하지 않습니다. 잠시 후 다시 시도해 주세요.');
+      console.error('guide image search error', e);
+    }
   };
 
   return (
@@ -53,11 +72,6 @@ export default function CamearaPage() {
               </div>
             </div>
           </div>
-
-          {/* 카메라 기능 테스트를 위한 코드 */}
-          {/* {imgSrc && <img src={imgSrc} alt='' />} */}
-
-          {/* 로딩 화면 테스트 */}
         </div>
       )}
 
