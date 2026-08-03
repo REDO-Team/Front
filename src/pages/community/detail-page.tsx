@@ -8,7 +8,7 @@ import PostActionModal from "../../components/CommunityPage/PostActionModal.tsx"
 import { useState, useEffect } from "react";
 import Modal from "../../components/common/Modal.tsx";
 import CommentItem from "./CommentItem.tsx";
-import { getCommunityDetail } from "../../apis/community.ts";
+import { getCommunityDetail, likeCommunity, unlikeCommunity } from "../../apis/community.ts";
 import { MOCK_POST, MOCK_COMMENTS } from "../../mocks/community";
 import LoadingSpinner from "../../components/common/LoadingSpinner.tsx";
 
@@ -100,6 +100,30 @@ export default function CommunityDetailPage() {
         <LoadingSpinner />
       </div>);
   }
+
+  const handleLikeToggle = async () => {
+    if (!postId) return;
+    try {
+      if (isLiked) {
+        const res = await unlikeCommunity(Number(postId));
+        setIsLiked(false);
+
+        if (res.isSuccess) {
+          setPost((prev: any) => ({ ...prev, numLikes: res.result.likeCount }));
+        }
+      } else {
+        const res = await likeCommunity(Number(postId));
+        setIsLiked(true);
+
+        if (res.isSuccess) {
+          setPost((prev: any) => ({ ...prev, numLikes: res.result.likeCount }));
+        }
+      }
+    } catch (error) {
+      console.error("좋아요 처리 실패", error);
+    }
+  };
+
   return (
     <div className="bg-bg-green1 min-h-screen pb-24 relative font-pretendard">
       <TopBar
@@ -160,11 +184,11 @@ export default function CommunityDetailPage() {
           </span>
           <button
             className="flex items-center gap-1 text-gray-900"
-            onClick={() => setIsLiked(!isLiked)}
+            onClick={handleLikeToggle}
           >
             <HeartIcon className={`w-[17px] h-[15px] ${!isLiked && "text-gray-500"}`}
               isFilled={isLiked} />
-            좋아요
+            좋아요 {post.numLikes > 0 ? post.numLikes : ""}
           </button>
         </div>
 
