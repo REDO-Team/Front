@@ -13,14 +13,16 @@ export default function DisposalInfoDetailage() {
   const [isOpen, setIsOpen] = useState(false);
 
   const guide: Guides = location?.state?.guide;
-  const isRecyclePossible = guide.name.includes('일반쓰레기');
+  console.log(guide);
+
+  const isRecyclePossible = guide?.name.includes('일반쓰레기');
 
   const handleFavorites = () => {
     setIsOpen(true);
   };
 
   const handleNavigate = () => {
-    if (guide.name.includes('쓰레기')) {
+    if (guide?.name.includes('쓰레기')) {
       navigate('/');
     } else {
       navigate('/certification');
