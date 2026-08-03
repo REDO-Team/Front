@@ -9,6 +9,27 @@ import { getCommunityList } from '../../apis/community';
 
 const CATEGORIES = ['전체보기', '정보공유', '리워드후기', '환경실천'];
 
+const formatTimeAgo = (dateString: string) => {
+  const postDate = new Date(dateString);
+  const now = new Date();
+  const diff = now.getTime() - postDate.getTime();
+
+  const sec = Math.floor(diff / 1000);
+  const min = Math.floor(sec / 60);
+  const hour = Math.floor(min / 60);
+  const day = Math.floor(hour / 24);
+
+  if (sec < 60) return `방금 전`;
+  if (min < 60) return `${min}분 전`;
+  if (hour < 24) return `${hour}시간 전`;
+  return `${day}일 전`;
+
+  const year = postDate.getFullYear();
+  const month = String(postDate.getMonth() + 1).padStart(2, '0');
+  const date = String(postDate.getDate()).padStart(2, '0');
+  return `${year}-${month}-${date}`;
+};
+
 const formatCategory = (categoryValue: any) => {
   const value = String(categoryValue);
   if (value === '1') return '정보공유';
@@ -86,20 +107,20 @@ export default function CommunityMainPage() {
               <div className='flex flex-col flex-1 gap-2 min-w-0'>
                 <div className='flex flex-col gap-1'>
                   <h3 className='text-[16px] font-semibold text-gray-900 leading-snug break-keep'>{post.title}</h3>
-                  {post.content && <p className='text-[15px] font-medium leading-[22px] text-gray-600 break-keep truncate'>{post.content}</p>}
+                  {post.preview && <p className='text-[15px] font-medium leading-[22px] text-gray-600 break-keep truncate'>{post.preview}</p>}
                 </div>
 
                 <div className='flex items-center gap-3 mt-1'>
                   {/* 유저 프로필 */}
                   <div className='flex items-center gap-1.5'>
                     <div className={`w-[20px] h-[20px] rounded-full ${post.authorColor}`}></div>
-                    <span className='text-[14px] font-bold leading-[22px] text-gray-600'>{post.author}</span>
+                    <span className='text-[14px] font-bold leading-[22px] text-gray-600'>{post.writer}</span>
                   </div>
 
                   <div className='flex flex-row items-center gap-2 whitespace-nowrap text-[14px] font-semibold leading-[22px] text-gray-500'>
                     <span className='flex items-center gap-1'>
                       <img src={HeartIcon} alt='좋아요' className='w-[11.25px] h-[10px]' />
-                      {post.likes}
+                      {post.numLikes}
                     </span>
                     <span className='flex items-center gap-1'>
                       <img src={CommentIcon} alt='댓글' className='w-[11.25px] h-[10.62px]' />
@@ -107,13 +128,13 @@ export default function CommunityMainPage() {
                     </span>
                   </div>
 
-                  {!post.imageUrl && <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{post.createdAt}</span>}
+                  {!post.imageUrl && <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{formatTimeAgo(post.createdAt)}</span>}
                 </div>
               </div>
               {post.imageUrl && (
                 <div className='flex flex-col items-center gap-1.5 shrink-0'>
                   <div className='w-[60px] h-[60px] shrink-0 rounded-[10px] bg-gradient-to-br from-[#40DC8F] to-[#4BE1FF]'></div>
-                  <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{post.createdAt}</span>
+                  <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{formatTimeAgo(post.createdAt)}</span>
                 </div>
               )}
             </div>
