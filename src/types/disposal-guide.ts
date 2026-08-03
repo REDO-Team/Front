@@ -18,3 +18,9 @@ export type GuideImageSearchResponse = CommonResponse<{
   guideDetail: Guides;
   identified: boolean;
 }>;
+
+// 가이드 즐겨찾기 추가
+export type GuideFavoriteResponse = CommonResponse<{
+  favoriteId: number;
+  guideId: number;
+}>;

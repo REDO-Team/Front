@@ -1,4 +1,4 @@
-import type { DisposalGuideResponse, GuideImageSearchResponse } from '../types/disposal-guide';
+import type { DisposalGuideResponse, GuideFavoriteResponse, GuideImageSearchResponse } from '../types/disposal-guide';
 import api from './api';
 
 // 배출 가이드 조회
@@ -20,6 +20,13 @@ export const postGuideImageSearch = async (image: File): Promise<GuideImageSearc
       'Content-Type': 'multipart/form-data',
     },
   });
+
+  return response.data;
+};
+
+// 가이드 즐겨찾기 추가
+export const postGuideFavorite = async (guideId: number | null): Promise<GuideFavoriteResponse> => {
+  const response = await api.post(`/api/guides/${guideId}/favorites`);
 
   return response.data;
 };
