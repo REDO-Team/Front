@@ -12,6 +12,8 @@ import type {
   AddressSearchResult,
   AddressSearchResultParams,
   ShippingAddressRequest,
+  RewardPurchaseResult,
+  RewardPurchaseRequest,
 } from '../types/reward';
 
 export const getRewardPoints = async (): Promise<RewardPointResponse> => {
@@ -107,6 +109,49 @@ export const createRewardAddress = async (
 
   if (!response.data.result) {
     throw new Error('배송지 생성 결과가 없습니다.');
+  }
+
+  return response.data.result;
+};
+
+export const deleteRewardAddress = async (
+  shippingAddressId: number,
+): Promise<void> => {
+  await api.delete(`/api/shipping-addresses/${shippingAddressId}`);
+};
+
+export const editRewardAddress = async (
+  shippingAddressId: number,
+  request: ShippingAddressRequest,
+): Promise<ShippingAddress> => {
+  const response = await api.patch<ApiResponse<ShippingAddress>>(
+    `/api/shipping-addresses/${shippingAddressId}`,
+    request,
+  );
+
+  if (!response.data.result) {
+    throw new Error('배송지 수정 결과가 없습니다.');
+  }
+
+  return response.data.result;
+};
+
+export const createRewardPurchase = async (
+  request: RewardPurchaseRequest,
+  idempotencyKey: string,
+): Promise<RewardPurchaseResult> => {
+  const response = await api.post<ApiResponse<RewardPurchaseResult>>(
+    '/api/rewards/redemptions',
+    request,
+    {
+      headers: {
+        'Idempotency-Key': idempotencyKey,
+      },
+    },
+  );
+
+  if (!response.data.result) {
+    throw new Error('상품 구매 결과가 없습니다.');
   }
 
   return response.data.result;
