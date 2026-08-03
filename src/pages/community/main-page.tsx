@@ -22,8 +22,8 @@ const formatTimeAgo = (dateString: string) => {
   if (sec < 60) return `방금 전`;
   if (min < 60) return `${min}분 전`;
   if (hour < 24) return `${hour}시간 전`;
-  return `${day}일 전`;
 
+  if (day < 7) return `${day}일 전`;
   const year = postDate.getFullYear();
   const month = String(postDate.getMonth() + 1).padStart(2, '0');
   const date = String(postDate.getDate()).padStart(2, '0');
@@ -36,7 +36,7 @@ const formatCategory = (categoryValue: any) => {
   if (value === '2') return '리워드후기';
   if (value === '3') return '환경실천';
   return '전체보기';
-}
+};
 const getCategoryStyle = (category: string) => {
   switch (category) {
     case '정보공유':
