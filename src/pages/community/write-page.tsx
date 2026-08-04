@@ -1,8 +1,22 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CameraIcon from '../../assets/icons/camera';
+import { postCommunity } from '../../apis/community';
 
 const CATEGORIES = ['정보공유', '리워드후기', '환경실천'];
+
+const getCategoryNumber = (category: string) => {
+  switch (category) {
+    case '정보공유':
+      return 1;
+    case '리워드후기':
+      return 2;
+    case '환경실천':
+      return 3;
+    default:
+      return 0;
+  }
+};
 
 export default function CommunityWritePage() {
   const navigate = useNavigate();
@@ -25,21 +39,31 @@ export default function CommunityWritePage() {
     }
   };
 
-  const handleSubmit = () => {
+  const isFormValid = selectedCategory !== '' && title.trim() !== '' && content.trim() !== '';
+  const handleSubmit = async () => {
     if (!selectedCategory || !title.trim() || !content.trim()) {
       alert('제목, 본문을 모두 입력해주세요!');
       return;
     }
 
-    // 서버(API)로 데이터 전송하는 로직이 들어갈 자리
-    console.log('전송할 데이터:', { selectedCategory, title, content, imagePreviews });
+    try {
+      const requestData = {
+        category: getCategoryNumber(selectedCategory),
+        title: title,
+        content: content,
+        images: imagePreviews,
+      };
 
-    navigate('/community/complete');
+      const res = await postCommunity(requestData);
+
+      if (res.isSuccess) {
+        navigate('/community/complete');
+      }
+    } catch (error) {
+      console.error('게시글 등록 실패', error);
+      alert('게시글 등록에 실패했습니다. 다시 시도해주세요.');
+    }
   };
-  const removeImage = (index: number) => {
-    setImagePreviews((prev) => prev.filter((_, i) => i !== index));
-  };
-  const isFormValid = selectedCategory !== '' && title.trim() !== '' && content.trim() !== '';
 
   return (
     <div className='bg-bg-green1 min-h-screen pb-24 relative font-pretendard'>

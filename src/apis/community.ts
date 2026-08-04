@@ -11,7 +11,9 @@ export const getCommunityDetail = async (communityId: number) => {
 };
 
 export const postCommunity = async (communityData: any) => {
-    const response = await api.post('/api/community', communityData);
+    const response = await api.post('/api/community', communityData, {
+        headers: { 'Content-Type': 'application/json' },
+    });
     return response.data;
 };
 
