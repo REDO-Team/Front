@@ -40,19 +40,19 @@ export const CATEGORY_LIST = [
 export const CATEGORY_DETAILS = [
   {
     category: '종이',
-    details: ['종이팩', '신문지', '박스', '종이컵', '기타'],
+    details: ['종이팩', '신문지', '박스', '종이컵'],
   },
   {
     category: '플라스틱',
-    details: ['투명 PET', '일반 PET', '기타', '플라스틱 용기'],
+    details: ['투명 PET', '일반 PET', '플라스틱 용기'],
   },
   {
     category: '캔',
-    details: ['음료캔', '통조림 캔', '기타', '스프레이 캔'],
+    details: ['음료캔', '통조림 캔', '스프레이 캔'],
   },
   {
     category: '유리',
-    details: ['유리병', '유리용기', '기타', '내열/특수 유리'],
+    details: ['유리병', '유리용기', '내열/특수 용기'],
   },
   {
     category: '기타',
