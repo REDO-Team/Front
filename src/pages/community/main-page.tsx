@@ -5,7 +5,6 @@ import HeartIcon from '../../assets/icons/heart.svg';
 import CommentIcon from '../../assets/icons/comment.svg';
 import { useNavigate } from 'react-router-dom';
 import { getCommunityList } from '../../apis/community';
-//import { MOCK_POSTS } from '../../mocks/community';
 import YellowCharacter from '../../assets/icons/character/yellow.svg?react';
 import GrayCharacter from '../../assets/icons/character/gray.svg?react';
 import GreenCharacter from '../../assets/icons/character/green.svg?react';

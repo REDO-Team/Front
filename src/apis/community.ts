@@ -10,7 +10,7 @@ export const getCommunityDetail = async (communityId: number) => {
     return response.data;
 };
 
-export const createCommunity = async (communityData: any) => {
+export const postCommunity = async (communityData: any) => {
     const response = await api.post('/api/community', communityData);
     return response.data;
 };
@@ -25,8 +25,10 @@ export const getComments = async (communityId: number) => {
     return response.data;
 };
 
-export const createComment = async (communityId: number, commentData: any) => {
-    const response = await api.post(`/api/community/${communityId}/comments`, commentData);
+export const postComment = async (communityId: number, content: string) => {
+    const response = await api.post(`/api/community/${communityId}/comments`,
+        { comment: content },
+        { headers: { 'Content-Type': 'application/json' } });
     return response.data;
 };
 

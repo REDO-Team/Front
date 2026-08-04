@@ -84,6 +84,8 @@ export default function CommentItem({ comment, isMine, onUpdate, onDelete }: Com
             </div>
           )}
 
+          <span className="text-[14px] font-bold text-gray-900">{comment.writer}</span>
+
           {isMine && (
             <span className="inline-flex items-center justify-center px-[6px] py-[2px] rounded-[10px] text-[10px] font-bold bg-main-green1 text-white">
               내 댓글

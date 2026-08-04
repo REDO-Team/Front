@@ -8,8 +8,7 @@ import PostActionModal from "../../components/CommunityPage/PostActionModal.tsx"
 import { useState, useEffect } from "react";
 import Modal from "../../components/common/Modal.tsx";
 import CommentItem from "./CommentItem.tsx";
-import { getCommunityDetail, likeCommunity, unlikeCommunity, getComments } from "../../apis/community.ts";
-import { MOCK_COMMENTS } from "../../mocks/community";
+import { getCommunityDetail, likeCommunity, unlikeCommunity, getComments, postComment } from "../../apis/community.ts";
 import LoadingSpinner from "../../components/common/LoadingSpinner.tsx";
 import YellowCharacter from '../../assets/icons/character/yellow.svg?react';
 import GrayCharacter from '../../assets/icons/character/gray.svg?react';
@@ -65,6 +64,7 @@ const renderCharacterProfile = (code: number) => {
 
 export default function CommunityDetailPage() {
   const [comments, setComments] = useState<any[]>([]);
+  const [newComment, setNewComment] = useState("");
   const [isActionModalOpen, setIsActionModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -143,6 +143,23 @@ export default function CommunityDetailPage() {
       }
     } catch (error) {
       console.error("좋아요 처리 실패", error);
+    }
+  };
+
+  const handlePostComment = async () => {
+    if (!newComment.trim() || !postId) return;
+    try {
+      const res = await postComment(Number(postId), newComment);
+      if (res.isSuccess) {
+        setNewComment("");
+
+        const commentsResponse = await getComments(Number(postId));
+        if (commentsResponse.isSuccess) {
+          setComments(commentsResponse.result.comments || []);
+        }
+      }
+    } catch (error) {
+      console.error("댓글 작성 실패", error);
     }
   };
 
@@ -258,10 +275,15 @@ export default function CommunityDetailPage() {
         <div className="flex items-center gap-[10px]">
           <input
             type="text"
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            onKeyDown={(e) => { e.key === 'Enter' && handlePostComment() }}
             placeholder="댓글을 입력해주세요"
             className="flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 py-2.5 text-[16px] outline-none placeholder:text-gray-600"
           />
-          <button className="bg-main-green1 text-white text-[14px] font-bold px-5 py-2.5 rounded-full shrink-0">
+          <button
+            onClick={handlePostComment}
+            className="bg-main-green1 text-white text-[14px] font-bold px-5 py-2.5 rounded-full shrink-0">
             게시
           </button>
         </div>
