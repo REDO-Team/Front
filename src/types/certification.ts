@@ -27,3 +27,25 @@ export type CertificationRuleResponse = CommonResponse<{
   policy: Policy;
   rewardPolicy: RewardPolicy;
 }>;
+
+// 신규 인증
+export type CertificationResponse = CommonResponse<{
+  certificationId: number;
+  status: string;
+  failureType: string | undefined;
+  recycleGuideId: number;
+  itemName: string;
+  categoryName: string;
+  earnedPoint: number;
+  failedReason: string;
+  retryGuide: string[];
+  retryAllowed: boolean;
+  retryPath: string;
+  judgedAt: Date;
+}>;
+
+export type CertificationRequest = {
+  image: File;
+  certificationSource: 'GENERAL' | 'AFTER_SEARCH';
+  recycleGuideId: number | null;
+};

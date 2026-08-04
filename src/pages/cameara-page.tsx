@@ -6,6 +6,7 @@ import Webcam from 'react-webcam';
 import { useRef, useState } from 'react';
 import PhotoAnalysisLoading from '../components/common/PhotoAnalysisLoading';
 import { postGuideImageSearch } from '../apis/disposal-guide';
+import { postCertification } from '../apis/certification';
 // import { useCertificationStore } from '../store/certificationStore';
 
 const base64ToFile = async (base64String: string, filename = 'capture.jpg'): Promise<File> => {
@@ -17,9 +18,12 @@ const base64ToFile = async (base64String: string, filename = 'capture.jpg'): Pro
 export default function CamearaPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const from = location?.state?.from;
+  const certificationSource = location?.state?.certificationSource;
+  const guideId = location?.state?.guideId;
+
   const webcamRef = useRef<Webcam | null>(null);
   const [loading, setLoading] = useState(false);
-  // const setCertified = useCertificationStore((state) => state.setCertified);
 
   const handleCapture = async () => {
     const img = webcamRef.current?.getScreenshot();
@@ -31,9 +35,45 @@ export default function CamearaPage() {
       const file = await base64ToFile(img);
 
       // 인증
-      if (location?.state === 'certification') {
-        // // setCertified();
-        navigate('/certification/success');
+      if (from === 'certification') {
+        const data = await postCertification({ image: file, certificationSource, recycleGuideId: guideId });
+        console.log(data);
+
+        // 인증 성공
+        if (data.result?.status === 'PASSED') {
+          navigate('/certification/success', {
+            state: {
+              itemName: data.result.itemName,
+              date: data.result.judgedAt,
+              point: data.result.earnedPoint,
+            },
+          });
+        }
+        // 인증 실패
+        else if (data.result?.status === 'FAILED') {
+          // AI 판정 실패
+          if (data.result.failureType === 'VLM_JUDGEMENT_FAILED') {
+            navigate('/certification/fail', {
+              state: {
+                failedReason: data.result.failedReason,
+                retryGuide: data.result.retryGuide,
+                retryAllowed: data.result.retryAllowed,
+                certificationId: data.result.certificationId,
+              },
+            });
+          }
+          // 동일 품목 인증 시도
+          else if (data.result.failureType === 'DUPLICATE_GUIDE_TODAY') {
+            navigate('/certification/fail', {
+              state: {
+                failedReason: data.result.failedReason,
+                retryGuide: data.result.retryGuide,
+                retryAllowed: data.result.retryAllowed,
+                certificationId: data.result.certificationId,
+              },
+            });
+          }
+        }
       }
       // 배출 정보 검색
       else {
@@ -47,7 +87,9 @@ export default function CamearaPage() {
       }
     } catch (e) {
       alert('접속이 원활하지 않습니다. 잠시 후 다시 시도해 주세요.');
-      console.error('guide image search error', e);
+      console.error('camera error', e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,7 +98,7 @@ export default function CamearaPage() {
       {!loading && (
         <div className='h-dvh'>
           <div className='relative flex flex-col h-full'>
-            <TopBar title={`${location?.state === 'certification' ? '인증하기' : '이미지 검색'}`} leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='black/50' color='white' position='absolute' />
+            <TopBar title={`${from === 'certification' ? '인증하기' : '이미지 검색'}`} leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='black/50' color='white' position='absolute' />
 
             <Webcam audio={false} ref={webcamRef} screenshotFormat='image/jpeg' videoConstraints={{ facingMode: 'environment' }} className='w-full object-cover h-full' />
             <div className='absolute inset-0 flex flex-col items-center justify-center px-20 z-10'>
@@ -77,7 +119,7 @@ export default function CamearaPage() {
 
       {loading && (
         <div className='h-[calc(100dvh-56px)] pt-14'>
-          <PhotoAnalysisLoading showNoti={location?.state === 'certification'} />
+          <PhotoAnalysisLoading showNoti={from === 'certification'} />
         </div>
       )}
     </>

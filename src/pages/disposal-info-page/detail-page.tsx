@@ -34,7 +34,12 @@ export default function DisposalInfoDetailage() {
     if (guide?.name.includes('쓰레기')) {
       navigate('/');
     } else {
-      navigate('/certification');
+      navigate('/certification', {
+        state: {
+          certificationSource: 'AFTER_SEARCH',
+          guideId: guide.guideId,
+        },
+      });
     }
   };
 
