@@ -65,7 +65,7 @@ const renderCharacterProfile = (code: number) => {
     case 4: return <OrangeCharacter className="w-full h-full" />;
     case 5: return <PurpleCharacter className="w-full h-full" />;
     case 6: return <BlueCharacter className="w-full h-full" />;
-    default: return <YellowCharacter className="w-full h-full" />;
+    default: return <ShadowIcon className="w-full h-full" />;
   }
 };
 
@@ -153,12 +153,16 @@ export default function CommunityMainPage() {
                     </span>
                   </div>
 
-                  {!post.imageUrl && <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{formatTimeAgo(post.createdAt)}</span>}
+                  {!post.imageUrl && (
+                    <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{formatTimeAgo(post.createdAt)}</span>)}
                 </div>
               </div>
               {post.imageUrl && (
                 <div className='flex flex-col items-center gap-1.5 shrink-0'>
-                  <div className='w-[60px] h-[60px] shrink-0 rounded-[10px] bg-gradient-to-br from-[#40DC8F] to-[#4BE1FF]'></div>
+                  <img
+                    src={post.imageUrl}
+                    alt='썸네일'
+                    className='w-[60px] h-[60px] rounded-[10px] object-cover shrink-0' />
                   <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{formatTimeAgo(post.createdAt)}</span>
                 </div>
               )}

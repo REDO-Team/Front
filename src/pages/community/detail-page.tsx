@@ -9,8 +9,15 @@ import { useState, useEffect } from "react";
 import Modal from "../../components/common/Modal.tsx";
 import CommentItem from "./CommentItem.tsx";
 import { getCommunityDetail, likeCommunity, unlikeCommunity } from "../../apis/community.ts";
-import { MOCK_POST, MOCK_COMMENTS } from "../../mocks/community";
+import { MOCK_COMMENTS } from "../../mocks/community";
 import LoadingSpinner from "../../components/common/LoadingSpinner.tsx";
+import YellowCharacter from '../../assets/icons/character/yellow.svg?react';
+import GrayCharacter from '../../assets/icons/character/gray.svg?react';
+import GreenCharacter from '../../assets/icons/character/green.svg?react';
+import OrangeCharacter from '../../assets/icons/character/orange.svg?react';
+import PurpleCharacter from '../../assets/icons/character/purple.svg?react';
+import BlueCharacter from '../../assets/icons/character/blue.svg?react';
+import ShadowIcon from '../../assets/icons/character/shadow.svg?react';
 
 const formatTimeAgo = (dateString: string) => {
   const postDate = new Date(dateString);
@@ -44,6 +51,18 @@ const getCategoryStyle = (category: string) => {
   }
 };
 
+const renderCharacterProfile = (code: number) => {
+  switch (code) {
+    case 1: return <YellowCharacter className="w-full h-full" />;
+    case 2: return <GrayCharacter className="w-full h-full" />;
+    case 3: return <GreenCharacter className="w-full h-full" />;
+    case 4: return <OrangeCharacter className="w-full h-full" />;
+    case 5: return <PurpleCharacter className="w-full h-full" />;
+    case 6: return <BlueCharacter className="w-full h-full" />;
+    default: return <ShadowIcon className="w-full h-full" />;
+  }
+};
+
 export default function CommunityDetailPage() {
   const [comments, setComments] = useState(MOCK_COMMENTS);
   const [isActionModalOpen, setIsActionModalOpen] = useState(false);
@@ -58,8 +77,6 @@ export default function CommunityDetailPage() {
   const [post, setPost] = useState<any>(null);
   const [isMyPost, setIsMyPost] = useState(false);
 
-  const currentUser = "리도01"; // 현재 로그인한 사용자 (임시)
-
   useEffect(() => {
     const fetchDetail = async () => {
       if (!postId) return;
@@ -70,9 +87,9 @@ export default function CommunityDetailPage() {
         const postData = data.result || data;
         setPost(postData);
 
-        if (postData.writer === currentUser) {
-          setIsMyPost(true);
-        }
+        setIsMyPost(postData.isMine);
+        setIsLiked(postData.isLiked);
+
       } catch (error) {
         console.error("게시글 상세 불러오기 실패", error);
       }
@@ -157,9 +174,14 @@ export default function CommunityDetailPage() {
 
         {/* 작성자 프로필 */}
         <div className="flex items-center gap-2 mb-4">
-          <div
-            className={`w-[38px] h-[38px] rounded-full ${post.authorColor}`}
-          ></div>
+          {post.profileImageUrl ? (
+            <img src={post.profileImageUrl} alt="프로필"
+              className="w-[38px] h-[38px] rounded-full object-cover shrink-0" />
+          ) : (
+            <div className="w-[38px] h-[38px] rounded-full bg-gray-100 flex items-center justify-center overflow-hidden shrink-0">
+              {renderCharacterProfile(post.characterCode)}
+            </div>
+          )}
           <div className="flex flex-col">
             <span className="text-[14px] font-bold text-gray-800">
               {post.writer}
@@ -175,12 +197,24 @@ export default function CommunityDetailPage() {
           <p className="text-[16px] font-medium text-gray-900 leading-relaxed whitespace-pre-wrap break-keep mb-6">
             {post.content}
           </p>
+          {post.imageUrls && post.imageUrls.length > 0 && (
+            <div className="flex flex-col gap-3 mt-4">
+              {post.imageUrls.map((url: string, index: number) => (
+                <img
+                  key={index}
+                  src={url}
+                  alt={`게시글 이미지 ${index + 1}`}
+                  className="w-full rounded-[10px] object-cover"
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex flex-row items-center gap-3 whitespace-nowrap text-[14px] font-semibold leading-[22px] text-gray-500 mb-4">
           <span className="flex items-center gap-1 text-gray-900">
             <CommentIcon className="w-[13px] h-[13px] text-main-green1" />
-            댓글 {post.comments}
+            댓글 {post.numComments > 0 ? post.numComments : ""}
           </span>
           <button
             className="flex items-center gap-1 text-gray-900"
@@ -200,7 +234,7 @@ export default function CommunityDetailPage() {
 
               <CommentItem
                 comment={comment}
-                isMine={comment.author === currentUser} // 내 댓글 여부 전달
+                isMine={comment.author === "리도01"} // 내 댓글 여부 전달
                 onUpdate={handleUpdateComment}
                 onDelete={handleDeleteComment}
               />
