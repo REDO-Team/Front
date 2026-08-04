@@ -30,8 +30,6 @@ export default function CamearaPage() {
     try {
       const file = await base64ToFile(img);
 
-      const data = await postGuideImageSearch(file);
-
       // 인증
       if (location?.state === 'certification') {
         // // setCertified();
@@ -39,6 +37,8 @@ export default function CamearaPage() {
       }
       // 배출 정보 검색
       else {
+        const data = await postGuideImageSearch(file);
+
         navigate('/disposal-info/detail', {
           state: {
             guide: data.result?.guideDetail,
