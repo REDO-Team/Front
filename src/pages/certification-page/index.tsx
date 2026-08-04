@@ -4,28 +4,38 @@ import Seed from '/src/assets/icons/seed.svg';
 import Seedling from '/src/assets/icons/seedling.svg';
 import RightArrow from '/src/assets/icons/right-arrow.svg?react';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from '../../components/common/Modal';
+import { getCertificationRule } from '../../apis/certification';
 // import { useCertificationStore } from '../../store/certificationStore';
-
-const mock = {
-  remain: 1,
-};
 
 export default function CertificationPage() {
   const navigate = useNavigate();
-  // const canCertify = useCertificationStore((state) => state.canCertify);
+  const [remain, setRemain] = useState<number | undefined>(3);
+  const [restrictType, setRestrictType] = useState<string | undefined>('NONE');
   const [isOpenExceed, SetIsOpenExceed] = useState(false); // 인증 횟수 초과 모달
   const [isOpenWaitTime, SetIsOpenWaitTime] = useState(false); // 재인증 대기 모달
 
+  useEffect(() => {
+    const fetchCertificationRule = async () => {
+      try {
+        const data = await getCertificationRule();
+        setRemain(data.result?.remainingCount);
+        setRestrictType(data.result?.restriction.type);
+      } catch (e) {
+        console.error('certification rule error', e);
+      }
+    };
+
+    fetchCertificationRule();
+  }, []);
+
   const handleCertificate = () => {
-    if (!mock.remain) {
+    if (restrictType === 'DAILY_LIMIT_EXCEEDED') {
       SetIsOpenExceed(true);
-    }
-    // else if (!canCertify()) {
-    //   SetIsOpenWaitTime(true);
-    // }
-    else {
+    } else if (restrictType === 'COOLDOWN' || restrictType === 'PROCESSING_EXISTS') {
+      SetIsOpenWaitTime(true);
+    } else {
       navigate('/certification/shooting');
     }
   };
@@ -63,7 +73,7 @@ export default function CertificationPage() {
               <span className='font-pretendard font-semibold text-base text-text'>잔여 인증 횟수</span>
             </div>
             <span className='font-pretendard font-bold text-[22px] text-main-green1'>
-              {mock.remain}
+              {remain}
               <span className='text-gray-600'>/3회</span>
             </span>
           </div>
