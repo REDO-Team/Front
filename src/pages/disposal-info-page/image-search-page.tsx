@@ -43,7 +43,7 @@ export default function ImageSearchPage() {
               <span className='font-pretendard font-bold text-base text-text'>촬영 팁</span>
               <ul className='flex flex-col gap-1.5 list-disc pl-5 font-pretendard font-medium text-sm text-gray-600'>
                 <li>사물이 잘 보이도록 촬영해 주세요</li>
-                <li>여러 각도에서 찍으면 더 정확해요</li>
+                <li>정면에서 찍으면 더 정확해요</li>
               </ul>
             </div>
 
