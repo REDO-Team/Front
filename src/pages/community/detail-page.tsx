@@ -8,7 +8,7 @@ import PostActionModal from "../../components/CommunityPage/PostActionModal.tsx"
 import { useState, useEffect } from "react";
 import Modal from "../../components/common/Modal.tsx";
 import CommentItem from "./CommentItem.tsx";
-import { getCommunityDetail, likeCommunity, unlikeCommunity } from "../../apis/community.ts";
+import { getCommunityDetail, likeCommunity, unlikeCommunity, getComments } from "../../apis/community.ts";
 import { MOCK_COMMENTS } from "../../mocks/community";
 import LoadingSpinner from "../../components/common/LoadingSpinner.tsx";
 import YellowCharacter from '../../assets/icons/character/yellow.svg?react';
@@ -19,7 +19,7 @@ import PurpleCharacter from '../../assets/icons/character/purple.svg?react';
 import BlueCharacter from '../../assets/icons/character/blue.svg?react';
 import ShadowIcon from '../../assets/icons/character/shadow.svg?react';
 
-const formatTimeAgo = (dateString: string) => {
+const formatTime = (dateString: string) => {
   const postDate = new Date(dateString);
 
   const year = postDate.getFullYear();
@@ -64,7 +64,7 @@ const renderCharacterProfile = (code: number) => {
 };
 
 export default function CommunityDetailPage() {
-  const [comments, setComments] = useState(MOCK_COMMENTS);
+  const [comments, setComments] = useState<any[]>([]);
   const [isActionModalOpen, setIsActionModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -86,9 +86,14 @@ export default function CommunityDetailPage() {
 
         const postData = data.result || data;
         setPost(postData);
-
         setIsMyPost(postData.isMine);
         setIsLiked(postData.isLiked);
+
+        const commentsResponse = await getComments(Number(postId));
+        if (commentsResponse.isSuccess) {
+          setComments(commentsResponse.result.comments || []);
+        }
+
 
       } catch (error) {
         console.error("게시글 상세 불러오기 실패", error);
@@ -187,7 +192,7 @@ export default function CommunityDetailPage() {
               {post.writer}
             </span>
             <span className="text-[14px] font-semibold leading-[22px] text-gray-400">
-              {post.createdAt ? formatTimeAgo(post.createdAt) : ""}
+              {post.createdAt ? formatTime(post.createdAt) : ""}
             </span>
           </div>
         </div>
@@ -230,11 +235,11 @@ export default function CommunityDetailPage() {
         <section className="flex flex-col gap-3">
           {" "}
           {comments.map((comment, index) => (
-            <div key={comment.id} className="flex flex-col">
+            <div key={comment.commentId} className="flex flex-col">
 
               <CommentItem
                 comment={comment}
-                isMine={comment.author === "리도01"} // 내 댓글 여부 전달
+                isMine={comment.writer === "리도01"} // 내 댓글 여부 전달
                 onUpdate={handleUpdateComment}
                 onDelete={handleDeleteComment}
               />

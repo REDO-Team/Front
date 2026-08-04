@@ -1,12 +1,44 @@
 import { useState } from "react";
 import Modal from "../../components/common/Modal.tsx";
+import YellowCharacter from '../../assets/icons/character/yellow.svg?react';
+import GrayCharacter from '../../assets/icons/character/gray.svg?react';
+import GreenCharacter from '../../assets/icons/character/green.svg?react';
+import OrangeCharacter from '../../assets/icons/character/orange.svg?react';
+import PurpleCharacter from '../../assets/icons/character/purple.svg?react';
+import BlueCharacter from '../../assets/icons/character/blue.svg?react';
+import ShadowIcon from '../../assets/icons/character/shadow.svg?react';
 
-interface Comment {
-  id: number;
-  author: string;
-  authorColor: string;
-  time: string;
+const formatTime = (dateString: string) => {
+  if (!dateString) return "";
+  const dateObj = new Date(dateString);
+
+  const year = String(dateObj.getFullYear()).slice(2);
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const date = String(dateObj.getDate()).padStart(2, '0');
+  const hours = String(dateObj.getHours()).padStart(2, '0');
+  const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+  return `${year}.${month}.${date} ${hours}:${minutes}`;
+};
+
+const renderCharacterProfile = (code: number) => {
+  switch (code) {
+    case 1: return <YellowCharacter className="w-full h-full" />;
+    case 2: return <GrayCharacter className="w-full h-full" />;
+    case 3: return <GreenCharacter className="w-full h-full" />;
+    case 4: return <OrangeCharacter className="w-full h-full" />;
+    case 5: return <PurpleCharacter className="w-full h-full" />;
+    case 6: return <BlueCharacter className="w-full h-full" />;
+    default: return <ShadowIcon className="w-full h-full" />;
+  }
+};
+
+export interface Comment {
+  commentId: number;
+  writer: string;
+  profileImageUrl?: string;
+  characterCode: number;
   content: string;
+  createdAt: string;
 }
 
 interface CommentItemProps {
@@ -32,7 +64,7 @@ export default function CommentItem({ comment, isMine, onUpdate, onDelete }: Com
   // 수정 완료
   const handleCompleteEdit = () => {
     if (editContent.trim() === "") return;
-    onUpdate(comment.id, editContent);
+    onUpdate(comment.commentId, editContent);
     setIsEditing(false);
   };
 
@@ -40,15 +72,24 @@ export default function CommentItem({ comment, isMine, onUpdate, onDelete }: Com
     <div className="flex flex-col">
       <div className="flex items-center justify-between mb-1.5">
         <div className="flex items-center gap-2">
-          <div className={`w-[32px] h-[32px] rounded-full ${comment.authorColor}`}></div>
-          <span className="text-[14px] font-bold text-gray-900">{comment.author}</span>
+          {comment.profileImageUrl ? (
+            <img
+              src={comment.profileImageUrl}
+              alt="프로필"
+              className="w-[32px] h-[32px] rounded-full object-cover shrink-0"
+            />
+          ) : (
+            <div className="w-[32px] h-[32px] rounded-full bg-gray-300 flex items-center justify-center">
+              {renderCharacterProfile(comment.characterCode)}
+            </div>
+          )}
 
           {isMine && (
             <span className="inline-flex items-center justify-center px-[6px] py-[2px] rounded-[10px] text-[10px] font-bold bg-main-green1 text-white">
               내 댓글
             </span>
           )}
-          <span className="text-[12px] font-semibold text-gray-400">{comment.time}</span>
+          <span className="text-[12px] font-semibold text-gray-400">{formatTime(comment.createdAt)}</span>
         </div>
 
         {isMine && !isEditing && (
@@ -106,7 +147,7 @@ export default function CommentItem({ comment, isMine, onUpdate, onDelete }: Com
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={() => {
           setIsDeleteModalOpen(false);
-          onDelete(comment.id);
+          onDelete(comment.commentId);
         }}
       />
     </div>
