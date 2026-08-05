@@ -8,7 +8,7 @@ import PostActionModal from "../../components/CommunityPage/PostActionModal.tsx"
 import { useState, useEffect } from "react";
 import Modal from "../../components/common/Modal.tsx";
 import CommentItem from "./CommentItem.tsx";
-import { getCommunityDetail, likeCommunity, unlikeCommunity, getComments, postComment } from "../../apis/community.ts";
+import { getCommunityDetail, likeCommunity, unlikeCommunity, getComments, postComment, deleteCommunity } from "../../apis/community.ts";
 import LoadingSpinner from "../../components/common/LoadingSpinner.tsx";
 import YellowCharacter from '../../assets/icons/character/yellow.svg?react';
 import GrayCharacter from '../../assets/icons/character/gray.svg?react';
@@ -114,6 +114,23 @@ export default function CommunityDetailPage() {
   const handleModifyPost = () => {
     navigate(`/community/modify/${postId}`);
   }
+
+  const handleDeletePost = async () => {
+    if (!postId) return;
+    try {
+      const res = await deleteCommunity(Number(postId));
+
+      if (res.isSuccess) {
+        alert("게시글이 삭제되었습니다.");
+        navigate("/community", { replace: true });
+      } else {
+        alert("게시글 삭제에 실패했습니다. 다시 시도해주세요.");
+      }
+    } catch (error) {
+      console.error("게시글 삭제 실패", error);
+      alert("서버오류로 게시글 삭제에 실패했습니다.");
+    }
+  };
 
   if (!post) {
 
@@ -326,7 +343,7 @@ export default function CommunityDetailPage() {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={() => {
           setIsDeleteModalOpen(false);
-          // navigate();
+          handleDeletePost();
         }}
       />
     </div>
