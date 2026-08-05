@@ -1,8 +1,19 @@
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+
 import {
   createBrowserRouter,
+  Navigate,
+  Outlet,
   RouterProvider,
+  useLocation,
   type RouteObject,
-} from "react-router-dom";
+} from 'react-router-dom';
+
+import { getAccessToken } from './apis/token';
+import { getMyInfo } from './apis/user';
+import LoadingSpinner from './components/common/LoadingSpinner';
+
 import "./App.css";
 import Layout from "./layouts/Layout";
 import HomePage from "./pages/home-page";
@@ -50,220 +61,399 @@ import CommunityModifyPage from "./pages/community/modify-page";
 import CommunityCompletePage from "./pages/community/complete-page";
 import CommunityModifyCompletePage from "./pages/community/modify-complete-page";
 
+interface ApiErrorResponse {
+  code?: string;
+  message?: string;
+  errorDetail?: string;
+}
+
+/**
+ * 로그인한 사용자만 접근할 수 있는 라우트
+ */
+const ProtectedRoute = () => {
+  const accessToken = getAccessToken();
+
+  if (!accessToken) {
+    return <Navigate to='/login' replace />;
+  }
+
+  return <Outlet />;
+};
+
+/**
+ * 비로그인 사용자만 접근할 수 있는 라우트
+ */
+const GuestOnlyRoute = () => {
+  const accessToken = getAccessToken();
+
+  if (accessToken) {
+    return <Navigate to='/' replace />;
+  }
+
+  return <Outlet />;
+};
+
+/**
+ * 회원가입 과정 전용 라우트
+ */
+const SignupRoute = () => {
+  const location = useLocation();
+  const accessToken = getAccessToken();
+
+  const isProfilePage =
+    location.pathname === '/signup/profile';
+
+  const isCompletePage =
+    location.pathname === '/signup/complete';
+
+  const shouldCheckProfile =
+    Boolean(accessToken) && isProfilePage;
+
+  const {
+    data: user,
+    isPending,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: [
+      'signupProfileCheck',
+      accessToken,
+    ],
+    queryFn: getMyInfo,
+    enabled: shouldCheckProfile,
+    retry: false,
+  });
+
+  /*
+   * /signup, /signup/terms
+   * 비로그인 사용자만 접근 가능
+   */
+  if (!isProfilePage && !isCompletePage) {
+    if (accessToken) {
+      return <Navigate to='/' replace />;
+    }
+
+    return <Outlet />;
+  }
+
+  /*
+   * /signup/profile, /signup/complete
+   * 회원가입 API에서 발급받은 토큰 필요
+   */
+  if (!accessToken) {
+    return <Navigate to='/login' replace />;
+  }
+
+  /*
+   * 프로필 생성 완료 화면은
+   * 프로필 생성 직후에만 접근 가능
+   */
+  if (isCompletePage) {
+    const isProfileCompleted =
+      sessionStorage.getItem(
+        'signupProfileCompleted',
+      ) === 'true';
+
+    if (!isProfileCompleted) {
+      return <Navigate to='/' replace />;
+    }
+
+    return <Outlet />;
+  }
+
+  /*
+   * /signup/profile 진입 시
+   * 현재 사용자 프로필 생성 여부 확인
+   */
+  if (isPending) {
+    return (
+      <div className='flex min-h-dvh items-center justify-center bg-white'>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  /*
+   * 사용자 정보 조회 성공:
+   * 이미 프로필을 생성한 사용자
+   */
+  if (user) {
+    return <Navigate to='/' replace />;
+  }
+
+  if (isError) {
+    const isProfileNotCreated =
+      axios.isAxiosError<ApiErrorResponse>(
+        error,
+      ) &&
+      error.response?.data?.code ===
+        'USER_404_001';
+
+    /*
+     * USER_404_001:
+     * 회원가입은 됐지만 프로필이 아직 없는 상태
+     */
+    if (isProfileNotCreated) {
+      return <Outlet />;
+    }
+
+    /*
+     * 토큰 만료나 기타 인증 오류
+     */
+    return <Navigate to='/login' replace />;
+  }
+
+  return <Outlet />;
+};
+
 const routes: RouteObject[] = [
   {
-    path: "/",
+    path: '/',
     element: <Layout />,
     children: [
+      /*
+       * 비로그인 전용
+       */
       {
-        index: true,
-        element: <HomePage />,
-      },
-      {
-        path: "splash",
-        element: <SplashPage />,
-      },
-      {
-        path: "guide",
-        element: <GuidePage />,
-      },
-      {
-        path: 'my',
+        element: <GuestOnlyRoute />,
         children: [
           {
-            index: true,
-            element: <MyPage />,
-          },
-          {
-            path: 'profile',
-            element: <ProfileEditPage />,
-          },
-          {
-            path: 'posts',
-            element: <MyPostsPage />,
-          },
-          {
-            path: 'favorites',
-            element: <FavoriteDisposalPage />,
-          },
-          {
-            path: 'favorites/:favoriteId',
-            element: <FavoriteDisposalDetailPage />,
-          },
-          {
-            path: 'history',
-            element: <RewardUseHistoryPage />,
-          },
-          {
-            path: 'comments',
-            element: <MyCommentsPage />,
-          }
-        ],
-      },
-      {
-        path: "certification",
-        children: [
-          {
-            index: true,
-            element: <CertificationPage />,
-          },
-          {
-            path: "guide",
-            element: <CertificationGuidePage />,
-          },
-          {
-            path: "shooting",
-            element: <ShootingPage />,
-          },
-          {
-            path: "success",
-            element: <SuccessPage />,
-          },
-          {
-            path: "fail",
-            element: <FailPage />,
+            path: 'login',
+            element: <LoginPage />,
           },
         ],
       },
+
+      /*
+       * 회원가입 과정
+       */
       {
-        path: "login",
-        element: <LoginPage />,
-      },
-      {
-        path: "my-contribution",
-        element: <MyContributionPage />,
-      },
-      {
-        path: "all-contribution",
-        element: <AllContributionPage />,
-      },
-      {
-        path: "signup",
+        path: 'signup',
+        element: <SignupRoute />,
         children: [
           {
             index: true,
             element: <SignupPage />,
           },
           {
-            path: "terms",
+            path: 'terms',
             element: <TermsPage />,
           },
           {
-            path: "profile",
+            path: 'profile',
             element: <ProfileCreatePage />,
           },
           {
-            path: "complete",
+            path: 'complete',
             element: <SignupCompletePage />,
           },
         ],
       },
+
+      /*
+       * 로그인 필수 페이지
+       */
       {
-        path: "disposal-info",
+        element: <ProtectedRoute />,
         children: [
           {
             index: true,
-            element: <DisposalInfoPage />,
+            element: <HomePage />,
           },
           {
-            path: "image-search",
-            element: <ImageSearchPage />,
+            path: 'splash',
+            element: <SplashPage />,
           },
           {
-            path: "problem-search",
-            element: <ProblemSearchPage />,
+            path: 'guide',
+            element: <GuidePage />,
+          },
+
+          {
+            path: 'my',
+            children: [
+              {
+                index: true,
+                element: <MyPage />,
+              },
+              {
+                path: 'profile',
+                element: <ProfileEditPage />,
+              },
+              {
+                path: 'posts',
+                element: <MyPostsPage />,
+              },
+              {
+                path: 'favorites',
+                element: <FavoriteDisposalPage />,
+              },
+              {
+                path: 'favorites/:favoriteId',
+                element: (
+                  <FavoriteDisposalDetailPage />
+                ),
+              },
+              {
+                path: 'history',
+                element: <RewardUseHistoryPage />,
+              },
+              {
+                path: 'comments',
+                element: <MyCommentsPage />,
+              },
+            ],
+          },
+
+          {
+            path: 'certification',
+            children: [
+              {
+                index: true,
+                element: <CertificationPage />,
+              },
+              {
+                path: 'guide',
+                element: <CertificationGuidePage />,
+              },
+              {
+                path: 'shooting',
+                element: <ShootingPage />,
+              },
+              {
+                path: 'success',
+                element: <SuccessPage />,
+              },
+              {
+                path: 'fail',
+                element: <FailPage />,
+              },
+            ],
+          },
+
+          {
+            path: 'my-contribution',
+            element: <MyContributionPage />,
           },
           {
-            path: "detail",
-            element: <DisposalInfoDetailPage />,
+            path: 'all-contribution',
+            element: <AllContributionPage />,
           },
+
           {
-            path: "fail",
-            element: <DisposalInfoFailPage />,
+            path: 'disposal-info',
+            children: [
+              {
+                index: true,
+                element: <DisposalInfoPage />,
+              },
+              {
+                path: 'image-search',
+                element: <ImageSearchPage />,
+              },
+              {
+                path: 'problem-search',
+                element: <ProblemSearchPage />,
+              },
+              {
+                path: 'detail',
+                element: <DisposalInfoDetailPage />,
+              },
+              {
+                path: 'fail',
+                element: <DisposalInfoFailPage />,
+              },
+            ],
           },
-        ],
-      },
-      {
-        path: "camera",
-        element: <CamearaPage />,
-      },
-      {
-        path: "reward",
-        children: [
+
           {
-            index: true,
-            element: <RewardHomePage />,
+            path: 'camera',
+            element: <CamearaPage />,
           },
+
           {
-            path: "history",
-            element: <RewardHistoryPage />,
+            path: 'reward',
+            children: [
+              {
+                index: true,
+                element: <RewardHomePage />,
+              },
+              {
+                path: 'history',
+                element: <RewardHistoryPage />,
+              },
+              {
+                path: 'store',
+                element: <RewardStorePage />,
+              },
+              {
+                path: 'products/:productId',
+                element: <RewardProductDetailPage />,
+              },
+              {
+                path: 'checkout/:productId',
+                element: <RewardCheckoutPage />,
+              },
+              {
+                path: 'address-list',
+                element: <RewardAddressListPage />,
+              },
+              {
+                path: 'address-search',
+                element: <RewardAddressSearchPage />,
+              },
+              {
+                path: 'address-detail',
+                element: <RewardAddressDetailPage />,
+              },
+              {
+                path: 'address-detail/:shippingAddressId/edit',
+                element: <RewardAddressDetailPage />,
+              },
+              {
+                path: 'address-complete/:productId',
+                element: (
+                  <RewardAddressCompletePage />
+                ),
+              },
+              {
+                path: 'use-complete/:productId',
+                element: <RewardUseCompletePage />,
+              },
+            ],
           },
+
           {
-            path: "store",
-            element: <RewardStorePage />,
+            path: 'community',
+            children: [
+              {
+                index: true,
+                element: <CommunityMainPage />,
+              },
+              {
+                path: 'write',
+                element: <CommunityWritePage />,
+              },
+              {
+                path: 'modify/:postId',
+                element: <CommunityModifyPage />,
+              },
+              {
+                path: 'complete',
+                element: <CommunityCompletePage />,
+              },
+              {
+                path: 'modify-complete',
+                element: (
+                  <CommunityModifyCompletePage />
+                ),
+              },
+              {
+                path: ':postId',
+                element: <CommunityDetailPage />,
+              },
+            ],
           },
-          {
-            path: "products/:productId",
-            element: <RewardProductDetailPage />,
-          },
-          {
-            path: "checkout/:productId",
-            element: <RewardCheckoutPage />,
-          },
-          {
-            path: "address-list",
-            element: <RewardAddressListPage />,
-          },
-          {
-            path: "address-search",
-            element: <RewardAddressSearchPage />,
-          },
-          {
-            path: "address-detail",
-            element: <RewardAddressDetailPage />,
-          },
-          {
-            path: "address-detail/:shippingAddressId/edit",
-            element: <RewardAddressDetailPage />,
-          },
-          {
-            path: "address-complete/:productId",
-            element: <RewardAddressCompletePage />,
-          },
-          {
-            path: "use-complete/:productId",
-            element: <RewardUseCompletePage />,
-          },
-        ],
-      },
-      {
-        path: "community",
-        children: [
-          {
-            index: true,
-            element: <CommunityMainPage />,
-          },
-          {
-            path: "write",
-            element: <CommunityWritePage />,
-          },
-          {
-            path: "modify/:postId",
-            element: <CommunityModifyPage />,
-          },
-          {
-            path: ":postId",
-            element: <CommunityDetailPage />,
-          },
-          {
-            path: "complete",
-            element: <CommunityCompletePage />,
-          }
-          ,
-          {
-            path: "modify-complete",
-            element: <CommunityModifyCompletePage />,
-          }
         ],
       },
     ],
