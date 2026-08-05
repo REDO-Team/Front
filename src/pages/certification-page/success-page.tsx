@@ -9,6 +9,8 @@ export default function SuccessPage() {
   const date = location?.state?.date;
   const point = location?.state?.point;
 
+  const formattedDate = date.replace('T', ' ').slice(0, 16).replaceAll('-', '.');
+
   return (
     <div className='h-full pt-5'>
       <div className='flex flex-col h-full px-5'>
@@ -38,7 +40,7 @@ export default function SuccessPage() {
           </div>
           <div className='flex justify-between items-center'>
             <span className='font-pretendard font-medium text-sm text-text'>인증 일시</span>
-            <span className='font-pretendard font-semibold text-sm text-text'>{date.toLocaleString()}</span>
+            <span className='font-pretendard font-semibold text-sm text-text'>{formattedDate}</span>
           </div>
           <div className='flex justify-between items-center'>
             <span className='font-pretendard font-medium text-sm text-text'>적립 포인트</span>

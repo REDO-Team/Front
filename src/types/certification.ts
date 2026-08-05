@@ -49,3 +49,20 @@ export type CertificationRequest = {
   certificationSource: 'GENERAL' | 'AFTER_SEARCH';
   recycleGuideId: number | null;
 };
+
+// 인증 재시도
+export type CertificationRetryResponse = CommonResponse<{
+  certificationId: number;
+  status: string;
+  failureType: string;
+  attemptCount: number;
+  recycleGuideId: number;
+  itemName: string;
+  categoryName: string;
+  earnedPoint: number;
+  failedReason: string;
+  retryGuide: string[];
+  retryAllowed: boolean;
+  retryPath: string;
+  judgedAt: Date;
+}>;

@@ -1,6 +1,8 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import FailInfo from '../../components/common/FailInfo';
 import FailCheckList from '../../components/CertificationPage/FailCheckList';
+import { useState } from 'react';
+import Modal from '../../components/common/Modal';
 
 export default function FailPage() {
   const navigate = useNavigate();
@@ -8,10 +10,21 @@ export default function FailPage() {
   const failedReason = location?.state?.failedReason;
   const retryGuide = location?.state?.retryGuide;
   const retryAllowed = location?.state?.retryAllowed;
-  // const certificationId = location?.state?.certificationId;
-  // .split('.')
-  // .map((text) => text.trim())
-  // .filter(Boolean);
+  const certificationId = location?.state?.certificationId;
+  const failureType = location?.state?.failureType;
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
+  const handleRetryShoot = () => {
+    if (failureType === 'VLM_JUDGEMENT_FAILED' && retryAllowed && certificationId) {
+      navigate('/camera', {
+        state: {
+          certificationId,
+        },
+      });
+    } else {
+      setIsOpenModal(true);
+    }
+  };
 
   return (
     <div className='h-full pt-5'>
@@ -46,11 +59,26 @@ export default function FailPage() {
             </div>
           </div>
 
-          <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 py-3.5 w-full text-center' onClick={() => navigate('/camera')}>
+          <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 py-3.5 w-full text-center' onClick={handleRetryShoot}>
             다시 촬영하기
           </button>
         </div>
       </div>
+
+      {isOpenModal && (
+        <Modal
+          isOpen={isOpenModal}
+          title={`인증을 다시 시도할 수 없습니다.`}
+          titleFontWeight='medium'
+          titleTextSize='15px'
+          buttonText='확인'
+          titleLineHeight='22px'
+          onClose={() => setIsOpenModal(false)}
+          onConfirm={() => {
+            setIsOpenModal(false);
+          }}
+        />
+      )}
     </div>
   );
 }

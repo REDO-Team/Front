@@ -1,4 +1,4 @@
-import type { CertificationRequest, CertificationResponse, CertificationRuleResponse } from '../types/certification';
+import type { CertificationRequest, CertificationResponse, CertificationRetryResponse, CertificationRuleResponse } from '../types/certification';
 import api from './api';
 
 // 인증 홈
@@ -20,6 +20,20 @@ export const postCertification = async ({ image, certificationSource, recycleGui
   }
 
   const response = await api.post('/api/certification', formData);
+
+  return response.data;
+};
+
+// 인증 재시도
+export const postCertificationRetry = async (certificationId: number, image: File): Promise<CertificationRetryResponse> => {
+  const formData = new FormData();
+  formData.append('image', image);
+
+  const response = await api.post(`/api/certification/${certificationId}/retry`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 
   return response.data;
 };
