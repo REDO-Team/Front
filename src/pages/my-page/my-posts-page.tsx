@@ -1,6 +1,7 @@
 import type { MouseEvent } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 import Logo from '../../assets/icons/Big-logo.svg?react';
 
@@ -11,6 +12,7 @@ const MyPostsPage = () => {
   const navigate = useNavigate();
 
   const [posts, setPosts] = useState(MOCK_MY_POSTS);
+  const [isLoading] = useState(false);
   const [deletePostId, setDeletePostId] = useState<number | null>(null);
 
   const isDeleteModalOpen = deletePostId !== null;
@@ -35,6 +37,14 @@ const MyPostsPage = () => {
 
     setDeletePostId(null);
   };
+
+  if (isLoading) {
+  return (
+    <div className='flex min-h-screen items-center justify-center bg-bg-my'>
+      <LoadingSpinner />
+    </div>
+  );
+}
 
   return (
     <div className='min-h-screen bg-[#F9FBFB]'>

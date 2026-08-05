@@ -19,6 +19,7 @@ import {
   uploadProfileImage,
   type MyInfo,
 } from '../../apis/user';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 import LeftArrowIcon from '../../assets/icons/left-arrow.svg?react';
 import GalleryIcon from '../../assets/icons/gallery.svg?react';
@@ -243,6 +244,14 @@ const ProfileEditForm = ({
     updateProfileMutation.mutate();
   };
 
+  if (updateProfileMutation.isPending) {
+  return (
+    <div className='flex min-h-dvh items-center justify-center bg-bg-my'>
+      <LoadingSpinner />
+    </div>
+  );
+}
+
   return (
     <div className='flex min-h-dvh w-full flex-col overflow-hidden bg-[#F9FBFB] font-pretendard text-text'>
       <header className='relative flex h-[72px] shrink-0 items-center justify-center px-5'>
@@ -379,9 +388,7 @@ const ProfileEditForm = ({
               : 'cursor-not-allowed bg-gray-400'
           }`}
         >
-          {updateProfileMutation.isPending
-            ? '수정 중...'
-            : '완료하기'}
+          완료하기
         </button>
       </div>
     </div>
@@ -400,8 +407,8 @@ const ProfileEditPage = () => {
 
   if (isPending) {
     return (
-      <div className='flex min-h-dvh items-center justify-center bg-[#F9FBFB]'>
-        프로필 정보를 불러오는 중이에요.
+      <div className='flex min-h-dvh items-center justify-center bg-bg-my'>
+        <LoadingSpinner />
       </div>
     );
   }

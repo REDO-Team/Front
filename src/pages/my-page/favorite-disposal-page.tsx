@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
-import HomeIcon from '../../assets/icons/home.svg';
-import TopBar from '../../components/common/TopBar';
 import Logo from '../../assets/icons/Big-logo.svg?react';
 
 import { MOCK_FAVORITE_DISPOSALS } from '../../mocks/favorite-disposal';
@@ -11,20 +10,21 @@ const FavoriteDisposalPage = () => {
   const navigate = useNavigate();
 
   const [favorites] = useState(MOCK_FAVORITE_DISPOSALS);
+  const [isLoading] = useState(false);
 
   const handleFavoriteClick = (favoriteId: number) => {
     navigate(`/my/favorites/${favoriteId}`);
   };
 
+  if (isLoading) {
+    return (
+      <div className='flex min-h-screen items-center justify-center bg-bg-my'>
+        <LoadingSpinner />
+      </div>
+    );
+  }
   return (
     <div className='min-h-screen bg-[#F9FBFB]'>
-      <TopBar
-        title='즐겨찾기한 배출정보'
-        leftIcon
-        rightIcon={HomeIcon}
-        onClick={() => navigate('/')}
-        bgColor='#F9FBFB'
-      />
 
       <main className='px-[20px] pt-[72px]'>
         {favorites.length > 0 ? (

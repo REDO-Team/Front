@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 import ShippingIcon from '../../assets/icons/shipping.svg?react';
 import DeliveryCompleteIcon from '../../assets/icons/delivery-complete.svg?react';
@@ -88,7 +89,7 @@ const RewardUseHistoryPage = () => {
   if (isPending) {
     return (
       <div className='flex min-h-screen items-center justify-center bg-bg-my'>
-        리워드 사용 내역을 불러오는 중이에요.
+        <LoadingSpinner />
       </div>
     );
   }
