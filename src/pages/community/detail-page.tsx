@@ -256,7 +256,7 @@ export default function CommunityDetailPage() {
 
               <CommentItem
                 comment={comment}
-                isMine={comment.writer === "리도01"} // 내 댓글 여부 전달
+                isMine={comment.isMine} // 내 댓글 여부 전달
                 onUpdate={handleUpdateComment}
                 onDelete={handleDeleteComment}
               />

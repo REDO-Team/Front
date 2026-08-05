@@ -39,6 +39,7 @@ export interface Comment {
   characterCode: number;
   content: string;
   createdAt: string;
+  isMine: boolean;
 }
 
 interface CommentItemProps {
