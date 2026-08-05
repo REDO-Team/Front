@@ -20,6 +20,7 @@ import LeftArrowIcon from '../../assets/icons/left-arrow.svg?react';
 import FullCheckIcon from '../../assets/icons/full-check.svg?react';
 import EmptyCheckIcon from '../../assets/icons/empty-check.svg?react';
 import LightRightArrowIcon from '../../assets/icons/light-right-arrow.svg?react';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 const NOTION_URL_BY_CODE: Record<string, string> = {
   SERVICE:
@@ -289,6 +290,14 @@ const TermsPage = () => {
     }
   };
 
+  if (isSubmitting) {
+  return (
+    <div className='flex min-h-dvh items-center justify-center bg-white'>
+      <LoadingSpinner />
+    </div>
+  );
+}
+
   return (
     <div className='flex min-h-dvh w-full flex-col bg-white px-5 pb-[27px] font-pretendard text-text'>
       <header className='pt-[28px]'>
@@ -316,9 +325,7 @@ const TermsPage = () => {
 
       {isLoading ? (
         <div className='flex flex-1 items-center justify-center'>
-          <span className='text-[14px] text-[#6B6B6B]'>
-            약관을 불러오는 중입니다.
-          </span>
+            <LoadingSpinner />
         </div>
       ) : loadErrorMessage ? (
         <div className='flex flex-1 items-center justify-center'>
@@ -428,9 +435,7 @@ const TermsPage = () => {
             : 'cursor-not-allowed bg-gray-400'
         }`}
       >
-        {isSubmitting
-          ? '가입 중...'
-          : '다음'}
+        다음
       </button>
     </div>
   );

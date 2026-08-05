@@ -13,6 +13,7 @@ import {
 } from '../../apis/user';
 import { getAccessToken } from '../../apis/token';
 import type { CharacterCode } from '../../constants/character';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 import LeftArrowIcon from '../../assets/icons/left-arrow.svg?react';
 import GalleryIcon from '../../assets/icons/gallery.svg?react';
@@ -328,6 +329,14 @@ const ProfileCreatePage = () => {
     }
   };
 
+  if (isCreatingProfile) {
+    return (
+      <div className='flex min-h-dvh items-center justify-center bg-white'>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
   return (
     <div className='mx-auto flex h-dvh w-full max-w-[402px] flex-col overflow-hidden bg-white font-pretendard text-text'>
       {/* 상단 헤더 */}
@@ -544,9 +553,7 @@ const ProfileCreatePage = () => {
               : 'cursor-not-allowed bg-gray-400'
           }`}
         >
-          {isCreatingProfile
-            ? '생성 중...'
-            : '다음'}
+          다음
         </button>
       </div>
     </div>
