@@ -110,9 +110,8 @@ export default function CommunityWritePage() {
             </button>
           )}
           {imagePreviews.map((preview, index) => (
-            <div key={index} className='relative w-[80px] h-[80px] shrink-0 mt-2'>
+            <div key={index} className='relative w-[80px] h-[80px] shrink-0'>
               {' '}
-              {/* mt-2를 추가해서 위쪽 여백 확보 */}
               <img src={preview} alt='preview' className='w-full h-full object-cover rounded-[20px]' />
               <button onClick={() => removeImage(index)} className='absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-[12px] font-bold z-10'>
                 X

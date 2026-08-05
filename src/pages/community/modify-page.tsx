@@ -162,7 +162,7 @@ export default function CommunityModifyPage() {
           )}
 
           {existingImages.map((img) => (
-            <div key={`existing-${img.imageId}`} className='relative w-[80px] h-[80px] shrink-0 mt-2'>
+            <div key={`existing-${img.imageId}`} className='relative w-[80px] h-[80px] shrink-0'>
               <img src={img.imageUrl} alt='existing preview' className='w-full h-full object-cover rounded-[20px]' />
               <button onClick={() => removeExistingImage(img.imageId)} className='absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-[12px] font-bold z-10'>
                 X
@@ -171,7 +171,7 @@ export default function CommunityModifyPage() {
           ))}
 
           {newImagePreviews.map((preview, index) => (
-            <div key={`new-${index}`} className='relative w-[80px] h-[80px] shrink-0 mt-2'>
+            <div key={`new-${index}`} className='relative w-[80px] h-[80px] shrink-0'>
               <img src={preview} alt='new preview' className='w-full h-full object-cover rounded-[20px]' />
               <button onClick={() => removeNewImage(index)} className='absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-[12px] font-bold z-10'>
                 X

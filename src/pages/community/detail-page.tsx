@@ -69,6 +69,8 @@ export default function CommunityDetailPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   const [isLiked, setIsLiked] = useState(false);
 
   const navigate = useNavigate();
@@ -249,13 +251,14 @@ export default function CommunityDetailPage() {
             {post.content}
           </p>
           {post.imageUrls && post.imageUrls.length > 0 && (
-            <div className="flex flex-col gap-3 mt-4">
+            <div className="flex gap-3 mt-4 overflow-x-auto pb-2 scrollbar-hide">
               {post.imageUrls.map((url: string, index: number) => (
                 <img
                   key={index}
                   src={url}
                   alt={`게시글 이미지 ${index + 1}`}
-                  className="w-full rounded-[10px] object-cover"
+                  className="w-[140px] h-[140px] rounded-[10px] object-cover shrink-0"
+                  onClick={() => setSelectedImage(url)}
                 />
               ))}
             </div>
@@ -358,6 +361,25 @@ export default function CommunityDetailPage() {
           handleDeletePost();
         }}
       />
+
+      {/* 이미지 확대 */}
+      {selectedImage && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 px-4"
+          onClick={() => setSelectedImage(null)}>
+
+          <button className="absolute top-6 right-6 text-white text-[30px] font-bold"
+            onClick={() => setSelectedImage(null)}>
+            &times;
+          </button>
+
+          <img
+            src={selectedImage}
+            alt="확대 이미지"
+            className="max-w-full max-h-[80vh] rounded-[10px] object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }
