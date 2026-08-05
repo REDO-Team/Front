@@ -24,3 +24,10 @@ export type GuideFavoriteResponse = CommonResponse<{
   favoriteId: number;
   guideId: number;
 }>;
+
+// 가이드 텍스트 검색
+export type GuideTextSearchResponse = CommonResponse<{
+  reason: string;
+  guideDetail: Guides;
+  identified: boolean;
+}>;

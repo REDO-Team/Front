@@ -5,9 +5,17 @@ import LogoutIcon from '../assets/icons/logout.svg';
 import BigLogo from '../assets/icons/Big-logo.svg?react';
 import RewardIcon from '../assets/icons/reward.svg';
 import TrashIcon from '../assets/icons/trash.svg';
-import { HOME_COMMUNITY_PREVIEWS, HOME_POINT_SUMMARY, HOME_REWARD_PREVIEWS, HOME_SERVICE_MENU_ITEMS, HOME_USER } from '../mocks/home';
+import { HOME_COMMUNITY_PREVIEWS, HOME_SERVICE_MENU_ITEMS } from '../mocks/home';
 import type { HomeServiceMenuItem } from '../types/home';
 import { useNavigate } from 'react-router-dom';
+import { getMyInfo } from '../apis/user';
+import { getRewardProducts } from '../apis/reward';
+import { useQuery } from '@tanstack/react-query';
+import RewardProductCard from '../components/RewardPage/RewardProductCard';
+import { useState } from 'react';
+import Modal from '../components/common/Modal';
+import { logout } from '../apis/auth';
+import { clearAuthData } from '../apis/token';
 
 const SERVICE_MENU_ICON_SRC: Record<HomeServiceMenuItem['icon'], string> = {
   trash: TrashIcon,
@@ -15,16 +23,41 @@ const SERVICE_MENU_ICON_SRC: Record<HomeServiceMenuItem['icon'], string> = {
   reward: RewardIcon,
   chart: ChartHomeIcon,
 };
-//사진 미리보기 구역
-const REWARD_IMAGE_STYLE = {
-  plant: 'bg-[linear-gradient(135deg,#edf7ef_0%,#d8c4a2_52%,#7c8f57_100%)] before:absolute before:left-3 before:top-3 before:h-7 before:w-7 before:rounded-full before:bg-[#8fa96b] after:absolute after:bottom-2 after:right-2 after:h-5 after:w-8 after:rounded-sm after:bg-[#c8934d]',
-  'gift-card': 'bg-[linear-gradient(135deg,#d8d1c8_0%,#ffffff_46%,#c6b5a0_100%)] before:absolute before:left-2 before:top-4 before:h-5 before:w-12 before:rounded-sm before:bg-white/85 after:absolute after:left-5 after:top-6 after:h-1 after:w-7 after:rounded-full after:bg-[#d7a44e]',
-} as const;
+const useInfo = () => {
+  return useQuery({
+    queryKey: ['myInfo'],
+    queryFn: getMyInfo,
+  });
+};
+
+const useRewardProducts = () => {
+  return useQuery({
+    queryKey: ['rewardProducts', { size: 2 }],
+    queryFn: () => getRewardProducts({ size: 2 }),
+  });
+};
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const formattedPoint = HOME_POINT_SUMMARY.totalPoint.toLocaleString();
   const communityPreview = HOME_COMMUNITY_PREVIEWS[0];
+  const { data: userInfo } = useInfo();
+  const {
+    data: rewardData,
+    isPending: isRewardProductsPending,
+    isError: isRewardProductsError,
+  } = useRewardProducts();
+  const rewardProducts = rewardData?.items ?? [];
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } finally {
+      clearAuthData();
+      setIsLogoutModalOpen(false);
+      navigate('/login', { replace: true });
+    }
+  };
 
   return (
     <div className='min-h-screen bg-bg-green1 pb-32 font-pretendard text-text'>
@@ -34,14 +67,16 @@ export default function HomePage() {
           <div className='pt-3'>
             <p className='text-[13px] font-semibold leading-none text-gray-700'>오늘도 분리수거 함께해요!</p>
             <h1 className='mt-3 text-[20px] font-bold leading-[1.35]'>
-              <span className='text-main-green1'>{HOME_USER.nickname}</span>님,
+              <span className='text-main-green1'>{userInfo?.nickname}</span>님,
               <br />
               오늘도 ReDO! 해볼까요?
             </h1>
           </div>
 
-          <button type='button' aria-label='로그아웃' className='mt-4 flex h-9 w-9 items-center justify-center rounded-full'>
-            {/* TODO: 별도 이슈에서 로그아웃 모달을 연결합니다. */}
+          <button type='button' 
+          aria-label='로그아웃' 
+          className='mt-4 flex h-9 w-9 items-center justify-center rounded-full'
+          onClick={() => setIsLogoutModalOpen(true)}>
             <img src={LogoutIcon} alt='' className='h-6 w-6' />
           </button>
         </header>
@@ -55,7 +90,7 @@ export default function HomePage() {
               <CoinsIcon aria-hidden='true' className='h-4 w-4 text-white' />
             </p>
             <strong className='mt-2 block text-[30px] font-bold leading-none'>
-              {formattedPoint}
+              {userInfo?.totalPoint.toLocaleString()}
               <span className='ml-1 text-[20px]'>P</span>
             </strong>
             <button type='button' onClick={() => navigate('/certification')} className='mt-4 flex h-10 w-[134px] items-center justify-center rounded-full bg-white text-[15px] font-bold text-main-green1 shadow-[0_5px_12px_rgba(0,0,0,0.08)]'>
@@ -116,22 +151,31 @@ export default function HomePage() {
             리워드 상점 <span className='ml-1 text-2xl leading-none'>›</span>
           </button>
 
-          <ul className='mt-3 flex flex-col gap-3'>
-            {HOME_REWARD_PREVIEWS.map((reward) => (
-              <li key={reward.id}>
-                <button type='button' onClick={() => navigate(`/reward/products/${reward.id}`)} aria-label={`${reward.name} 상품 보기`} className='flex min-h-[77px] w-full items-center rounded-2xl bg-white px-3 py-2 text-left shadow-[0_7px_16px_rgba(0,0,0,0.06)]'>
-                  <div role='img' aria-label={reward.imageAlt} className={`relative h-[54px] w-[54px] shrink-0 overflow-hidden rounded-xl ${REWARD_IMAGE_STYLE[reward.imageVariant]}`} />
-                  <div className='ml-3 min-w-0 flex-1'>
-                    <span className={`rounded-full px-2 py-1 text-[10px] font-semibold ${reward.imageVariant === 'plant' ? 'bg-skyblue-bg text-skyblue-text' : 'bg-reward-bg text-reward-text'}`}>{reward.category}</span>
-                    <p className='mt-2 truncate text-[15px] font-bold leading-none'>{reward.name}</p>
-                  </div>
-                  <strong className='ml-3 shrink-0 text-[16px] font-bold text-main-green1'>{reward.requiredPoint.toLocaleString()}P</strong>
-                </button>
-              </li>
-            ))}
-          </ul>
+          {isRewardProductsPending ? (
+            <p className='py-8 text-center text-sm text-gray-500'>상품을 불러오는 중이에요...</p>
+          ) : isRewardProductsError ? (
+            <p className='py-8 text-center text-sm text-gray-500'>상품을 불러오지 못했어요.</p>
+          ) : rewardProducts.length === 0 ? (
+            <p className='py-8 text-center text-sm text-gray-500'>등록된 상품이 없어요.</p>
+          ) : (
+            <ul className='mt-3 flex flex-col gap-3'>
+              {rewardProducts.map((product) => (
+                <li key={product.rewardProductId}>
+                  <RewardProductCard product={product} />
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
       </main>
+      <Modal
+        isOpen={isLogoutModalOpen}
+        title='로그아웃 하시겠습니까?'
+        buttonText='로그아웃 하기'
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleLogout}
+        titleLineHeight='100%'
+      />
     </div>
   );
 }
