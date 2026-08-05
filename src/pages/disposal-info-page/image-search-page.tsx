@@ -53,7 +53,7 @@ export default function ImageSearchPage() {
               <button type='button' className='font-pretendard font-bold text-lg text-main-green2 rounded-4xl bg-white border border-[#C8F5DA] py-4 w-full flex items-center justify-center' onClick={handleGallaryClick}>
                 갤러리에서 불러오기
               </button>
-              <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 px-5 py-4 w-full flex items-center justify-center' onClick={() => navigate('/camera', { state: 'info' })}>
+              <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 px-5 py-4 w-full flex items-center justify-center' onClick={() => navigate('/camera', { state: { from: 'info' } })}>
                 촬영하기
               </button>
             </div>
