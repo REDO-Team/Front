@@ -8,7 +8,7 @@ import PostActionModal from "../../components/CommunityPage/PostActionModal.tsx"
 import { useState, useEffect } from "react";
 import Modal from "../../components/common/Modal.tsx";
 import CommentItem from "./CommentItem.tsx";
-import { getCommunityDetail, likeCommunity, unlikeCommunity, getComments, postComment, deleteCommunity } from "../../apis/community.ts";
+import { getCommunityDetail, likeCommunity, unlikeCommunity, getComments, postComment, deleteCommunity, deleteComment } from "../../apis/community.ts";
 import LoadingSpinner from "../../components/common/LoadingSpinner.tsx";
 import YellowCharacter from '../../assets/icons/character/yellow.svg?react';
 import GrayCharacter from '../../assets/icons/character/gray.svg?react';
@@ -107,8 +107,21 @@ export default function CommunityDetailPage() {
     setComments(comments.map(comment => comment.id === commentId ? { ...comment, content: newContent } : comment));
   };
 
-  const handleDeleteComment = (commentId: number) => {
-    setComments(comments.filter(comment => comment.id !== commentId));
+  const handleDeleteComment = async (commentId: number) => {
+    if (!postId) return;
+
+    try {
+      const res = await deleteComment(Number(postId), commentId);
+
+      if (res.isSuccess) {
+        setComments(comments.filter(comment => comment.commentId !== commentId));
+      } else {
+        alert("댓글 삭제에 실패했습니다. 다시 시도해주세요.");
+      }
+    } catch (error) {
+      console.error("댓글 삭제 실패", error);
+      alert("서버오류로 댓글 삭제에 실패했습니다.");
+    }
   };
 
   const handleModifyPost = () => {
@@ -121,7 +134,6 @@ export default function CommunityDetailPage() {
       const res = await deleteCommunity(Number(postId));
 
       if (res.isSuccess) {
-        alert("게시글이 삭제되었습니다.");
         navigate("/community", { replace: true });
       } else {
         alert("게시글 삭제에 실패했습니다. 다시 시도해주세요.");

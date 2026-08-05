@@ -22,6 +22,13 @@ export const deleteCommunity = async (communityId: number) => {
     return response.data;
 };
 
+export const updateCommunity = async (communityId: number, formData: FormData) => {
+    const response = await api.post(`/api/community/${communityId}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+};
+
 export const getComments = async (communityId: number) => {
     const response = await api.get(`/api/community/${communityId}/comments`);
     return response.data;
