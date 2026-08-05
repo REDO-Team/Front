@@ -10,9 +10,9 @@ export const getCommunityDetail = async (communityId: number) => {
     return response.data;
 };
 
-export const postCommunity = async (communityData: any) => {
-    const response = await api.post('/api/community', communityData, {
-        headers: { 'Content-Type': 'application/json' },
+export const postCommunity = async (formData: FormData) => {
+    const response = await api.post('/api/community', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
     });
     return response.data;
 };

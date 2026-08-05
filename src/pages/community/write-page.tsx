@@ -25,6 +25,7 @@ export default function CommunityWritePage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +37,13 @@ export default function CommunityWritePage() {
       }
       const previewUrl = URL.createObjectURL(file);
       setImagePreviews((prev) => [...prev, previewUrl]);
+      setImageFiles((prev) => [...prev, file]);
     }
+  };
+
+  const removeImage = (indexToRemove: number) => {
+    setImagePreviews((prev) => prev.filter((_, index) => index !== indexToRemove));
+    setImageFiles((prev) => prev.filter((_, index) => index !== indexToRemove));
   };
 
   const isFormValid = selectedCategory !== '' && title.trim() !== '' && content.trim() !== '';
@@ -47,14 +54,15 @@ export default function CommunityWritePage() {
     }
 
     try {
-      const requestData = {
-        category: getCategoryNumber(selectedCategory),
-        title: title,
-        content: content,
-        images: imagePreviews,
-      };
+      const formData = new FormData();
+      formData.append('category', String(getCategoryNumber(selectedCategory)));
+      formData.append('title', title);
+      formData.append('content', content);
+      imageFiles.forEach((file) => {
+        formData.append('images', file);
+      });
 
-      const res = await postCommunity(requestData);
+      const res = await postCommunity(formData);
 
       if (res.isSuccess) {
         navigate('/community/complete');
