@@ -6,7 +6,7 @@ import Webcam from 'react-webcam';
 import { useRef, useState } from 'react';
 import PhotoAnalysisLoading from '../components/common/PhotoAnalysisLoading';
 import { postGuideImageSearch } from '../apis/disposal-guide';
-import { postCertification } from '../apis/certification';
+import { postCertification, postCertificationRetry } from '../apis/certification';
 // import { useCertificationStore } from '../store/certificationStore';
 
 const base64ToFile = async (base64String: string, filename = 'capture.jpg'): Promise<File> => {
@@ -21,6 +21,9 @@ export default function CamearaPage() {
   const from = location?.state?.from;
   const certificationSource = location?.state?.certificationSource;
   const guideId = location?.state?.guideId;
+  const certificationId = location?.state?.certificationId || null;
+
+  console.log(certificationId);
 
   const webcamRef = useRef<Webcam | null>(null);
   const [loading, setLoading] = useState(false);
@@ -34,12 +37,11 @@ export default function CamearaPage() {
     try {
       const file = await base64ToFile(img);
 
-      // 인증
+      // 신규 인증
       if (from === 'certification') {
         const data = await postCertification({ image: file, certificationSource, recycleGuideId: guideId });
-        console.log(data);
 
-        // 인증 성공
+        // 신규 인증 성공
         if (data.result?.status === 'PASSED') {
           navigate('/certification/success', {
             state: {
@@ -49,12 +51,13 @@ export default function CamearaPage() {
             },
           });
         }
-        // 인증 실패
+        // 신규 인증 실패
         else if (data.result?.status === 'FAILED') {
           // AI 판정 실패
           if (data.result.failureType === 'VLM_JUDGEMENT_FAILED') {
             navigate('/certification/fail', {
               state: {
+                failureType: data.result.failureType,
                 failedReason: data.result.failedReason,
                 retryGuide: data.result.retryGuide,
                 retryAllowed: data.result.retryAllowed,
@@ -66,6 +69,7 @@ export default function CamearaPage() {
           else if (data.result.failureType === 'DUPLICATE_GUIDE_TODAY') {
             navigate('/certification/fail', {
               state: {
+                failureType: data.result.failureType,
                 failedReason: data.result.failedReason,
                 retryGuide: data.result.retryGuide,
                 retryAllowed: data.result.retryAllowed,
@@ -76,14 +80,62 @@ export default function CamearaPage() {
         }
       }
       // 배출 정보 검색
-      else {
+      else if (from === 'info') {
         const data = await postGuideImageSearch(file);
 
-        navigate('/disposal-info/detail', {
-          state: {
-            guide: data.result?.guideDetail,
-          },
-        });
+        // 검색 성공
+        if (data.result?.identified) {
+          navigate('/disposal-info/detail', {
+            state: {
+              guide: data.result?.guideDetail,
+            },
+          });
+        }
+        // 검색 실패
+        else {
+          navigate('/disposal-info/fail');
+        }
+      }
+      // 재인증
+      else if (certificationId) {
+        const data = await postCertificationRetry(certificationId, file);
+        // 재인증 성공
+        if (data.result?.status === 'PASSED') {
+          navigate('/certification/success', {
+            state: {
+              itemName: data.result.itemName,
+              date: data.result.judgedAt,
+              point: data.result.earnedPoint,
+            },
+          });
+        }
+        // 재인증 실패
+        else if (data.result?.status === 'FAILED') {
+          // AI 판정 실패
+          if (data.result.failureType === 'VLM_JUDGEMENT_FAILED') {
+            navigate('/certification/fail', {
+              state: {
+                failureType: data.result.failureType,
+                failedReason: data.result.failedReason,
+                retryGuide: data.result.retryGuide,
+                retryAllowed: data.result.retryAllowed,
+                certificationId: data.result.certificationId,
+              },
+            });
+          }
+          // 동일 품목 재인증 시도
+          else if (data.result.failureType === 'DUPLICATE_GUIDE_TODAY') {
+            navigate('/certification/fail', {
+              state: {
+                failureType: data.result.failureType,
+                failedReason: data.result.failedReason,
+                retryGuide: data.result.retryGuide,
+                retryAllowed: data.result.retryAllowed,
+                certificationId: data.result.certificationId,
+              },
+            });
+          }
+        }
       }
     } catch (e) {
       alert('접속이 원활하지 않습니다. 잠시 후 다시 시도해 주세요.');
