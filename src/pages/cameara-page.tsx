@@ -23,7 +23,7 @@ export default function CamearaPage() {
   const guideId = location?.state?.guideId;
   const certificationId = location?.state?.certificationId || null;
 
-  console.log(certificationId);
+  console.log('CameraPage state', location.state);
 
   const webcamRef = useRef<Webcam | null>(null);
   const [loading, setLoading] = useState(false);
@@ -37,8 +37,14 @@ export default function CamearaPage() {
     try {
       const file = await base64ToFile(img);
 
+      console.log({
+        from,
+        certificationId,
+      });
+
       // 신규 인증
       if (from === 'certification') {
+        console.log('신규 인증');
         const data = await postCertification({ image: file, certificationSource, recycleGuideId: guideId });
 
         // 신규 인증 성공
@@ -62,6 +68,8 @@ export default function CamearaPage() {
                 retryGuide: data.result.retryGuide,
                 retryAllowed: data.result.retryAllowed,
                 certificationId: data.result.certificationId,
+                certificationSource,
+                guideId,
               },
             });
           }
@@ -74,6 +82,8 @@ export default function CamearaPage() {
                 retryGuide: data.result.retryGuide,
                 retryAllowed: data.result.retryAllowed,
                 certificationId: data.result.certificationId,
+                certificationSource,
+                guideId,
               },
             });
           }
