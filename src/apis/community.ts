@@ -46,6 +46,13 @@ export const deleteComment = async (communityId: number, commentId: number) => {
     return response.data;
 };
 
+export const updateComment = async (communityId: number, commentId: number, content: string) => {
+    const response = await api.patch(`/api/community/${communityId}/comment/${commentId}`,
+        { comment: content },
+        { headers: { 'Content-Type': 'application/json' } });
+    return response.data;
+}
+
 export const likeCommunity = async (communityId: number) => {
     const response = await api.post(`/api/community/${communityId}/like`);
     return response.data;

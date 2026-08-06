@@ -65,8 +65,12 @@ export default function CommentItem({ comment, isMine, onUpdate, onDelete }: Com
   // 수정 완료
   const handleCompleteEdit = () => {
     if (editContent.trim() === "") return;
+    setIsEditModalOpen(true);
+  };
+  const confirmEdit = () => {
     onUpdate(comment.commentId, editContent);
     setIsEditing(false);
+    setIsEditModalOpen(false);
   };
 
   return (
@@ -97,7 +101,7 @@ export default function CommentItem({ comment, isMine, onUpdate, onDelete }: Com
 
         {isMine && !isEditing && (
           <div className="flex items-center gap-2 text-[14px] font-semibold">
-            <button className="text-gray-600" onClick={() => setIsEditModalOpen(true)}>수정</button>
+            <button className="text-gray-600" onClick={() => setIsEditing(true)}>수정</button>
             <button className="text-[#E25655]" onClick={() => setIsDeleteModalOpen(true)}>삭제</button>
           </div>
         )}
@@ -137,8 +141,7 @@ export default function CommentItem({ comment, isMine, onUpdate, onDelete }: Com
         buttonText="수정하기"
         onClose={() => setIsEditModalOpen(false)}
         onConfirm={() => {
-          setIsEditModalOpen(false);
-          setIsEditing(true);
+          confirmEdit();
         }}
       />
 
