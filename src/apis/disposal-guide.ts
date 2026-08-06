@@ -1,4 +1,10 @@
-import type { DisposalGuideResponse, GuideFavoriteResponse, GuideImageSearchResponse, GuideTextSearchResponse } from '../types/disposal-guide';
+import type {
+  DisposalGuideResponse,
+  GuideFavoriteResponse,
+  GuideImageSearchResponse,
+  GuideTextSearchResponse,
+  FavoriteGuideListResponse,
+} from '../types/disposal-guide';
 import api from './api';
 
 // 배출 가이드 조회
@@ -37,3 +43,14 @@ export const postGuideTextSearch = async (query: string): Promise<GuideTextSearc
 
   return response.data;
 };
+
+// 즐겨찾기한 배출 가이드 조회
+export const getFavoriteGuides =
+  async (): Promise<FavoriteGuideListResponse> => {
+    const response = await api.get(
+      '/api/guides/favorites',
+    );
+
+    return response.data;
+  };
+

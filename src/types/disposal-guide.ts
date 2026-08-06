@@ -31,3 +31,16 @@ export type GuideTextSearchResponse = CommonResponse<{
   guideDetail: Guides;
   identified: boolean;
 }>;
+
+//즐겨찾기조회
+export type FavoriteGuide = {
+  guideId: number;
+  name: string;
+  title: string;
+  favoritedAt: string;
+};
+
+export type FavoriteGuideListResponse =
+  CommonResponse<{
+    favorites: FavoriteGuide[];
+  }>;
