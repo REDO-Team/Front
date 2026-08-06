@@ -6,11 +6,12 @@ import DeliveryCompleteIcon from '../../assets/icons/delivery-complete.svg?react
 import ExchangeCompleteIcon from '../../assets/icons/exchange-complete.svg?react';
 import Logo from '../../assets/icons/Big-logo.svg?react';
 
-import { getRewardRedemptions } from '../../apis/reward';
-
 import type {
   FulfillmentStatus,
+  FulfillmentType,
 } from '../../types/reward';
+
+import { getRewardRedemptions } from '../../apis/reward';
 
 const formatRedeemedAt = (
   redeemedAt: string,
@@ -53,38 +54,44 @@ const RewardUseHistoryPage = () => {
     data?.content ?? [];
 
   const renderStatusIcon = (
-    status: FulfillmentStatus,
-  ) => {
-    switch (status) {
-      case 'READY':
-      case 'SHIPPING':
-        return (
-          <ShippingIcon
-            aria-label='배송중'
-            className='h-[22px] w-auto shrink-0'
-          />
-        );
+  type: FulfillmentType,
+  status: FulfillmentStatus,
+) => {
+  if (status === 'READY' || status === 'SENT') {
+    return (
+      <ShippingIcon
+        aria-label='처리중'
+        className='h-[22px] w-auto shrink-0'
+      />
+    );
+  }
 
-      case 'DELIVERED':
-        return (
-          <DeliveryCompleteIcon
-            aria-label='배송완료'
-            className='h-[22px] w-auto shrink-0'
-          />
-        );
+  if (
+    type === 'DELIVERY' &&
+    status === 'COMPLETED'
+  ) {
+    return (
+      <DeliveryCompleteIcon
+        aria-label='배송완료'
+        className='h-[22px] w-auto shrink-0'
+      />
+    );
+  }
 
-      case 'COMPLETED':
-        return (
-          <ExchangeCompleteIcon
-            aria-label='교환완료'
-            className='h-[22px] w-auto shrink-0'
-          />
-        );
+  if (
+    type === 'COUPON' &&
+    status === 'COMPLETED'
+  ) {
+    return (
+      <ExchangeCompleteIcon
+        aria-label='발송완료'
+        className='h-[22px] w-auto shrink-0'
+      />
+    );
+  }
 
-      default:
-        return null;
-    }
-  };
+  return null;
+};
 
   if (isPending) {
     return (
@@ -146,6 +153,7 @@ const RewardUseHistoryPage = () => {
                 {/* 배송 상태 */}
                 <div className='ml-[8px] self-start pt-[1px]'>
                   {renderStatusIcon(
+                      item.fulfillmentType,
                     item.fulfillmentStatus,
                   )}
                 </div>
