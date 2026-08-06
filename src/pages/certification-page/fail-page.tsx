@@ -12,13 +12,29 @@ export default function FailPage() {
   const retryAllowed = location?.state?.retryAllowed;
   const certificationId = location?.state?.certificationId;
   const failureType = location?.state?.failureType;
+  const guideId = location?.state?.guideId;
+  const certificationSource = location?.state?.certificationSource;
   const [isOpenModal, setIsOpenModal] = useState(false);
 
+  console.log('FailPage state:', location.state);
+
   const handleRetryShoot = () => {
+    // AI 검증 실패에 따른 재시도
     if (failureType === 'VLM_JUDGEMENT_FAILED' && retryAllowed && certificationId) {
       navigate('/camera', {
         state: {
           certificationId,
+        },
+      });
+    }
+    // 동일 품목 검증 시도에 따른 재시도
+    else if (failureType === 'DUPLICATE_GUIDE_TODAY') {
+      navigate('/camera', {
+        state: {
+          from: 'certification',
+          certificationSource,
+          guideId,
+          // certificationId
         },
       });
     } else {
