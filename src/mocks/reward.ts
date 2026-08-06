@@ -1,6 +1,6 @@
 import type {
-    AddressSearchResponse,
-    RewardHistory,
+    AddressSearchResult,
+    ApiResponse,
     RewardProduct,
     RewardShippingAddress,
     RewardSummary,
@@ -14,93 +14,6 @@ export const mockRewardSummary: RewardSummary = {
 };
 
 export const mockRecentShippingAddress: RewardShippingAddress | null = null;
-
-export const mockRewardHistory: RewardHistory[] = [
-    {
-        id: 1,
-        title: '분리수거 인증',
-        type: 'EARN',
-        point: 500,
-        createdAt: '2026-06-21T12:00:00Z',
-    },
-    {
-        id: 2,
-        title: '분리수거 인증',
-        type: 'EARN',
-        point: 500,
-        createdAt: '2026-06-21T12:00:00Z',
-    },
-    {
-        id: 3,
-        title: '분리수거 인증',
-        type: 'EARN',
-        point: 500,
-        createdAt: '2026-06-21T12:00:00Z',
-    },
-    {
-        id: 4,
-        title: '친환경 수세미 교환',
-        type: 'USE',
-        point: -1000,
-        createdAt: '2026-06-21T12:00:00Z',
-    },
-    {
-        id: 5,
-        title: '분리수거 인증',
-        type: 'EARN',
-        point: 300,
-        createdAt: '2026-06-18T09:30:00Z',
-    },
-    {
-        id: 6,
-        title: '다회용 컵 교환',
-        type: 'USE',
-        point: -1500,
-        createdAt: '2026-06-15T14:20:00Z',
-    },
-    {
-        id: 7,
-        title: '분리수거 인증',
-        type: 'EARN',
-        point: 500,
-        createdAt: '2026-06-12T11:10:00Z',
-    },
-    {
-        id: 8,
-        title: '친환경 장바구니 교환',
-        type: 'USE',
-        point: -2000,
-        createdAt: '2026-06-08T16:40:00Z',
-    },
-    {
-        id: 9,
-        title: '분리수거 인증',
-        type: 'EARN',
-        point: 400,
-        createdAt: '2026-06-05T08:50:00Z',
-    },
-    {
-        id: 10,
-        title: '분리수거 인증',
-        type: 'EARN',
-        point: 500,
-        createdAt: '2026-06-01T13:15:00Z',
-    },
-    {
-        id: 11,
-        title: '친환경 수세미 교환',
-        type: 'USE',
-        point: -1000,
-        createdAt: '2026-05-28T10:00:00Z',
-    },
-    {
-        id: 12,
-        title: '분리수거 인증',
-        type: 'EARN',
-        point: 300,
-        createdAt: '2026-05-24T15:30:00Z',
-    },
-];
 
 export const mockRewardProducts: RewardProduct[] = [
     {
@@ -196,7 +109,7 @@ export const MOCK_SHIPPING_ADDRESS_RESPONSE: ShippingAddressListResponse = {
   },
 };
 
-export const MOCK_ADDRESS_SEARCH_RESPONSE: AddressSearchResponse = {
+export const MOCK_ADDRESS_SEARCH_RESPONSE: ApiResponse<AddressSearchResult> = {
   isSuccess: true,
   code: 'ADDRESS_SEARCH_200_001',
   message: '주소 검색에 성공했습니다.',

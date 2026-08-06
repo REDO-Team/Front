@@ -8,6 +8,7 @@ import PostActionModal from "../../components/CommunityPage/PostActionModal.tsx"
 import { useState } from "react";
 import Modal from "../../components/common/Modal.tsx";
 import CommentItem from "./CommentItem.tsx";
+import { MOCK_POST, MOCK_COMMENTS } from "../../mocks/community";
 
 const getCategoryStyle = (category: string) => {
   switch (category) {
@@ -21,42 +22,6 @@ const getCategoryStyle = (category: string) => {
       return "bg-gray-100 text-gray-500";
   }
 };
-
-const MOCK_POST = {
-  category: "정보공유",
-  title: "이렇게 하면 쉬워요!",
-  author: "리도01",
-  authorColor: "bg-main-green1",
-  time: "2026.06.27 15:00",
-  content:
-    "안내 가이드 따라하다가 저만의 꿀팁을 발견했어요!\n다른 사용자 분들도 이 방법 사용해보시고 쉬웠는지 알려주세요ㅎㅎ",
-  comments: 2,
-  likes: 0,
-};
-
-const MOCK_COMMENTS = [
-  {
-    id: 1,
-    author: "리도03",
-    authorColor: "bg-main-green1",
-    time: "26.06.27 15:00",
-    content: "알려주신대로 하니까 빨라진 것 같아요! 좋은 정보 감사합니다!",
-  },
-  {
-    id: 2,
-    author: "리도08",
-    authorColor: "bg-main-green1",
-    time: "26.06.27 15:00",
-    content: "저도 해봤는데 진짜 편하네요 ㅎㅎ 공유 감사해요!",
-  },
-  {
-    id: 3,
-    author: "리도01",
-    authorColor: "bg-main-green1",
-    time: "26.06.27 16:00",
-    content: "댓글 남겨주셔서 감사해요!\n더 좋은 정보로 찾아올게요:)",
-  },
-];
 
 export default function CommunityDetailPage() {
   const [comments, setComments] = useState(MOCK_COMMENTS);

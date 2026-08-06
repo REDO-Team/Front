@@ -1,10 +1,24 @@
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import YellowCharacter from '../../assets/icons/character/yellow-character.svg';
 import RewardCard from '../../components/RewardPage/RewardCard';
-import { mockRewardHistory, mockRewardSummary } from '../../mocks/reward';
+import { HOME_USER } from '../../mocks/home';
+import { getRewardHistory, getRewardPoints } from '../../apis/reward';
 
 export default function RewardHomePage() {
-  const { nickname, currentPoint, monthlyPoint } = mockRewardSummary;
+  const { nickname } = HOME_USER;
+  const { data, isPending, isError } = useQuery({
+    queryKey: ['rewardPoints'],
+    queryFn: getRewardPoints,
+  });
+  const {
+    data: historyData,
+    isPending: isHistoryPending,
+    isError: isHistoryError,
+  } = useQuery({
+    queryKey: ['rewardHistory', { size: 4 }],
+    queryFn: () => getRewardHistory({ size: 4 }),
+  });
 
   return (
     <div className='flex flex-1 flex-col gap-10 px-5 pb-10 font-pretendard'>
@@ -14,11 +28,25 @@ export default function RewardHomePage() {
           <p className='text-[15px] font-semibold leading-none'>{nickname}님의 포인트</p>
 
           <p className='mt-2 text-[38px] font-bold leading-none tracking-[-0.02em]'>
-            {currentPoint.toLocaleString()}
-            <span className='ml-1.5 text-[24px]'>P</span>
+            {isPending ? (
+              <span className='text-[18px]'>불러오는 중...</span>
+            ) : isError || !data ? (
+              <span className='text-[18px]'>포인트를 불러오지 못했어요</span>
+            ) : (
+              <>
+                {data.totalPoint.toLocaleString('ko-KR')}
+                <span className='ml-1.5 text-[24px]'>P</span>
+              </>
+            )}
           </p>
 
-          <p className='mt-4 inline-flex h-8 items-center rounded-full bg-white/30 px-3.5 text-[13px] font-semibold leading-none backdrop-blur-[1px]'>이번 달 + {monthlyPoint.toLocaleString()}P 적립했어요</p>
+          <p className='mt-4 inline-flex h-8 items-center rounded-full bg-white/30 px-3.5 text-[13px] font-semibold leading-none backdrop-blur-[1px]'>
+            {isPending
+              ? '이번 달 적립 포인트를 불러오는 중이에요'
+              : isError || !data
+                ? '포인트 정보를 다시 불러와 주세요'
+                : `이번 달 + ${data.monthlyEarnedPoint.toLocaleString('ko-KR')}P 적립했어요`}
+          </p>
         </div>
 
         <div aria-hidden='true' className='absolute bottom-0 right-0 h-full w-[155px] overflow-hidden'>
@@ -36,9 +64,26 @@ export default function RewardHomePage() {
         </div>
 
         <div className='mt-3 rounded-[22px] bg-white px-4 shadow-[0_8px_20px_rgba(0,0,0,0.06)] divide-y divide-gray-200'>
-          {mockRewardHistory.slice(0, 4).map((history) => (
-            <RewardCard key={history.id} rewardHistory={history} />
-          ))}
+          {isHistoryPending ? (
+            <p className='py-10 text-center text-sm font-medium text-gray-500'>
+              리워드 내역을 불러오는 중이에요...
+            </p>
+          ) : isHistoryError || !historyData ? (
+            <p className='py-10 text-center text-sm font-medium text-gray-500'>
+              리워드 내역을 불러오지 못했어요.
+            </p>
+          ) : historyData.items.length === 0 ? (
+            <p className='py-10 text-center text-sm font-medium text-gray-500'>
+              아직 내역이 없어요.
+            </p>
+          ) : (
+            historyData.items.map((history) => (
+              <RewardCard
+                key={history.transactionId}
+                rewardHistory={history}
+              />
+            ))
+          )}
         </div>
       </section>
 

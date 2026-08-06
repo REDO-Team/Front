@@ -5,7 +5,21 @@ import {
   useEffect,
   useState,
 } from 'react';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+
+import {
+  getMyInfo,
+  updateCharacter,
+  updateNickname,
+  uploadProfileImage,
+  type MyInfo,
+} from '../../apis/user';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 import LeftArrowIcon from '../../assets/icons/left-arrow.svg?react';
 import GalleryIcon from '../../assets/icons/gallery.svg?react';
@@ -24,81 +38,134 @@ import PurpleCharacterSelected from '../../assets/icons/character/purple-charact
 import BlueCharacter from '../../assets/icons/character/blue-character.svg?react';
 import BlueCharacterSelected from '../../assets/icons/character/blue-character-selected.svg?react';
 
+import type { CharacterCode } from '../../constants/character';
+
 type SvgComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
 interface CharacterItem {
-  id: number;
+  id: CharacterCode;
   label: string;
   defaultIcon: SvgComponent;
   selectedIcon: SvgComponent;
 }
 
+interface ProfileEditFormProps {
+  user: MyInfo;
+}
+
 const CHARACTER_ITEMS: CharacterItem[] = [
   {
-    id: 1,
+    id: '1',
     label: '노란색 캐릭터',
     defaultIcon: YellowCharacter,
     selectedIcon: YellowCharacterSelected,
   },
   {
-    id: 2,
+    id: '2',
     label: '회색 캐릭터',
     defaultIcon: GrayCharacter,
     selectedIcon: GrayCharacterSelected,
   },
   {
-    id: 3,
+    id: '3',
     label: '초록색 캐릭터',
     defaultIcon: GreenCharacter,
     selectedIcon: GreenCharacterSelected,
   },
   {
-    id: 4,
+    id: '4',
     label: '주황색 캐릭터',
     defaultIcon: OrangeCharacter,
     selectedIcon: OrangeCharacterSelected,
   },
   {
-    id: 5,
+    id: '5',
     label: '보라색 캐릭터',
     defaultIcon: PurpleCharacter,
     selectedIcon: PurpleCharacterSelected,
   },
   {
-    id: 6,
+    id: '6',
     label: '파란색 캐릭터',
     defaultIcon: BlueCharacter,
     selectedIcon: BlueCharacterSelected,
   },
 ];
 
-const ProfileEditPage = () => {
-  const navigate = useNavigate();
+const NICKNAME_REGEX = /^[가-힣0-9]{2,10}$/;
 
-  const [nickname, setNickname] = useState('');
-  const [selectedCharacterId, setSelectedCharacterId] = useState<
-    number | null
-  >(null);
-  const [profileImage, setProfileImage] = useState<string | null>(
-    null,
+const ProfileEditForm = ({
+  user,
+}: ProfileEditFormProps) => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const [nickname, setNickname] = useState(user.nickname);
+
+  const [
+    selectedCharacterId,
+    setSelectedCharacterId,
+  ] = useState<CharacterCode | null>(
+    user.characterCode,
   );
+
+  const [profileImage, setProfileImage] =
+    useState<string | null>(
+      user.profileImageUrl,
+    );
+
+  const [
+    profileImageFile,
+    setProfileImageFile,
+  ] = useState<File | null>(null);
 
   const selectedCharacter = CHARACTER_ITEMS.find(
     (character) => character.id === selectedCharacterId,
   );
 
-  const SelectedCharacterIcon = selectedCharacter?.selectedIcon;
+  const SelectedCharacterIcon =
+    selectedCharacter?.selectedIcon;
+
+  const isNicknameValid = NICKNAME_REGEX.test(
+    nickname.trim(),
+  );
+
+  const isNicknameError =
+    nickname.trim() !== '' && !isNicknameValid;
+
+  const isNicknameChanged =
+    nickname.trim() !== user.nickname;
+
+  const isImageChanged =
+    profileImageFile !== null;
+
+  const isCharacterChanged =
+    selectedCharacterId !== null &&
+    selectedCharacterId !== user.characterCode;
+
+  const isChanged =
+    isNicknameChanged ||
+    isImageChanged ||
+    isCharacterChanged;
 
   const isValid =
-    nickname.trim() !== '' && selectedCharacterId !== null;
+    isNicknameValid &&
+    selectedCharacterId !== null &&
+    isChanged;
 
   useEffect(() => {
     return () => {
-      if (profileImage) {
+      if (profileImage?.startsWith('blob:')) {
         URL.revokeObjectURL(profileImage);
       }
     };
   }, [profileImage]);
+
+  const handleNicknameChange = (
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
+    setNickname(event.target.value.slice(0, 10));
+  };
 
   const handleImageChange = (
     event: ChangeEvent<HTMLInputElement>,
@@ -113,33 +180,80 @@ const ProfileEditPage = () => {
       return;
     }
 
-    if (profileImage) {
+    if (profileImage?.startsWith('blob:')) {
       URL.revokeObjectURL(profileImage);
     }
 
     const imageUrl = URL.createObjectURL(file);
 
     setProfileImage(imageUrl);
+    setProfileImageFile(file);
   };
 
-  const handleCharacterSelect = (characterId: number) => {
-    if (profileImage) {
-      URL.revokeObjectURL(profileImage);
+  const handleCharacterSelect = (
+    characterId: CharacterCode,
+  ) => {
+    setSelectedCharacterId(characterId);
+  };
+
+  const updateProfileMutation = useMutation({
+  mutationFn: async () => {
+    if (
+      isCharacterChanged &&
+      selectedCharacterId !== null
+    ) {
+      await updateCharacter(selectedCharacterId);
     }
 
-    setSelectedCharacterId(characterId);
-    setProfileImage(null);
-  };
+    if (isImageChanged && profileImageFile) {
+      await uploadProfileImage(profileImageFile);
+    }
+
+    if (isNicknameChanged) {
+      await updateNickname(nickname.trim());
+    }
+  },
+
+  onSuccess: async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ['myInfo'],
+    });
+
+    navigate('/my', {
+      replace: true,
+    });
+  },
+
+  onError: (error) => {
+    console.error('프로필 수정 실패:', error);
+
+    alert(
+      '프로필 수정에 실패했습니다. 다시 시도해주세요.',
+    );
+  },
+});
 
   const handleSave = () => {
-    if (!isValid) return;
+    if (
+      !isValid ||
+      updateProfileMutation.isPending
+    ) {
+      return;
+    }
 
-    navigate('/my');
+    updateProfileMutation.mutate();
   };
+
+  if (updateProfileMutation.isPending) {
+  return (
+    <div className='flex min-h-dvh items-center justify-center bg-bg-my'>
+      <LoadingSpinner />
+    </div>
+  );
+}
 
   return (
     <div className='flex min-h-dvh w-full flex-col overflow-hidden bg-[#F9FBFB] font-pretendard text-text'>
-      {/* 자체 헤더 */}
       <header className='relative flex h-[72px] shrink-0 items-center justify-center px-5'>
         <button
           type='button'
@@ -164,22 +278,18 @@ const ProfileEditPage = () => {
         </button>
       </header>
 
-      {/* 내용 */}
       <main className='min-h-0 flex-1 overflow-y-auto px-5'>
-        {/* 프로필 사진 및 캐릭터 */}
         <section className='flex justify-center pt-[16px]'>
           <div className='relative h-[122px] w-[122px]'>
-            <div className='h-full w-full overflow-hidden rounded-full bg-gradient-to-br from-main-green1 to-main-sky shadow-[0_4px_8px_rgba(0,0,0,0.08)]'>
+            <div className='flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-white shadow-[0_4px_8px_rgba(0,0,0,0.08)]'>
               {profileImage ? (
                 <img
                   src={profileImage}
-                  alt='선택한 프로필'
+                  alt={`${nickname} 프로필`}
                   className='h-full w-full object-cover'
                 />
               ) : SelectedCharacterIcon ? (
-                <div className='flex h-full w-full items-center justify-center'>
-                  <SelectedCharacterIcon className='h-[130px] w-[130px] shrink-0' />
-                </div>
+                <SelectedCharacterIcon className='h-full w-full translate-x-[2px] scale-[1.15]' />
               ) : null}
             </div>
 
@@ -201,11 +311,10 @@ const ProfileEditPage = () => {
           </div>
         </section>
 
-        {/* 닉네임 */}
         <section className='mt-[18px]'>
           <label
             htmlFor='nickname'
-            className='mb-[15px] block w-[350px] text-[16px] font-semibold leading-[15px] tracking-[0] text-[#2A2A2A]'
+            className='mb-[15px] block text-[16px] font-semibold leading-[15px] text-[#2A2A2A]'
           >
             닉네임 수정하기
           </label>
@@ -214,16 +323,25 @@ const ProfileEditPage = () => {
             id='nickname'
             type='text'
             value={nickname}
-            maxLength={20}
-            onChange={(event) => setNickname(event.target.value)}
+            maxLength={10}
+            inputMode='text'
+            autoComplete='off'
+            onChange={handleNicknameChange}
             placeholder='닉네임을 입력해주세요'
-            className='h-[48px] w-full rounded-[24px] border border-gray-200 bg-white px-[18px] text-[14px] font-medium leading-[18px] text-gray-800 outline-none placeholder:text-gray-400 focus:border-main-green1'
+            aria-invalid={isNicknameError}
+            className='h-[48px] w-full rounded-[24px] border border-gray-200 bg-white px-[18px] text-[14px] font-medium leading-[18px] text-gray-800 outline-none placeholder:text-gray-400'
           />
+
+          {nickname !== '' && !isNicknameValid && (
+            <p className='mt-2 text-xs text-red-500'>
+              닉네임은 한글과 숫자만 사용 가능하며
+              2~10글자로 입력해주세요.
+            </p>
+          )}
         </section>
 
-        {/* 캐릭터 선택 */}
         <fieldset className='mt-[16px] min-w-0'>
-          <legend className='mb-[15px] block w-[350px] text-[16px] font-semibold leading-[15px] tracking-[0] text-[#2A2A2A]'>
+          <legend className='mb-[15px] block text-[16px] font-semibold leading-[15px] text-[#2A2A2A]'>
             나의 캐릭터
           </legend>
 
@@ -255,14 +373,17 @@ const ProfileEditPage = () => {
         </fieldset>
       </main>
 
-      {/* 완료 버튼 */}
       <div className='shrink-0 bg-[#F9FBFB] px-5 pb-[32px] pt-[16px]'>
         <button
           type='button'
-          disabled={!isValid}
+          disabled={
+            !isValid ||
+            updateProfileMutation.isPending
+          }
           onClick={handleSave}
           className={`h-[50px] w-full rounded-[25px] text-[16px] font-bold text-white transition-colors ${
-            isValid
+            isValid &&
+            !updateProfileMutation.isPending
               ? 'bg-main-green1'
               : 'cursor-not-allowed bg-gray-400'
           }`}
@@ -271,6 +392,40 @@ const ProfileEditPage = () => {
         </button>
       </div>
     </div>
+  );
+};
+
+const ProfileEditPage = () => {
+  const {
+    data: user,
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ['myInfo'],
+    queryFn: getMyInfo,
+  });
+
+  if (isPending) {
+    return (
+      <div className='flex min-h-dvh items-center justify-center bg-bg-my'>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (isError || !user) {
+    return (
+      <div className='flex min-h-dvh items-center justify-center bg-[#F9FBFB]'>
+        프로필 정보를 불러오지 못했어요.
+      </div>
+    );
+  }
+
+  return (
+    <ProfileEditForm
+      key={`${user.userId}-${user.nickname}-${user.characterCode}-${user.profileImageUrl ?? ''}`}
+      user={user}
+    />
   );
 };
 

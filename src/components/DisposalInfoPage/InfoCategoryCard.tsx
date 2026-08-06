@@ -15,7 +15,7 @@ export default function InfoCategoryCard({ img, color, shadow, title, content, t
 
   return (
     <div
-      className='w-full flex justify-between items-center p-5 rounded-[20px] bg-white shadow shadow-black/3'
+      className='w-full flex justify-between items-center p-5 rounded-[20px] bg-white shadow shadow-black/3 select-none'
       onClick={() => {
         navigate(`${to}`);
       }}

@@ -1,6 +1,9 @@
 import type { MouseEvent } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+
+import Logo from '../../assets/icons/Big-logo.svg?react';
 
 import Modal from '../../components/common/Modal';
 import { MOCK_MY_COMMENTS } from '../../mocks/my-comment';
@@ -9,6 +12,7 @@ const MyCommentsPage = () => {
   const navigate = useNavigate();
 
   const [comments, setComments] = useState(MOCK_MY_COMMENTS);
+  const [isLoading] = useState(false);
   const [deleteCommentId, setDeleteCommentId] = useState<number | null>(null);
 
   const isDeleteModalOpen = deleteCommentId !== null;
@@ -34,6 +38,14 @@ const MyCommentsPage = () => {
     setDeleteCommentId(null);
   };
 
+  if (isLoading) {
+  return (
+    <div className='flex min-h-screen items-center justify-center bg-bg-my'>
+      <LoadingSpinner />
+    </div>
+  );
+}
+
   return (
     <div className='min-h-screen bg-[#F9FBFB]'>
       <main className='px-[20px] pt-[72px]'>
@@ -56,9 +68,12 @@ const MyCommentsPage = () => {
             ))}
           </section>
         ) : (
-          <div className='flex min-h-[500px] items-center justify-center'>
-            <p className='text-[14px] font-medium text-gray-400'>작성한 댓글이 없습니다.</p>
-          </div>
+          <div className='flex min-h-[calc(100vh-72px)] flex-col items-center justify-center pb-[80px]'>
+                <Logo className='h-[146px] w-[161px]' />
+                <p className='mt-[38px] text-center text-[22px] font-bold leading-[130%] tracking-[0] text-[#6B6B6B]'>
+                    아직 작성한 댓글이 없어요
+                </p>
+            </div>
         )}
       </main>
 

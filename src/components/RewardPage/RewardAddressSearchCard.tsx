@@ -6,14 +6,13 @@ interface AddressSearchCardProps{
 }
 
 export default function AddressSearchCard({ address, onSelect }: AddressSearchCardProps) {
-    const { roadAddress, jibunAddress, postalCode, buildingName } = address;
+    const { roadAddress, jibunAddress, postalCode} = address;
 
     return (
           <article className="rounded-2xl bg-white p-4 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <p className="text-sm font-bold leading-5">
           {roadAddress}
-          {buildingName && ` (${buildingName})`}
         </p>
 
         <button
@@ -32,7 +31,6 @@ export default function AddressSearchCard({ address, onSelect }: AddressSearchCa
 
         <p className="text-sm leading-5 text-gray-400">
           {jibunAddress}
-          {buildingName && ` ${buildingName}`}
         </p>
       </div>
 

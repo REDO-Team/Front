@@ -1,51 +1,72 @@
-/**
- * 나의 기여도 화면에서 물품 하나를 표현할 때 사용하는 타입입니다.
- * iconKey는 실제 아이콘을 연결하기 전까지 사용할 아이콘 식별자입니다.
- */
-export interface ContributionItem {
-  id: string;
-  name: string;
-  requiredCount: number;
-  isAchieved: boolean;
-  iconKey: string;
+export interface ApiResponse<T> {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: T | null;
+  errorDetail?: string | null;
 }
 
-/**
- * 나의 기여도 화면에 필요한 사용자 진행 정보를 표현하는 타입입니다.
- * 첫 물품 달성 전이나 모든 물품 달성 후의 상태는 null로 표현합니다.
- */
-export interface MyContributionData {
-  nickname: string;
-  recycleCount: number;
-  achievedItemName: string | null;
-  nextItemName: string | null;
-  remainingCount: number | null;
-  items: ContributionItem[];
-}
-
-export type ContributionActivityType =
-  | 'PRODUCT_IN_PROGRESS'
-  | 'PRODUCT_REMAINING'
-  | 'RECYCLING_COMPLETED'
-  | 'FIRST_RECYCLING';
-
-export type ContributionProductType =
+export type ContributionMilestoneType =
   | 'TOILET_PAPER'
   | 'NOTE'
-  | 'BOTTLE'
-  | 'BAG'
-  | 'FLOWERPOT'
-  | 'CLOTHES'
+  | 'GLASS_BOTTLE'
+  | 'TRASH_BAG'
+  | 'PLASTIC_FLOWER_POT'
+  | 'T_SHIRT'
   | 'SNEAKERS'
   | 'BENCH';
 
-/** 전체 기여도 화면에 표시할 사용자 활동 한 건을 표현합니다. */
-export interface ContributionActivity {
-  id: number;
-  type: ContributionActivityType;
+export type ContributionMilestoneStatus =
+  | 'ACHIEVED'
+  | 'IN_PROGRESS'
+  | 'LOCKED';
+
+export interface ContributionMilestone {
+  type: ContributionMilestoneType;
+  name: string;
+  requiredCertificationCount: number;
+  status: ContributionMilestoneStatus;
+}
+
+export interface MyContributionResult {
   nickname: string;
-  productType?: ContributionProductType;
-  productName?: string;
-  remainingCount?: number;
-  recyclingCount?: number;
+  totalCertificationCount: number;
+  summaryMessage: string;
+  latestAchievedMilestone: ContributionMilestone | null;
+  nextMilestone: ContributionMilestone | null;
+  remainingCount: number;
+  milestones: ContributionMilestone[];
+}
+
+export type ContributionProductType = ContributionMilestoneType;
+
+export type ContributionEventType =
+  | 'FIRST_CERTIFICATION'
+  | 'DAILY_CERTIFICATION'
+  | 'REWARD_PROGRESS';
+
+export interface ContributionFeed {
+  feedId: number;
+  userId: number;
+  nickname: string;
+  profileImageUrl: string;
+  message: string;
+  highlightText: string;
+  eventType: ContributionEventType;
+  targetName: string;
+  remainingCount: number;
+  createdAt: string;
+}
+
+export interface AllContributionResult {
+  totalParticipantCount: number;
+  summaryMessage: string;
+  feeds: ContributionFeed[];
+  nextCursor: number;
+  hasNext: boolean;
+}
+
+export interface ContributionFeedParams {
+  cursor?: number;
+  size?: number;
 }

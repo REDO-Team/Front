@@ -1,8 +1,15 @@
 export type RewardHistoryType = 'EARN' | 'USE';
 
-export type RewardProductType = 'PARTNER' | 'GIFTICON';
+export type RewardProductType = 'PARTNER_BRAND' | 'COUPON_GIFTICON';
 
 export type RewardFilterType = 'ALL' | RewardProductType;
+
+export type MockRewardProductType = 'PARTNER' | 'GIFTICON';
+
+export type RewardProductStatus = 'ACTIVE' | 'INACTIVE' | 'SOLD_OUT';
+
+export type RewardAddressType = 'HOME' | 'COMPANY' | 'SCHOOL';
+
 
 export interface RewardSummary {
     nickname: string;
@@ -10,18 +17,66 @@ export interface RewardSummary {
     monthlyPoint: number;
 }
 
-export interface RewardHistory {
-    id: number;
-    title: string;
-    type: RewardHistoryType;
-    point: number;
-    createdAt: string;
+export interface RewardPointResponse {
+  totalPoint: number;
+  monthlyEarnedPoint: number;
 }
+
+export interface RewardProductListParams {
+  rewardProductType?: RewardProductType;
+  cursor?: number;
+  size?: number;
+}
+
+export interface RewardProductListItem {
+  rewardProductId: number;
+  rewardProductType: RewardProductType;
+  name: string;
+  imageUrl: string;
+  pricePoint: number;
+  stockQuantity: number;
+  status: RewardProductStatus;
+}
+
+export interface RewardProductListResult {
+  items: RewardProductListItem[];
+  nextCursor: number;
+  hasNext: boolean;
+}
+
+export interface RewardProductDetail extends RewardProductListItem {
+  description: string;
+  usageGuide: string;
+  validityDays: number;
+}
+
+export interface RewardHistory {
+  transactionId: number;
+  title: string;
+  transactionType: RewardHistoryType;
+  amount: number;
+  certificationId: number;
+  rewardRedemptionId: number;
+  createdAt: string;  
+}
+
+export interface RewardHistoryResult {
+  items: RewardHistory[];
+  nextCursor: number;
+  hasNext: boolean;
+}
+
+export interface RewardHistoryParams {
+  cursor?: number;
+  size?: number;
+}
+
+
 
 export interface RewardProduct {
     id: number;
     name: string;
-    type: RewardProductType;
+    type: MockRewardProductType;
     point: number;
     description?: string;
     usageGuide?: string;
@@ -39,11 +94,12 @@ export interface ApiResponse<T> {
   code: string;
   message: string;
   result: T | null;
+  errorDetail?: string | null;
 }
 
 export interface ShippingAddress {
     shippingAddressId: number;
-    addressType: string;
+    addressType: RewardAddressType;
     receiverName: string;
     phone: string;
     postalCode: string;
@@ -51,6 +107,18 @@ export interface ShippingAddress {
     address2: string;
     isDefault: boolean;
 }
+
+export interface ShippingAddressRequest {
+    addressType: RewardAddressType;
+    receiverName: string;
+    phone: string;
+    postalCode: string;
+    address1: string;
+    address2: string;
+    isDefault: boolean;
+}
+
+
 
 export interface ShippingAddressListResult {
   shippingAddresses: ShippingAddress[];
@@ -74,4 +142,55 @@ export interface AddressSearchResult {
   hasNext: boolean;
 }
 
-export type AddressSearchResponse = ApiResponse<AddressSearchResult>;
+export interface AddressSearchResultParams {
+  keyword: string;
+  page?: number;
+  size?: number;
+}
+
+export interface RewardPurchaseRequest {
+  rewardProductId: number;
+  shippingAddressId?: number;
+  receiverName?: string;
+  receiverPhone?: string;
+}
+
+export interface RewardPurchaseResult {
+  rewardRedemptionId: number;
+  rewardProductId: number;
+  productName: string;
+  usedPoint: number;
+  remainingPoint: number;
+}
+
+export type FulfillmentType =
+  | 'DELIVERY'
+  | 'GIFTICON';
+
+export type FulfillmentStatus =
+  | 'READY'
+  | 'SHIPPING'
+  | 'DELIVERED'
+  | 'COMPLETED';
+
+export interface RewardRedemptionItem {
+  rewardRedemptionId: number;
+  rewardProductId: number;
+  productName: string;
+  productImageUrl: string;
+  usedPoint: number;
+  fulfillmentType: FulfillmentType;
+  fulfillmentStatus: FulfillmentStatus;
+  redeemedAt: string;
+}
+
+export interface RewardRedemptionResult {
+  content: RewardRedemptionItem[];
+  nextCursor: number | null;
+  hasNext: boolean;
+}
+
+export interface RewardRedemptionParams {
+  cursor?: number;
+  size?: number;
+}

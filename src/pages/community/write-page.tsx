@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CameraIcon from '../../assets/icons/camera';
 
-const CATEGORIES = ['정보공유', '환경실천', '리워드후기'];
+const CATEGORIES = ['정보공유', '리워드후기', '환경실천'];
 
 export default function CommunityWritePage() {
   const navigate = useNavigate();

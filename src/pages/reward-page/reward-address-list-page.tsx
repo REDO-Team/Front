@@ -1,28 +1,75 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import BigLogo from '../../assets/icons/Big-logo.svg';
 import RewardAddressCard from '../../components/RewardPage/RewardAddressCard';
-import { MOCK_SHIPPING_ADDRESS_RESPONSE } from '../../mocks/reward';
-
-const initialShippingAddresses = MOCK_SHIPPING_ADDRESS_RESPONSE.result?.shippingAddresses ?? [];
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import FailInfo from '../../components/common/FailInfo';
+import Modal from '../../components/common/Modal';
+import {
+  deleteRewardAddress,
+  getRewardAddressList,
+} from '../../apis/reward';
 
 export default function RewardAddressListPage() {
   const navigate = useNavigate();
-  const [shippingAddresses, setShippingAddresses] = useState(initialShippingAddresses);
-  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(() => initialShippingAddresses.find(({ isDefault }) => isDefault)?.shippingAddressId ?? initialShippingAddresses[0]?.shippingAddressId ?? null);
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+  const [deleteAddressId, setDeleteAddressId] = useState<number | null>(null);
+  const {
+    data: addressList,
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ['rewardAddressList'],
+    queryFn: getRewardAddressList,
+  });
+
+  const shippingAddresses = addressList ?? [];
+  const effectiveSelectedAddressId =
+    selectedAddressId ??
+    shippingAddresses.find(({ isDefault }) => isDefault)?.shippingAddressId ??
+    shippingAddresses[0]?.shippingAddressId ??
+    null;
   const hasShippingAddresses = shippingAddresses.length > 0;
 
-  const handleDelete = (shippingAddressId: number) => {
-    setShippingAddresses((currentAddresses) => {
-      const nextAddresses = currentAddresses.filter((address) => address.shippingAddressId !== shippingAddressId);
+  const queryClient = useQueryClient();
+  const deleteAddressMutation = useMutation({
+    mutationFn: deleteRewardAddress,
+    onSuccess: (_, deletedAddressId) => {
+      setSelectedAddressId((currentAddressId) =>
+        currentAddressId === deletedAddressId ? null : currentAddressId,
+      );
+      queryClient.invalidateQueries({ queryKey: ['rewardAddressList'] });
+    },
+    onError: () => {
+      alert('배송지 삭제에 실패했습니다.');
+    },
+  });
+  const handleDeleteConfirm = () => {
+    if (deleteAddressId === null) return;
 
-      if (selectedAddressId === shippingAddressId) {
-        setSelectedAddressId(nextAddresses.find(({ isDefault }) => isDefault)?.shippingAddressId ?? nextAddresses[0]?.shippingAddressId ?? null);
-      }
-
-      return nextAddresses;
-    });
+    deleteAddressMutation.mutate(deleteAddressId);
+    setDeleteAddressId(null);
   };
+
+  if (isPending) {
+    return (
+      <div className='flex flex-1 items-center justify-center bg-bg-green1'>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (isError || !addressList) {
+    return (
+      <div className='flex flex-1 flex-col bg-bg-green1 px-4 pb-8 font-pretendard'>
+        <FailInfo
+          title='배송지 목록을 불러오지 못했어요.'
+          content='잠시 후 다시 시도해 주세요.'
+        />
+      </div>
+    );
+  }
 
   return (
     <div className='flex flex-1 flex-col bg-bg-green1 px-4 pb-8 font-pretendard'>
@@ -36,7 +83,14 @@ export default function RewardAddressListPage() {
       {hasShippingAddresses ? (
         <section aria-label='등록된 배송지' className='mt-4 flex flex-col gap-3'>
           {shippingAddresses.map((shippingAddress) => (
-            <RewardAddressCard key={shippingAddress.shippingAddressId} shippingAddressListResponse={shippingAddress} isSelected={selectedAddressId === shippingAddress.shippingAddressId} onSelect={() => setSelectedAddressId(shippingAddress.shippingAddressId)} onEdit={() => navigate(`/reward/address-detail/${shippingAddress.shippingAddressId}/edit`)} onDelete={() => handleDelete(shippingAddress.shippingAddressId)} />
+            <RewardAddressCard
+              key={shippingAddress.shippingAddressId}
+              shippingAddressListResponse={shippingAddress}
+              isSelected={effectiveSelectedAddressId === shippingAddress.shippingAddressId}
+              onSelect={() => setSelectedAddressId(shippingAddress.shippingAddressId)}
+              onEdit={() => navigate(`/reward/address-detail/${shippingAddress.shippingAddressId}/edit`)}
+              onDelete={() => setDeleteAddressId(shippingAddress.shippingAddressId)}
+            />
           ))}
         </section>
       ) : (
@@ -49,6 +103,15 @@ export default function RewardAddressListPage() {
           </p>
         </div>
       )}
+
+      <Modal
+        isOpen={deleteAddressId !== null}
+        title={'배송지를 삭제하시겠습니까?'}
+        buttonText='삭제하기'
+        buttonColor='red'
+        onClose={() => setDeleteAddressId(null)}
+        onConfirm={handleDeleteConfirm}
+      />
     </div>
   );
 }

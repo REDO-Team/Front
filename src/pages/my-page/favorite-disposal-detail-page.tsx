@@ -1,4 +1,6 @@
 import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 import FullCheck from '../../assets/icons/full-check.svg?react';
 import Info from '../../assets/icons/info.svg?react';
@@ -9,9 +11,16 @@ import { MOCK_FAVORITE_DISPOSALS } from '../../mocks/favorite-disposal';
 
 const FavoriteDisposalDetailPage = () => {
   const { favoriteId } = useParams();
+  const [isLoading] = useState(false);
 
   const favorite = MOCK_FAVORITE_DISPOSALS.find((item) => item.id === Number(favoriteId));
-
+  if (isLoading) {
+    return (
+      <div className='flex min-h-screen items-center justify-center bg-bg-my'>
+        <LoadingSpinner />
+      </div>
+    );
+  }
   if (!favorite) {
     return (
       <div className='min-h-screen bg-[#F9FBFB]'>

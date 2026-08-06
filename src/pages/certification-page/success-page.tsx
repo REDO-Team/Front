@@ -1,15 +1,15 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import FullCheck from '/src/assets/icons/full-check.svg';
 import Coins from '/src/assets/icons/coins.svg?react';
 
-const mock = {
-  reward: 100,
-  type: '종량제 봉투',
-  date: '2026.05.29 09:40',
-};
-
 export default function SuccessPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const itemName = location?.state?.itemName;
+  const date = location?.state?.date;
+  const point = location?.state?.point;
+
+  const formattedDate = date.replace('T', ' ').slice(0, 16).replaceAll('-', '.');
 
   return (
     <div className='h-full pt-5'>
@@ -26,7 +26,7 @@ export default function SuccessPage() {
           <div className='flex flex-col gap-1.5'>
             <span className='font-pretendard font-bold text-sm text-text'>적립 포인트</span>
             <span className='font-pretendard font-bold text-[32px] text-main-green1'>
-              + {mock.reward}
+              + {point}
               <span className='text-[22px]'>p</span>
             </span>
           </div>
@@ -36,15 +36,15 @@ export default function SuccessPage() {
         <div className='flex flex-col gap-3.5 bg-white rounded-[20px] px-6.5 py-6 shadow-lg shadow-black/5 mt-2.5 mb-5'>
           <div className='flex justify-between items-center'>
             <span className='font-pretendard font-medium text-sm text-text'>인증 항목</span>
-            <span className='font-pretendard font-semibold text-sm text-text'>{mock.type}</span>
+            <span className='font-pretendard font-semibold text-sm text-text'>{itemName}</span>
           </div>
           <div className='flex justify-between items-center'>
             <span className='font-pretendard font-medium text-sm text-text'>인증 일시</span>
-            <span className='font-pretendard font-semibold text-sm text-text'>{mock.date}</span>
+            <span className='font-pretendard font-semibold text-sm text-text'>{formattedDate}</span>
           </div>
           <div className='flex justify-between items-center'>
             <span className='font-pretendard font-medium text-sm text-text'>적립 포인트</span>
-            <span className='font-pretendard font-semibold text-sm text-text'>{mock.reward}P</span>
+            <span className='font-pretendard font-semibold text-sm text-text'>{point}P</span>
           </div>
         </div>
 

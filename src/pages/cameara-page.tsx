@@ -5,31 +5,154 @@ import TopBar from '../components/common/TopBar';
 import Webcam from 'react-webcam';
 import { useRef, useState } from 'react';
 import PhotoAnalysisLoading from '../components/common/PhotoAnalysisLoading';
+import { postGuideImageSearch } from '../apis/disposal-guide';
+import { postCertification, postCertificationRetry } from '../apis/certification';
 // import { useCertificationStore } from '../store/certificationStore';
+
+const base64ToFile = async (base64String: string, filename = 'capture.jpg'): Promise<File> => {
+  const response = await fetch(base64String);
+  const blob = await response.blob();
+  return new File([blob], filename, { type: blob.type });
+};
 
 export default function CamearaPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const from = location?.state?.from;
+  const certificationSource = location?.state?.certificationSource;
+  const guideId = location?.state?.guideId;
+  const certificationId = location?.state?.certificationId || null;
+
+  console.log('CameraPage state', location.state);
+
   const webcamRef = useRef<Webcam | null>(null);
-  const [imgSrc, setImgSrc] = useState<string | null | undefined>(null);
   const [loading, setLoading] = useState(false);
-  // const setCertified = useCertificationStore((state) => state.setCertified);
 
-  const handleCapture = () => {
+  const handleCapture = async () => {
     const img = webcamRef.current?.getScreenshot();
-    setImgSrc(img);
 
-    console.log(imgSrc);
+    if (!img) return;
 
     setLoading(true);
-    setTimeout(() => {
-      if (location?.state === 'certification') {
-        navigate('/certification/success');
-      } else {
-        navigate('/disposal-info/detail');
+    try {
+      const file = await base64ToFile(img);
+
+      console.log({
+        from,
+        certificationId,
+      });
+
+      // 신규 인증
+      if (from === 'certification') {
+        console.log('신규 인증');
+        const data = await postCertification({ image: file, certificationSource, recycleGuideId: guideId });
+
+        // 신규 인증 성공
+        if (data.result?.status === 'PASSED') {
+          navigate('/certification/success', {
+            state: {
+              itemName: data.result.itemName,
+              date: data.result.judgedAt,
+              point: data.result.earnedPoint,
+            },
+          });
+        }
+        // 신규 인증 실패
+        else if (data.result?.status === 'FAILED') {
+          // AI 판정 실패
+          if (data.result.failureType === 'VLM_JUDGEMENT_FAILED') {
+            navigate('/certification/fail', {
+              state: {
+                failureType: data.result.failureType,
+                failedReason: data.result.failedReason,
+                retryGuide: data.result.retryGuide,
+                retryAllowed: data.result.retryAllowed,
+                certificationId: data.result.certificationId,
+                certificationSource,
+                guideId,
+              },
+            });
+          }
+          // 동일 품목 인증 시도
+          else if (data.result.failureType === 'DUPLICATE_GUIDE_TODAY') {
+            navigate('/certification/fail', {
+              state: {
+                failureType: data.result.failureType,
+                failedReason: data.result.failedReason,
+                retryGuide: data.result.retryGuide,
+                retryAllowed: data.result.retryAllowed,
+                certificationId: data.result.certificationId,
+                certificationSource,
+                guideId,
+              },
+            });
+          }
+        }
       }
-    }, 5000);
-    // setCertified();
+      // 배출 정보 검색
+      else if (from === 'info') {
+        const data = await postGuideImageSearch(file);
+
+        // 검색 성공
+        if (data.result?.identified) {
+          navigate('/disposal-info/detail', {
+            state: {
+              guide: data.result?.guideDetail,
+            },
+          });
+        }
+        // 검색 실패
+        else {
+          navigate('/disposal-info/fail');
+        }
+      }
+      // 재인증
+      else if (certificationId) {
+        const data = await postCertificationRetry(certificationId, file);
+        // 재인증 성공
+        if (data.result?.status === 'PASSED') {
+          navigate('/certification/success', {
+            state: {
+              itemName: data.result.itemName,
+              date: data.result.judgedAt,
+              point: data.result.earnedPoint,
+            },
+          });
+        }
+        // 재인증 실패
+        else if (data.result?.status === 'FAILED') {
+          // AI 판정 실패
+          if (data.result.failureType === 'VLM_JUDGEMENT_FAILED') {
+            navigate('/certification/fail', {
+              state: {
+                failureType: data.result.failureType,
+                failedReason: data.result.failedReason,
+                retryGuide: data.result.retryGuide,
+                retryAllowed: data.result.retryAllowed,
+                certificationId: data.result.certificationId,
+              },
+            });
+          }
+          // 동일 품목 재인증 시도
+          else if (data.result.failureType === 'DUPLICATE_GUIDE_TODAY') {
+            navigate('/certification/fail', {
+              state: {
+                failureType: data.result.failureType,
+                failedReason: data.result.failedReason,
+                retryGuide: data.result.retryGuide,
+                retryAllowed: data.result.retryAllowed,
+                certificationId: data.result.certificationId,
+              },
+            });
+          }
+        }
+      }
+    } catch (e) {
+      alert('접속이 원활하지 않습니다. 잠시 후 다시 시도해 주세요.');
+      console.error('camera error', e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -37,7 +160,7 @@ export default function CamearaPage() {
       {!loading && (
         <div className='h-dvh'>
           <div className='relative flex flex-col h-full'>
-            <TopBar title={`${location?.state === 'certification' ? '인증하기' : '이미지 검색'}`} leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='black/50' color='white' position='absolute' />
+            <TopBar title={`${from === 'certification' ? '인증하기' : '이미지 검색'}`} leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='black/50' color='white' position='absolute' />
 
             <Webcam audio={false} ref={webcamRef} screenshotFormat='image/jpeg' videoConstraints={{ facingMode: 'environment' }} className='w-full object-cover h-full' />
             <div className='absolute inset-0 flex flex-col items-center justify-center px-20 z-10'>
@@ -53,17 +176,12 @@ export default function CamearaPage() {
               </div>
             </div>
           </div>
-
-          {/* 카메라 기능 테스트를 위한 코드 */}
-          {/* {imgSrc && <img src={imgSrc} alt='' />} */}
-
-          {/* 로딩 화면 테스트 */}
         </div>
       )}
 
       {loading && (
         <div className='h-[calc(100dvh-56px)] pt-14'>
-          <PhotoAnalysisLoading showNoti={location?.state === 'certification'} />
+          <PhotoAnalysisLoading showNoti={from === 'certification'} />
         </div>
       )}
     </>

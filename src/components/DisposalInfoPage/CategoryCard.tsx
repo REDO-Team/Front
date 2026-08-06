@@ -3,6 +3,7 @@ import CategoryTag from './CategoryTag';
 import DownArrow from '/src/assets/icons/down-arrow.svg?react';
 import UpArrow from '/src/assets/icons/up-arrow.svg?react';
 import { filterCategoryTags } from '../../utils/filterCategoryTag';
+import { getDisposalGuide } from '../../apis/disposal-guide';
 
 interface CategoryCardProps {
   Icon: React.FC<React.SVGProps<SVGSVGElement>>;
@@ -13,10 +14,20 @@ interface CategoryCardProps {
 
 export default function CategoryCard({ Icon, category, onClick, isOpen }: CategoryCardProps) {
   const navigate = useNavigate();
-  const handleClickTag = (tag: string) => {
-    navigate('/disposal-info/detail', {
-      state: tag,
-    });
+
+  const handleClickTag = async (tag: string) => {
+    try {
+      const data = await getDisposalGuide(tag);
+
+      navigate('/disposal-info/detail', {
+        state: {
+          guide: data.result,
+        },
+      });
+    } catch (e) {
+      alert('접속이 원활하지 않습니다. 잠시 후 다시 시도해 주세요.');
+      console.error('disposal guide error:', e);
+    }
   };
 
   return (

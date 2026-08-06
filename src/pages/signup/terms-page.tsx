@@ -1,181 +1,438 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+
+import {
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
+
+import api from '../../apis/api';
+import { setAccessToken } from '../../apis/token';
+import {
+  getTerms,
+  type Term,
+} from '../../apis/terms-api';
+
 import LeftArrowIcon from '../../assets/icons/left-arrow.svg?react';
 import FullCheckIcon from '../../assets/icons/full-check.svg?react';
 import EmptyCheckIcon from '../../assets/icons/empty-check.svg?react';
 import LightRightArrowIcon from '../../assets/icons/light-right-arrow.svg?react';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
-type AgreementId = 'service' | 'privacy' | 'age' | 'ai' | 'marketing';
+const NOTION_URL_BY_CODE: Record<string, string> = {
+  SERVICE:
+    'https://app.notion.com/p/368eb332282b80c39c48d3f7ab31558d?source=copy_link',
+  PRIVACY:
+    'https://app.notion.com/p/391eb332282b806d90c0eff9827a7d5f?source=copy_link',
+  AI:
+    'https://app.notion.com/p/AI-392eb332282b809086f0d3f3915ec6c7?source=copy_link',
+  MARKETING:
+    'https://app.notion.com/p/39aeb332282b8012bd2cca451c75d311?source=copy_link',
+};
 
-interface AgreementItem {
-  id: AgreementId;
-  label: string;
-  required: boolean;
-  notionUrl?: string;
+interface SignupLocationState {
+  signupType: 'LOCAL' | 'SOCIAL';
+  socialProvider?: string;
+  socialId?: string;
 }
 
-const AGREEMENT_ITEMS: AgreementItem[] = [
-  {
-    id: 'service',
-    label: '서비스 이용약관',
-    required: true,
-    notionUrl:
-      'https://app.notion.com/p/368eb332282b80c39c48d3f7ab31558d?source=copy_link',
-  },
-  {
-    id: 'privacy',
-    label: '개인정보 수집 및 이용',
-    required: true,
-    notionUrl:
-      'https://app.notion.com/p/391eb332282b806d90c0eff9827a7d5f?source=copy_link',
-  },
-  {
-    id: 'age',
-    label: '만 14세 이상입니다',
-    required: true,
-  },
-  {
-    id: 'ai',
-    label: 'AI 서비스 이용약관 동의',
-    required: true,
-    notionUrl:
-      'https://app.notion.com/p/AI-392eb332282b809086f0d3f3915ec6c7?source=copy_link',
-  },
-  {
-    id: 'marketing',
-    label: '마케팅 정보 수신 동의',
-    required: false,
-    notionUrl:
-      'https://app.notion.com/p/39aeb332282b8012bd2cca451c75d311?source=copy_link',
-  },
-];
+interface SignupResult {
+  userId: number;
+  accessToken: string;
+}
 
-const INITIAL_AGREEMENTS: Record<AgreementId, boolean> = {
-  service: false,
-  privacy: false,
-  age: false,
-  ai: false,
-  marketing: false,
-};
+interface SignupResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: SignupResult;
+}
 
 const TermsPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [agreements, setAgreements] =
-    useState<Record<AgreementId, boolean>>(INITIAL_AGREEMENTS);
+  const signupState =
+    location.state as SignupLocationState | null;
 
-  const isAllAgreed = AGREEMENT_ITEMS.every(
-    (item) => agreements[item.id],
-  );
+  const signupType =
+    signupState?.signupType ?? 'LOCAL';
 
-  const isRequiredAgreed = AGREEMENT_ITEMS.filter(
-    (item) => item.required,
-  ).every((item) => agreements[item.id]);
+  const [terms, setTerms] = useState<Term[]>([]);
+
+  const [agreements, setAgreements] = useState<
+    Record<number, boolean>
+  >({});
+
+  const [isLoading, setIsLoading] =
+    useState(true);
+
+  const [isSubmitting, setIsSubmitting] =
+    useState(false);
+
+  const [
+    loadErrorMessage,
+    setLoadErrorMessage,
+  ] = useState('');
+
+  const [
+    submitErrorMessage,
+    setSubmitErrorMessage,
+  ] = useState('');
+
+  useEffect(() => {
+    const fetchTerms = async () => {
+      try {
+        setIsLoading(true);
+        setLoadErrorMessage('');
+
+        const termsData = await getTerms();
+
+        console.log(
+          '백엔드 약관 목록:',
+          termsData,
+        );
+
+        setTerms(termsData);
+
+        const initialAgreements =
+          termsData.reduce<
+            Record<number, boolean>
+          >((acc, term) => {
+            acc[term.termId] = false;
+            return acc;
+          }, {});
+
+        setAgreements(initialAgreements);
+      } catch (error) {
+        console.error(
+          '약관 조회 실패:',
+          error,
+        );
+
+        setLoadErrorMessage(
+          '약관을 불러오지 못했습니다.',
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void fetchTerms();
+  }, []);
+
+  const isAllAgreed = useMemo(() => {
+    return (
+      terms.length > 0 &&
+      terms.every(
+        (term) =>
+          agreements[term.termId],
+      )
+    );
+  }, [terms, agreements]);
+
+  const isRequiredAgreed = useMemo(() => {
+    const requiredTerms = terms.filter(
+      (term) => term.isRequired,
+    );
+
+    return (
+      requiredTerms.length > 0 &&
+      requiredTerms.every(
+        (term) =>
+          agreements[term.termId],
+      )
+    );
+  }, [terms, agreements]);
 
   const handleToggleAll = () => {
     const nextChecked = !isAllAgreed;
 
-    setAgreements({
-      service: nextChecked,
-      privacy: nextChecked,
-      age: nextChecked,
-      ai: nextChecked,
-      marketing: nextChecked,
-    });
+    const nextAgreements = terms.reduce<
+      Record<number, boolean>
+    >((acc, term) => {
+      acc[term.termId] = nextChecked;
+      return acc;
+    }, {});
+
+    setAgreements(nextAgreements);
+    setSubmitErrorMessage('');
   };
 
-  const handleToggleAgreement = (id: AgreementId) => {
+  const handleToggleAgreement = (
+    termId: number,
+  ) => {
     setAgreements((prev) => ({
       ...prev,
-      [id]: !prev[id],
+      [termId]: !prev[termId],
     }));
+
+    setSubmitErrorMessage('');
   };
 
-  const handleOpenTerms = (notionUrl: string) => {
-    window.open(notionUrl, '_blank', 'noopener,noreferrer');
+  const handleOpenTerms = (term: Term) => {
+    const notionUrl =
+      NOTION_URL_BY_CODE[term.code];
+
+    if (!notionUrl) {
+      return;
+    }
+
+    window.open(
+      notionUrl,
+      '_blank',
+      'noopener,noreferrer',
+    );
   };
-  
+
+  const handleNext = async () => {
+    if (
+      !isRequiredAgreed ||
+      isSubmitting
+    ) {
+      return;
+    }
+
+    const agreedTermsIds = terms
+      .filter(
+        (term) =>
+          agreements[term.termId],
+      )
+      .map((term) => term.termId);
+
+    // 일반 회원가입
+    if (signupType === 'LOCAL') {
+      sessionStorage.setItem(
+        'signupAgreedTermsIds',
+        JSON.stringify(
+          agreedTermsIds,
+        ),
+      );
+
+      navigate('/signup');
+      return;
+    }
+
+    // 소셜 회원가입
+    const socialProvider =
+      signupState?.socialProvider;
+
+    const socialId =
+      signupState?.socialId;
+
+    if (
+      !socialProvider ||
+      !socialId
+    ) {
+      setSubmitErrorMessage(
+        '소셜 로그인 정보가 없습니다. 다시 로그인해 주세요.',
+      );
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      setSubmitErrorMessage('');
+
+      const response =
+        await api.post<SignupResponse>(
+          '/api/auth/signup',
+          {
+            signupType: 'SOCIAL',
+            socialProvider,
+            socialId,
+            agreedTermsIds,
+          },
+        );
+
+      const {
+        isSuccess,
+        message,
+        result,
+      } = response.data;
+
+      if (!isSuccess) {
+        setSubmitErrorMessage(
+          message ||
+            '회원가입에 실패했습니다.',
+        );
+        return;
+      }
+
+      if (!result?.accessToken) {
+        setSubmitErrorMessage(
+          '로그인 토큰을 발급받지 못했습니다.',
+        );
+        return;
+      }
+
+      setAccessToken(
+        result.accessToken,
+      );
+
+      navigate('/signup/profile', {
+        replace: true,
+      });
+    } catch (error) {
+      console.error(
+        '소셜 회원가입 실패:',
+        error,
+      );
+
+      setSubmitErrorMessage(
+        '회원가입 중 오류가 발생했습니다.',
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isSubmitting) {
+  return (
+    <div className='flex min-h-dvh items-center justify-center bg-white'>
+      <LoadingSpinner />
+    </div>
+  );
+}
+
   return (
     <div className='flex min-h-dvh w-full flex-col bg-white px-5 pb-[27px] font-pretendard text-text'>
       <header className='pt-[28px]'>
         <div className='flex h-[22px] items-center'>
           <button
             type='button'
-            onClick={() => navigate('/login')}
+            onClick={() =>
+              navigate('/login')
+            }
             aria-label='뒤로가기'
             className='flex h-6 w-6 items-center justify-center'
           >
             <LeftArrowIcon className='h-[18px] w-[9px] text-text' />
           </button>
 
-          <h1 className='ml-[8px] text-[18px] font-semibold leading-[100%] tracking-[0] text-[#111111]'>
+          <h1 className='ml-[8px] text-[18px] font-semibold leading-[100%] text-[#111111]'>
             약관 동의
           </h1>
         </div>
 
-        <p className='mt-[27px] max-w-[267px] whitespace-nowrap text-[14px] font-medium leading-[100%] tracking-[0] text-[#6B6B6B]'>
+        <p className='mt-[27px] whitespace-nowrap text-[14px] font-medium text-[#6B6B6B]'>
           ReDO! 서비스 이용을 위해 약관에 동의해 주세요
         </p>
       </header>
 
-      <button
-        type='button'
-        onClick={handleToggleAll}
-        aria-pressed={isAllAgreed}
-        className='mt-[15px] flex h-[50px] w-full items-center rounded-[25px] border border-gray-200 px-[14px] text-left'
-      >
-        {isAllAgreed ? (
-          <FullCheckIcon className='h-6 w-6 shrink-0' />
-        ) : (
-          <EmptyCheckIcon className='h-6 w-6 shrink-0' />
-        )}
-
-        <span className='ml-[10px] text-[16px] font-semibold leading-[15px] tracking-[0] text-[#4A4A4A]'>
-          아래 약관에 모두 동의합니다
-        </span>
-      </button>
-
-      <section className='mt-[20px] flex h-[216px] w-full flex-col justify-between px-[14px]'>
-        {AGREEMENT_ITEMS.map((item) => (
-          <div key={item.id} className='flex h-[32px] w-full items-center'>
-            <button
-              type='button'
-              onClick={() => handleToggleAgreement(item.id)}
-              aria-pressed={agreements[item.id]}
-              aria-label={`${item.label} 동의`}
-              className='flex min-w-0 flex-1 items-center text-left'
-            >
-              {agreements[item.id] ? (
-                <FullCheckIcon className='h-6 w-6 shrink-0' />
-              ) : (
-                <EmptyCheckIcon className='h-6 w-6 shrink-0' />
-              )}
-
-              <span className='ml-[10px] truncate text-[16px] font-medium leading-[15px] tracking-[0] text-[#4A4A4A]'>
-                [{item.required ? '필수' : '선택'}] {item.label}
-              </span>
-            </button>
-
-            {item.notionUrl && (
-              <button
-                type='button'
-                onClick={() => handleOpenTerms(item.notionUrl!)}
-                aria-label={`${item.label} 상세보기`}
-                className='flex h-6 w-6 shrink-0 items-center justify-center'
-              >
-                <LightRightArrowIcon className='h-6 w-6' />
-              </button>
+      {isLoading ? (
+        <div className='flex flex-1 items-center justify-center'>
+            <LoadingSpinner />
+        </div>
+      ) : loadErrorMessage ? (
+        <div className='flex flex-1 items-center justify-center'>
+          <span className='text-[14px] text-red-500'>
+            {loadErrorMessage}
+          </span>
+        </div>
+      ) : (
+        <>
+          <button
+            type='button'
+            onClick={handleToggleAll}
+            aria-pressed={isAllAgreed}
+            className='mt-[15px] flex h-[50px] w-full items-center rounded-[25px] border border-gray-200 px-[14px] text-left'
+          >
+            {isAllAgreed ? (
+              <FullCheckIcon className='h-6 w-6 shrink-0' />
+            ) : (
+              <EmptyCheckIcon className='h-6 w-6 shrink-0' />
             )}
-          </div>
-        ))}
-      </section>
+
+            <span className='ml-[10px] text-[16px] font-semibold text-[#4A4A4A]'>
+              아래 약관에 모두 동의합니다
+            </span>
+          </button>
+
+          <section className='mt-[20px] flex w-full flex-col gap-3 px-[14px]'>
+            {terms.map((term) => (
+              <div
+                key={term.termId}
+                className='flex h-[32px] w-full items-center'
+              >
+                <button
+                  type='button'
+                  onClick={() =>
+                    handleToggleAgreement(
+                      term.termId,
+                    )
+                  }
+                  aria-pressed={
+                    agreements[
+                      term.termId
+                    ] ?? false
+                  }
+                  className='flex min-w-0 flex-1 items-center text-left'
+                >
+                  {agreements[
+                    term.termId
+                  ] ? (
+                    <FullCheckIcon className='h-6 w-6 shrink-0' />
+                  ) : (
+                    <EmptyCheckIcon className='h-6 w-6 shrink-0' />
+                  )}
+
+                  <span className='ml-[10px] truncate text-[16px] font-medium text-[#4A4A4A]'>
+                    [
+                    {term.isRequired
+                      ? '필수'
+                      : '선택'}
+                    ] {term.title}
+                  </span>
+                </button>
+
+                {NOTION_URL_BY_CODE[
+                  term.code
+                ] && (
+                  <button
+                    type='button'
+                    onClick={() =>
+                      handleOpenTerms(
+                        term,
+                      )
+                    }
+                    aria-label={`${term.title} 상세보기`}
+                    className='flex h-6 w-6 shrink-0 items-center justify-center'
+                  >
+                    <LightRightArrowIcon className='h-6 w-6' />
+                  </button>
+                )}
+              </div>
+            ))}
+          </section>
+
+          {submitErrorMessage && (
+            <p className='mt-[16px] text-center text-[13px] font-medium text-red-500'>
+              {submitErrorMessage}
+            </p>
+          )}
+        </>
+      )}
 
       <button
         type='button'
-        disabled={!isRequiredAgreed}
-        onClick={() => navigate('/signup')}
-        className={`mt-auto h-[50px] w-full rounded-[30px] text-[16px] font-bold text-white transition-colors ${
-          isRequiredAgreed ? 'bg-main-green1' : 'bg-gray-400'
+        disabled={
+          isLoading ||
+          isSubmitting ||
+          Boolean(loadErrorMessage) ||
+          !isRequiredAgreed
+        }
+        onClick={handleNext}
+        className={`mt-auto h-[50px] w-full rounded-[30px] text-[16px] font-bold text-white ${
+          isRequiredAgreed &&
+          !isLoading &&
+          !isSubmitting &&
+          !loadErrorMessage
+            ? 'bg-main-green1'
+            : 'cursor-not-allowed bg-gray-400'
         }`}
       >
         다음

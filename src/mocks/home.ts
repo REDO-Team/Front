@@ -19,9 +19,13 @@ export const HOME_POINT_SUMMARY: HomePointSummary = {
 };
 
 // 홈 화면의 고정 서비스 메뉴입니다.
-// 메뉴 이동 기능은 별도 이슈에서 실제 라우트와 연결할 예정입니다.
 export const HOME_SERVICE_MENU_ITEMS: HomeServiceMenuItem[] = [
-  { id: 'disposal-info', title: '배출 정보', path: '/guide', icon: 'trash' },
+  {
+    id: 'disposal-info',
+    title: '배출 정보',
+    path: '/disposal-info',
+    icon: 'trash',
+  },
   {
     id: 'disposal-auth',
     title: '배출 인증',
@@ -32,7 +36,7 @@ export const HOME_SERVICE_MENU_ITEMS: HomeServiceMenuItem[] = [
   {
     id: 'contribution',
     title: '실시간 기여도',
-    path: '/contribution',
+    path: '/my-contribution',
     icon: 'chart',
   },
 ];
@@ -41,7 +45,7 @@ export const HOME_SERVICE_MENU_ITEMS: HomeServiceMenuItem[] = [
 // 커뮤니티 목록 API가 준비되면 이 배열을 서버 데이터로 바꾸면 됩니다.
 export const HOME_COMMUNITY_PREVIEWS: HomeCommunityPreview[] = [
   {
-    id: 1,
+    id: 2,
     category: '환경실천',
     title: '오늘 한강에서 플로깅 했어요!',
     content: '산책하면서 작은 쓰레기부터 주웠더니 뿌듯했어요.',

@@ -3,31 +3,44 @@ import Scan from '/src/assets/icons/scan.svg';
 import Seed from '/src/assets/icons/seed.svg';
 import Seedling from '/src/assets/icons/seedling.svg';
 import RightArrow from '/src/assets/icons/right-arrow.svg?react';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import Modal from '../../components/common/Modal';
-// import { useCertificationStore } from '../../store/certificationStore';
-
-const mock = {
-  remain: 1,
-};
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getCertificationRule } from '../../apis/certification';
 
 export default function CertificationPage() {
   const navigate = useNavigate();
-  // const canCertify = useCertificationStore((state) => state.canCertify);
-  const [isOpenExceed, SetIsOpenExceed] = useState(false); // 인증 횟수 초과 모달
-  const [isOpenWaitTime, SetIsOpenWaitTime] = useState(false); // 재인증 대기 모달
+  const location = useLocation();
+  const certificationSource = location?.state?.certificationSource || 'GENERAL';
+  const guideId = location?.state?.guideId || null;
+  const [remain, setRemain] = useState<number | undefined>(3);
+  const [restrictType, setRestrictType] = useState<string | undefined>('NONE');
+
+  useEffect(() => {
+    const fetchCertificationRule = async () => {
+      try {
+        const data = await getCertificationRule();
+        setRemain(data.result?.remainingCount);
+        setRestrictType(data.result?.restriction.type);
+      } catch (e) {
+        console.error('certification rule error', e);
+      }
+    };
+
+    fetchCertificationRule();
+  }, []);
 
   const handleCertificate = () => {
-    if (!mock.remain) {
-      SetIsOpenExceed(true);
-    }
-    // else if (!canCertify()) {
-    //   SetIsOpenWaitTime(true);
-    // }
-    else {
-      navigate('/certification/shooting');
-    }
+    navigate('/certification/shooting', {
+      state: {
+        certificationSource,
+        guideId,
+        restrictType,
+      },
+    });
+  };
+
+  const handleCertificationGuide = () => {
+    navigate('/certification/guide', { state: { certificationSource, guideId, restrictType } });
   };
 
   return (
@@ -63,7 +76,7 @@ export default function CertificationPage() {
               <span className='font-pretendard font-semibold text-base text-text'>잔여 인증 횟수</span>
             </div>
             <span className='font-pretendard font-bold text-[22px] text-main-green1'>
-              {mock.remain}
+              {remain}
               <span className='text-gray-600'>/3회</span>
             </span>
           </div>
@@ -74,42 +87,12 @@ export default function CertificationPage() {
             <span>인증하기</span>
             <RightArrow className='absolute right-5' />
           </button>
-          <button type='button' className='font-pretendard font-bold text-xl text-main-green1 rounded-4xl bg-white border border-main-green1 px-5 py-4 w-full flex items-center justify-center relative' onClick={() => navigate('/certification/guide')}>
+          <button type='button' className='font-pretendard font-bold text-xl text-main-green1 rounded-4xl bg-white border border-main-green1 px-5 py-4 w-full flex items-center justify-center relative' onClick={handleCertificationGuide}>
             <span>인증 가이드 보기</span>
             <RightArrow className='absolute right-5' />
           </button>
         </div>
       </div>
-
-      {isOpenExceed && (
-        <Modal
-          isOpen={isOpenExceed}
-          title={`인증 가능 횟수를 초과했어요. \n 하루 최대 3회까지만 인증할 수 있어요. \n 내일 다시 시도해주세요.`}
-          titleFontWeight='medium'
-          titleTextSize='15px'
-          buttonText='확인'
-          titleLineHeight='22px'
-          onClose={() => SetIsOpenExceed(false)}
-          onConfirm={() => {
-            SetIsOpenExceed(false);
-          }}
-        />
-      )}
-
-      {isOpenWaitTime && (
-        <Modal
-          isOpen={isOpenWaitTime}
-          title={`인증 대기 시간입니다. \n 이전 인증 후 5분이 지나야 재인증이 가능합니다.`}
-          titleFontWeight='medium'
-          titleTextSize='15px'
-          buttonText='확인'
-          titleLineHeight='22px'
-          onClose={() => SetIsOpenWaitTime(false)}
-          onConfirm={() => {
-            SetIsOpenWaitTime(false);
-          }}
-        />
-      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import Info from '/src/assets/icons/info.svg?react';
 import FullCheck from '/src/assets/icons/full-check.svg';
 import Error from '/src/assets/icons/error.svg';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import WrongEx from '/src/assets/images/wrong-ex.png';
 import CorrectEx from '/src/assets/images/correct-ex.png';
 import GuideCard from '../../components/CertificationPage/GuideCard';
@@ -10,6 +10,10 @@ const CERTIFICATION_GUIDE = ['하루 최대 3회까지 인증 및 리워드 적�
 
 export default function CertificationGuidePage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const certificationSource = location?.state?.certificationSource;
+  const guideId = location?.state?.guideId;
+  const restrictType = location?.state?.restrictType;
 
   return (
     <div className='h-full pt-5'>
@@ -72,7 +76,7 @@ export default function CertificationGuidePage() {
           </div>
         </div>
 
-        <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 py-3.5 w-full text-center mt-6' onClick={() => navigate('/certification/shooting')}>
+        <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 py-3.5 w-full text-center mt-6' onClick={() => navigate('/certification/shooting', { state: { certificationSource, guideId, restrictType } })}>
           인증하기
         </button>
       </div>

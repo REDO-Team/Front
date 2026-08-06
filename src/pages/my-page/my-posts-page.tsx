@@ -1,6 +1,10 @@
 import type { MouseEvent } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+
+import Logo from '../../assets/icons/Big-logo.svg?react';
+
 import Modal from '../../components/common/Modal';
 import { MOCK_MY_POSTS } from '../../mocks/my-post';
 
@@ -8,6 +12,7 @@ const MyPostsPage = () => {
   const navigate = useNavigate();
 
   const [posts, setPosts] = useState(MOCK_MY_POSTS);
+  const [isLoading] = useState(false);
   const [deletePostId, setDeletePostId] = useState<number | null>(null);
 
   const isDeleteModalOpen = deletePostId !== null;
@@ -33,6 +38,14 @@ const MyPostsPage = () => {
     setDeletePostId(null);
   };
 
+  if (isLoading) {
+  return (
+    <div className='flex min-h-screen items-center justify-center bg-bg-my'>
+      <LoadingSpinner />
+    </div>
+  );
+}
+
   return (
     <div className='min-h-screen bg-[#F9FBFB]'>
       <main className='px-[20px] pt-[72px]'>
@@ -55,9 +68,12 @@ const MyPostsPage = () => {
             ))}
           </section>
         ) : (
-          <div className='flex min-h-[500px] items-center justify-center'>
-            <p className='text-[14px] font-medium text-gray-400'>작성한 게시글이 없습니다.</p>
-          </div>
+          <div className='flex min-h-[calc(100vh-72px)] flex-col items-center justify-center pb-[80px]'>
+                <Logo className='h-[146px] w-[161px]' />
+                <p className='mt-[38px] text-center text-[22px] font-bold leading-[130%] tracking-[0] text-[#6B6B6B]'>
+                    아직 작성한 게시글이 없어요
+                </p>
+            </div>
         )}
       </main>
 

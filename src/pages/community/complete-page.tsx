@@ -1,22 +1,27 @@
 import { useNavigate } from "react-router-dom";
-import CheckIcon from "../../assets/icons/check";
+import FullCheck from "../../assets/icons/full-check.svg";
 
 export default function CommunityCompletePage() {
     const navigate = useNavigate();
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-bg-green1 font-pretendard">            <div className="w-[100px] h-[100px] bg-main-green1 rounded-full flex items-center justify-center mb-8 drop-shadow-[0_0_20px_rgba(24,178,104,0.5)]">
-            <CheckIcon className="w-[30px] h-[22px]" />
-        </div>
-
-            <div className="text-center mb-[120px]">
-                <h1 className="text-[24px] font-bold text-gray-800 mb-2">
-                    게시글을 등록했어요!
-                </h1>
-                <p className="text-[16px] font-semibold text-gray-500">
-                    앞으로도 함께 소통해요
-                </p>
+        <div className='flex flex-1 flex-col bg-bg-green1 px-5 pb-6 font-pretendard text-text'>
+            <div className='flex flex-1 flex-col items-center justify-center text-center'>
+                <img
+                    src={FullCheck}
+                    alt='완료'
+                    className='h-20 w-20 drop-shadow-[0_0_12px_rgba(6,198,95,0.4)] mb-8'
+                />
+                <div className="text-center mb-[120px]">
+                    <h1 className="text-[24px] font-bold text-gray-800 mb-2">
+                        게시글을 등록했어요!
+                    </h1>
+                    <p className="text-[16px] font-semibold text-gray-500">
+                        앞으로도 함께 소통해요
+                    </p>
+                </div>
             </div>
+
 
             <footer className="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-120 px-5 pb-8 pt-3">
                 <button
@@ -26,7 +31,6 @@ export default function CommunityCompletePage() {
                     확인
                 </button>
             </footer>
-
         </div>
     );
 }
