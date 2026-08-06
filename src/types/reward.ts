@@ -162,3 +162,35 @@ export interface RewardPurchaseResult {
   usedPoint: number;
   remainingPoint: number;
 }
+
+export type FulfillmentType =
+  | 'DELIVERY'
+  | 'GIFTICON';
+
+export type FulfillmentStatus =
+  | 'READY'
+  | 'SHIPPING'
+  | 'DELIVERED'
+  | 'COMPLETED';
+
+export interface RewardRedemptionItem {
+  rewardRedemptionId: number;
+  rewardProductId: number;
+  productName: string;
+  productImageUrl: string;
+  usedPoint: number;
+  fulfillmentType: FulfillmentType;
+  fulfillmentStatus: FulfillmentStatus;
+  redeemedAt: string;
+}
+
+export interface RewardRedemptionResult {
+  content: RewardRedemptionItem[];
+  nextCursor: number | null;
+  hasNext: boolean;
+}
+
+export interface RewardRedemptionParams {
+  cursor?: number;
+  size?: number;
+}

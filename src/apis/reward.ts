@@ -14,6 +14,8 @@ import type {
   ShippingAddressRequest,
   RewardPurchaseResult,
   RewardPurchaseRequest,
+  RewardRedemptionResult,
+  RewardRedemptionParams,
 } from '../types/reward';
 
 export const getRewardPoints = async (): Promise<RewardPointResponse> => {
@@ -152,6 +154,24 @@ export const createRewardPurchase = async (
 
   if (!response.data.result) {
     throw new Error('상품 구매 결과가 없습니다.');
+  }
+
+  return response.data.result;
+};
+
+export const getRewardRedemptions = async (
+  params?: RewardRedemptionParams,
+): Promise<RewardRedemptionResult> => {
+  const response = await api.get<
+    ApiResponse<RewardRedemptionResult>
+  >('/api/rewards/redemptions', {
+    params,
+  });
+
+  if (!response.data.result) {
+    throw new Error(
+      '리워드 사용 내역 조회 결과가 없습니다.',
+    );
   }
 
   return response.data.result;

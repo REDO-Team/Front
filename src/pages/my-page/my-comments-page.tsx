@@ -1,6 +1,7 @@
 import type { MouseEvent } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 import Logo from '../../assets/icons/Big-logo.svg?react';
 
@@ -11,6 +12,7 @@ const MyCommentsPage = () => {
   const navigate = useNavigate();
 
   const [comments, setComments] = useState(MOCK_MY_COMMENTS);
+  const [isLoading] = useState(false);
   const [deleteCommentId, setDeleteCommentId] = useState<number | null>(null);
 
   const isDeleteModalOpen = deleteCommentId !== null;
@@ -35,6 +37,14 @@ const MyCommentsPage = () => {
 
     setDeleteCommentId(null);
   };
+
+  if (isLoading) {
+  return (
+    <div className='flex min-h-screen items-center justify-center bg-bg-my'>
+      <LoadingSpinner />
+    </div>
+  );
+}
 
   return (
     <div className='min-h-screen bg-[#F9FBFB]'>
