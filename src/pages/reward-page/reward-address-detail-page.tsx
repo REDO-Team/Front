@@ -129,22 +129,27 @@ function RewardAddressDetailForm({
 
         <div className='mt-2 flex flex-col gap-3'>
           <div>
-            <p className='text-[15px] font-bold text-text'>주소</p>
-            <button
-              type='button'
-              onClick={() =>
-                navigate('/reward/address-search', {
-                  state: {
-                    returnTo: isEditMode ? `/reward/address-detail/${shippingAddressId}/edit` : '/reward/address-detail',
-                  },
-                })
-              }
-              className='mt-2 w-full rounded-[20px] bg-bg-green2 px-5 py-3.5 text-left'
-              aria-label='주소 다시 검색'
-            >
+            <div className='flex items-center justify-between'>
+              <p className='text-[15px] font-bold text-text'>주소</p>
+              <button
+                type='button'
+                onClick={() =>
+                  navigate('/reward/address-search', {
+                    state: {
+                      returnTo: isEditMode ? `/reward/address-detail/${shippingAddressId}/edit` : '/reward/address-detail',
+                    },
+                  })
+                }
+                className='h-8 rounded-full bg-main-green1 px-4 text-sm font-bold text-white'
+              >
+                주소검색
+              </button>
+            </div>
+
+            <div className='mt-2 w-full rounded-[20px] bg-bg-green2 px-5 py-3.5'>
               <span className='block text-[15px] font-bold leading-snug text-gray-800'>{selectedAddress.roadAddress}</span>
               <span className='mt-0.5 block text-[13px] font-medium text-gray-500'>({selectedAddress.postalCode})</span>
-            </button>
+            </div>
 
             <input required value={detailAddress} onChange={(event) => setDetailAddress(event.target.value)} placeholder='상세 주소를 입력해주세요' className={inputClassName} />
 
