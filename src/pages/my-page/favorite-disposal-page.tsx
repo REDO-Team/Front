@@ -1,53 +1,72 @@
-import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { getFavoriteGuides } from '../../apis/disposal-guide';
 
-import HomeIcon from '../../assets/icons/home.svg';
-import TopBar from '../../components/common/TopBar';
 import Logo from '../../assets/icons/Big-logo.svg?react';
 
-import { MOCK_FAVORITE_DISPOSALS } from '../../mocks/favorite-disposal';
 
 const FavoriteDisposalPage = () => {
   const navigate = useNavigate();
+  const {data,isPending,isError,
+    } = useQuery({
+      queryKey: ['favoriteGuides'],
+      queryFn: getFavoriteGuides,
+    });
 
-  const [favorites] = useState(MOCK_FAVORITE_DISPOSALS);
+  const favorites = data?.result?.favorites ?? [];
 
-  const handleFavoriteClick = (favoriteId: number) => {
-    navigate(`/my/favorites/${favoriteId}`);
-  };
+  const handleFavoriteClick = (
+  guideId: number,
+  name: string,
+) => {
+  navigate(
+    `/my/favorites/${guideId}?name=${encodeURIComponent(name)}`
+  );
+};
 
+if (isPending) {
+  return (
+    <div className='flex min-h-screen items-center justify-center bg-bg-my'>
+      <LoadingSpinner />
+    </div>
+  );
+}
+
+if (isError) {
+  return (
+    <div className='flex min-h-screen items-center justify-center bg-bg-my'>
+      즐겨찾기한 배출정보를 불러오지 못했어요.
+    </div>
+  );
+}
   return (
     <div className='min-h-screen bg-[#F9FBFB]'>
-      <TopBar
-        title='즐겨찾기한 배출정보'
-        leftIcon
-        rightIcon={HomeIcon}
-        onClick={() => navigate('/')}
-        bgColor='#F9FBFB'
-      />
-
       <main className='px-[20px] pt-[72px]'>
         {favorites.length > 0 ? (
           <section className='flex flex-col gap-[10px]'>
-            {favorites.map(favorite => (
+            {favorites.map((favorite) => (
               <article
-                key={favorite.id}
+                key={favorite.guideId}
                 onClick={() =>
-                  handleFavoriteClick(favorite.id)
+                  handleFavoriteClick(
+                    favorite.guideId,
+                    favorite.name,
+                  )
                 }
-                className='h-[81px] w-full cursor-pointer rounded-[16px] bg-white px-[16px] py-[14px] shadow-[0_3px_12px_rgba(0,0,0,0.08)]'
-              >
-                <div className='flex h-full flex-col gap-[9px]'>
-                  <time className='block truncate text-[14px] font-medium leading-[100%] tracking-[0] text-[#111111]'>
-                    {favorite.createdAt}
-                  </time>
+            className='h-[81px] w-full cursor-pointer rounded-[16px] bg-white px-[16px] py-[14px] shadow-[0_3px_12px_rgba(0,0,0,0.08)]'
+          >
+          <div className='flex h-full flex-col gap-[9px]'>
+          <time className='block truncate text-[14px] font-medium leading-[100%] tracking-[0] text-[#111111]'>
+            {favorite.favoritedAt}
+          </time>
 
-                  <h2 className='truncate text-[18px] font-semibold leading-[100%] tracking-[-0.01em] text-[#111111]'>
-                    {favorite.title}
-                  </h2>
-                </div>
-              </article>
-            ))}
+          <h2 className='truncate text-[18px] font-semibold leading-[100%] tracking-[-0.01em] text-[#111111]'>
+            {favorite.title}
+          </h2>
+          </div>
+          </article>
+        ))}
           </section>
         ) : (
           <div className='flex min-h-[calc(100vh-72px)] flex-col items-center justify-center pb-[80px]'>

@@ -1,30 +1,23 @@
+import { postGuideTextSearch } from '../../apis/disposal-guide';
 import ChatBox from '../../components/DisposalInfoPage/ChatBox';
 import ChatInput from '../../components/DisposalInfoPage/ChatInput';
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import type { Guides } from '../../types/disposal-guide';
 
 const INPUT_BAR_H = 106;
 
-const ChatMessages = [
-  {
-    msg: '현재 플라스틱 용기가 어떤 상태인가요? 오염물이 묻어있거나 비닐이 쌓여있는지 알려주세요!',
-    // user: '지금 빨간 국물들이 조금 묻어있는 상태야',
-  },
-  {
-    msg: '배출 정보를 찾고 있습니다! 잠시만 기다려주세요..',
-  },
-];
-
 export default function ProblemSearchPage() {
   const [newMessage, setnewMessage] = useState<string>('');
-  const [messages, setMessages] = useState<{ isMine: boolean; message: string }[]>([
+  const [messages, setMessages] = useState<{ isMine: boolean; message: string | undefined; isIdentified: boolean | undefined }[]>([
     {
       isMine: false,
       message: '안녕하세요! 올바른 분리배출, 제가 도와드릴게요. 문제 상황을 입력해주세요!',
-      // user: '이거 어떻게 버리는지 모르겠어',
+      isIdentified: false,
     },
   ]);
   const [loading, setLoading] = useState(false);
   const [kb, setKb] = useState(0);
+  const [guide, setGuide] = useState<Guides>();
 
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -66,30 +59,32 @@ export default function ProblemSearchPage() {
   const handleSend = async () => {
     if (!newMessage.trim()) return;
 
-    setMessages((prev) => [...prev, { isMine: true, message: newMessage }]);
+    setMessages((prev) => [...prev, { isMine: true, message: newMessage, isIdentified: false }]);
     setnewMessage('');
 
     // 데이터 호출 예시
     setLoading(true);
-    setTimeout(() => {
-      setMessages((prev) => [...prev, { isMine: false, message: ChatMessages[0].msg }]);
+    try {
+      const data = await postGuideTextSearch(newMessage);
+      setMessages((prev) => [...prev, { isMine: false, message: data.result?.reason, isIdentified: data.result?.identified }]);
+      setGuide(data.result?.guideDetail);
+    } catch (e) {
+      alert('접속이 원활하지 않습니다. 잠시 후 다시 시도해 주세요.');
+      console.error('guide text search error', e);
+    } finally {
       setLoading(false);
-    }, 5000);
+    }
   };
-
-  useEffect(() => {
-    console.log('loading:', loading);
-  }, [loading]);
 
   return (
     <div className='h-full overflow-x-hidden flex mt-5'>
       <div className='flex flex-col px-6.5 flex-1 overflow-y-auto'>
         <div className='flex flex-col gap-6'>
           {messages.map((m, idx) => {
-            return <ChatBox key={idx} isMine={m.isMine} message={m.message} />;
+            return <ChatBox key={idx} isMine={m.isMine} message={m.message} isIdentified={m.isIdentified} guide={guide} />;
           })}
         </div>
-        {loading && <ChatBox isMine={false} message='' loading />}
+        {loading && <ChatBox isMine={false} message='' loading={loading} />}
 
         <div
           ref={bottomRef}

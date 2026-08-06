@@ -3,6 +3,7 @@ import axios from 'axios';
 import {checkLoginId,sendEmailVerification,verifyEmailCode,signup,} from '../../apis/auth';
 import { useNavigate } from 'react-router-dom';
 import LeftArrowIcon from '../../assets/icons/left-arrow.svg?react';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 const ID_REGEX = /^[A-Za-z]{6,}$/;
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/;
@@ -157,13 +158,23 @@ const handleSignup = async () => {
 
     localStorage.setItem('accessToken', result.accessToken);
 
-    navigate('/signup/profile');
+    navigate('/signup/profile', {
+      replace: true,
+    });
   } catch {
     alert('회원가입에 실패했습니다.');
   } finally {
     setIsSigningUp(false);
   }
 };
+
+if (isSigningUp) {
+  return (
+    <div className='flex min-h-dvh items-center justify-center bg-white'>
+      <LoadingSpinner />
+    </div>
+  );
+}
 
   return (
     <div className='flex h-dvh w-full flex-col overflow-hidden bg-white font-pretendard text-text'>
@@ -429,7 +440,7 @@ const handleSignup = async () => {
               : 'cursor-not-allowed bg-gray-400'
           }`}
         >
-          {isSigningUp ? '가입 중...' : '다음'}
+          다음
         </button>
       </div>
     </div>

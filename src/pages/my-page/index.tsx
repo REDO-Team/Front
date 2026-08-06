@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 import HeartIcon from '../../assets/icons/hearts.svg?react';
 import RewardHistoryIcon from '../../assets/icons/reward-history.svg?react';
@@ -135,8 +136,8 @@ const MyPage = () => {
 
   if (isUserPending) {
     return (
-      <div className='flex min-h-screen items-center justify-center bg-[#F9FBFB]'>
-        회원 정보를 불러오는 중이에요...
+      <div className='flex min-h-screen items-center justify-center bg-bg-my'>
+        <LoadingSpinner />
       </div>
     );
   }

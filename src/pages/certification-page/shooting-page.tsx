@@ -1,13 +1,31 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ShootCard from '../../components/common/ShootCard';
 import NotiCard from '../../components/CertificationPage/NotiCard';
 import FilledAnalysis from '/src/assets/icons/filled-analysis.svg';
 import Location from '/src/assets/icons/location.svg';
 import Devices from '/src/assets/icons/devices.svg';
 import Info from '/src/assets/icons/info.svg?react';
+import { useState } from 'react';
+import Modal from '../../components/common/Modal';
 
 export default function ShootingPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [isOpenExceed, SetIsOpenExceed] = useState(false); // 인증 횟수 초과 모달
+  const [isOpenWaitTime, SetIsOpenWaitTime] = useState(false); // 재인증 대기 모달
+  const restrictType = location?.state?.restrictType;
+  const certificationSource = location?.state?.certificationSource;
+  const guideId = location?.state?.guideId;
+
+  const handleClickShoot = () => {
+    if (restrictType === 'DAILY_LIMIT_EXCEEDED') {
+      SetIsOpenExceed(true);
+    } else if (restrictType === 'COOLDOWN' || restrictType === 'PROCESSING_EXISTS') {
+      SetIsOpenWaitTime(true);
+    } else {
+      navigate('/camera', { state: { from: 'certification', certificationSource, guideId } });
+    }
+  };
 
   return (
     <div className='h-full pt-5'>
@@ -42,10 +60,40 @@ export default function ShootingPage() {
           </div>
         </div>
 
-        <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 py-3.5 w-full text-center mt-auto' onClick={() => navigate('/camera', { state: 'certification' })}>
+        <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 py-3.5 w-full text-center mt-auto' onClick={handleClickShoot}>
           촬영하기
         </button>
       </div>
+
+      {isOpenExceed && (
+        <Modal
+          isOpen={isOpenExceed}
+          title={`인증 가능 횟수를 초과했어요. \n 하루 최대 3회까지만 인증할 수 있어요. \n 내일 다시 시도해주세요.`}
+          titleFontWeight='medium'
+          titleTextSize='15px'
+          buttonText='확인'
+          titleLineHeight='22px'
+          onClose={() => SetIsOpenExceed(false)}
+          onConfirm={() => {
+            SetIsOpenExceed(false);
+          }}
+        />
+      )}
+
+      {isOpenWaitTime && (
+        <Modal
+          isOpen={isOpenWaitTime}
+          title={`인증 대기 시간입니다. \n 이전 인증 후 5분이 지나야 재인증이 가능합니다.`}
+          titleFontWeight='medium'
+          titleTextSize='15px'
+          buttonText='확인'
+          titleLineHeight='22px'
+          onClose={() => SetIsOpenWaitTime(false)}
+          onConfirm={() => {
+            SetIsOpenWaitTime(false);
+          }}
+        />
+      )}
     </div>
   );
 }
