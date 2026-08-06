@@ -32,7 +32,7 @@ const renderCharacterProfile = (code: number) => {
   }
 };
 
-export interface Comment {
+export interface CommentData {
   commentId: number;
   writer: string;
   profileImageUrl?: string;
@@ -43,7 +43,7 @@ export interface Comment {
 }
 
 interface CommentItemProps {
-  comment: Comment;
+  comment: CommentData;
   isMine: boolean;
   onUpdate: (id: number, newContent: string) => void;
   onDelete: (id: number) => void;

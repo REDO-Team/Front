@@ -13,7 +13,6 @@ import PurpleCharacter from '../../assets/icons/character/purple.svg?react';
 import BlueCharacter from '../../assets/icons/character/blue.svg?react';
 import ShadowIcon from '../../assets/icons/character/shadow.svg?react';
 
-const CATEGORIES = ['전체보기', '정보공유', '리워드후기', '환경실천'];
 
 const formatTimeAgo = (dateString: string) => {
   const postDate = new Date(dateString);
@@ -36,7 +35,22 @@ const formatTimeAgo = (dateString: string) => {
   return `${year}-${month}-${date}`;
 };
 
-const formatCategory = (categoryValue: any) => {
+interface PostItem {
+  id: number;
+  category: string | number;
+  title: string;
+  preview?: string;
+  writer: string;
+  profileImageUrl?: string;
+  characterCode: number;
+  numLikes: number;
+  numComments: number;
+  imageUrl?: string;
+  createdAt: string;
+}
+
+const CATEGORIES = ['전체보기', '정보공유', '리워드후기', '환경실천'];
+const formatCategory = (categoryValue: string | number) => {
   const value = String(categoryValue);
   if (value === '1') return '정보공유';
   if (value === '2') return '리워드후기';
@@ -77,7 +91,7 @@ export default function CommunityMainPage() {
   const [selectedCategory, setSelectedCategory] = useState('전체보기');
 
 
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<PostItem[]>([]);
 
   useEffect(() => {
     const fetchPosts = async () => {

@@ -7,7 +7,7 @@ import MoreIcon from "../../assets/icons/MoreIcon";
 import PostActionModal from "../../components/CommunityPage/PostActionModal.tsx";
 import { useState, useEffect } from "react";
 import Modal from "../../components/common/Modal.tsx";
-import CommentItem from "./CommentItem.tsx";
+import CommentItem, { type CommentData } from "./CommentItem.tsx";
 import { getCommunityDetail, likeCommunity, unlikeCommunity, getComments, postComment, deleteCommunity, deleteComment, updateComment } from "../../apis/community.ts";
 import LoadingSpinner from "../../components/common/LoadingSpinner.tsx";
 import YellowCharacter from '../../assets/icons/character/yellow.svg?react';
@@ -17,6 +17,21 @@ import OrangeCharacter from '../../assets/icons/character/orange.svg?react';
 import PurpleCharacter from '../../assets/icons/character/purple.svg?react';
 import BlueCharacter from '../../assets/icons/character/blue.svg?react';
 import ShadowIcon from '../../assets/icons/character/shadow.svg?react';
+
+interface PostDetail {
+  category: string | number;
+  title: string;
+  profileImageUrl?: string;
+  characterCode: number;
+  writer: string;
+  createdAt: string;
+  content: string;
+  imageUrls?: string[];
+  numComments: number;
+  numLikes: number;
+  isMine: boolean;
+  isLiked: boolean;
+}
 
 const formatTime = (dateString: string) => {
   const postDate = new Date(dateString);
@@ -29,7 +44,7 @@ const formatTime = (dateString: string) => {
   return `${year}.${month}.${date} ${hours}:${minutes}`;
 };
 
-const formatCategory = (categoryValue: any) => {
+const formatCategory = (categoryValue: string | number) => {
   const value = String(categoryValue);
   if (value === '1') return '정보공유';
   if (value === '2') return '리워드후기';
@@ -63,7 +78,7 @@ const renderCharacterProfile = (code: number) => {
 };
 
 export default function CommunityDetailPage() {
-  const [comments, setComments] = useState<any[]>([]);
+  const [comments, setComments] = useState<CommentData[]>([]);
   const [newComment, setNewComment] = useState("");
   const [isActionModalOpen, setIsActionModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -76,7 +91,7 @@ export default function CommunityDetailPage() {
   const navigate = useNavigate();
   const { postId } = useParams();
 
-  const [post, setPost] = useState<any>(null);
+  const [post, setPost] = useState<PostDetail | null>(null);
   const [isMyPost, setIsMyPost] = useState(false);
 
   useEffect(() => {
@@ -175,14 +190,14 @@ export default function CommunityDetailPage() {
         setIsLiked(false);
 
         if (res.isSuccess) {
-          setPost((prev: any) => ({ ...prev, numLikes: res.result.likeCount }));
+          setPost((prev) => prev ? { ...prev, numLikes: res.result.likeCount } : null);
         }
       } else {
         const res = await likeCommunity(Number(postId));
         setIsLiked(true);
 
         if (res.isSuccess) {
-          setPost((prev: any) => ({ ...prev, numLikes: res.result.likeCount }));
+          setPost((prev) => prev ? { ...prev, numLikes: res.result.likeCount } : null);
         }
       }
     } catch (error) {
@@ -322,7 +337,9 @@ export default function CommunityDetailPage() {
             type="text"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            onKeyDown={(e) => { e.key === 'Enter' && handlePostComment() }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handlePostComment();
+            }}
             placeholder="댓글을 입력해주세요"
             className="flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 py-2.5 text-[16px] outline-none placeholder:text-gray-600"
           />

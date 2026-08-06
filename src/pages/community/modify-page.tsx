@@ -14,7 +14,7 @@ const getCategoryNumber = (category: string) => {
   }
 };
 
-const formatCategoryString = (categoryValue: any) => {
+const formatCategoryString = (categoryValue: string | number) => {
   const value = String(categoryValue);
   if (value === '1') return '정보공유';
   if (value === '2') return '리워드후기';
