@@ -21,11 +21,18 @@ export default function ImageSearchPage() {
     setLoading(true);
     try {
       const data = await postGuideImageSearch(file);
-      navigate('/disposal-info/detail', {
-        state: {
-          guide: data?.result?.guideDetail,
-        },
-      });
+      // 이미지 검색 성공
+      if (data.result?.identified) {
+        navigate('/disposal-info/detail', {
+          state: {
+            guide: data?.result?.guideDetail,
+          },
+        });
+      }
+      // 이미지 검색 실패
+      else {
+        navigate('/disposal-info/fail');
+      }
     } catch (e) {
       alert('접속이 원활하지 않습니다. 잠시 후 다시 시도해 주세요.');
       console.error('guide image search error', e);
