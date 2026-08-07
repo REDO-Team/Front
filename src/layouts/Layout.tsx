@@ -8,7 +8,6 @@ const Layout = () => {
   const navigate = useNavigate();
 
   const isHome = location.pathname === '/';
-  const isSplash = !!matchPath('/splash', location.pathname);
   const isLogin = !!matchPath('/login', location.pathname);
 
   const isSignup = !!matchPath({ path: '/signup/*', end: false }, location.pathname);
@@ -60,9 +59,9 @@ const Layout = () => {
 
   const isMyhistory = !!matchPath('/my/history', location.pathname);
 
-  const hideTopBar = isHome || isSplash || isLogin || isSignup || isCamera || isMy || isRewardAddressComplete || isRewardUseComplete;
+  const hideTopBar = isHome || isLogin || isSignup || isCamera || isMy || isRewardAddressComplete || isRewardUseComplete;
 
-  const hideBottomBar = isSplash || isLogin || isSignup || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isCertificationFail || isImageSearch || isProblemSearch || isMyContribution || isAllContribution || isDisposalInfoFail || isDisposalInfoDetail || isCamera || isDisposalInfo || isReward || isCommunityDetail || isMyPosts || isMycomments || isMyProfileEdit || isMyfavorites || isMyhistory || isCommunityWrite || isCommunityModify;
+  const hideBottomBar = isLogin || isSignup || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isCertificationFail || isImageSearch || isProblemSearch || isMyContribution || isAllContribution || isDisposalInfoFail || isDisposalInfoDetail || isCamera || isDisposalInfo || isReward || isCommunityDetail || isMyPosts || isMycomments || isMyProfileEdit || isMyfavorites || isMyhistory || isCommunityWrite || isCommunityModify;
 
   const hasGreenBackground = isGuide || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isDisposalInfo || isDisposalInfoDetail || isImageSearch || isProblemSearch || isDisposalInfoFail || isCamera || isAllContribution || isReward;
 
