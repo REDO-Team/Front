@@ -14,6 +14,7 @@ export default function ProblemSearchPage() {
       isMine: boolean;
       message: string | undefined;
       isIdentified: boolean | undefined;
+      guide?: Guides;
     }[]
   >(() => {
     const savedMessages = sessionStorage.getItem(STORAGE_KEY);
@@ -35,7 +36,6 @@ export default function ProblemSearchPage() {
     ];
   });
   const [loading, setLoading] = useState(false);
-  const [guide, setGuide] = useState<Guides>();
 
   // 키보드 높이 조정
   const [kb, setKb] = useState(0);
@@ -91,8 +91,7 @@ export default function ProblemSearchPage() {
     setLoading(true);
     try {
       const data = await postGuideTextSearch(newMessage);
-      setMessages((prev) => [...prev, { isMine: false, message: data.result?.reason, isIdentified: data.result?.identified }]);
-      setGuide(data.result?.guideDetail);
+      setMessages((prev) => [...prev, { isMine: false, message: data.result?.reason, isIdentified: data.result?.identified, guide: data.result?.guideDetail }]);
     } catch (e) {
       alert('접속이 원활하지 않습니다. 잠시 후 다시 시도해 주세요.');
       console.error('guide text search error', e);
@@ -106,7 +105,7 @@ export default function ProblemSearchPage() {
       <div className='flex flex-col px-6.5 flex-1 overflow-y-auto'>
         <div className='flex flex-col gap-6'>
           {messages.map((m, idx) => {
-            return <ChatBox key={idx} isMine={m.isMine} message={m.message} isIdentified={m.isIdentified} guide={guide} />;
+            return <ChatBox key={idx} isMine={m.isMine} message={m.message} isIdentified={m.isIdentified} guide={m.guide} />;
           })}
         </div>
         {loading && <ChatBox isMine={false} message='' loading={loading} />}
