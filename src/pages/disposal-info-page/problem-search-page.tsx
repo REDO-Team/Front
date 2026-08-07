@@ -5,20 +5,40 @@ import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import type { Guides } from '../../types/disposal-guide';
 
 const INPUT_BAR_H = 106;
+const STORAGE_KEY = 'problem-search-messages';
 
 export default function ProblemSearchPage() {
   const [newMessage, setnewMessage] = useState<string>('');
-  const [messages, setMessages] = useState<{ isMine: boolean; message: string | undefined; isIdentified: boolean | undefined }[]>([
+  const [messages, setMessages] = useState<
     {
-      isMine: false,
-      message: '안녕하세요! 올바른 분리배출, 제가 도와드릴게요. 문제 상황을 입력해주세요!',
-      isIdentified: false,
-    },
-  ]);
+      isMine: boolean;
+      message: string | undefined;
+      isIdentified: boolean | undefined;
+    }[]
+  >(() => {
+    const savedMessages = sessionStorage.getItem(STORAGE_KEY);
+
+    if (savedMessages) {
+      try {
+        return JSON.parse(savedMessages);
+      } catch (error) {
+        console.error('Session Storage Message Call Error', error);
+      }
+    }
+
+    return [
+      {
+        isMine: false,
+        message: '안녕하세요! 올바른 분리배출, 제가 도와드릴게요. 문제 상황을 입력해주세요!',
+        isIdentified: false,
+      },
+    ];
+  });
   const [loading, setLoading] = useState(false);
-  const [kb, setKb] = useState(0);
   const [guide, setGuide] = useState<Guides>();
 
+  // 키보드 높이 조정
+  const [kb, setKb] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -48,6 +68,11 @@ export default function ProblemSearchPage() {
       vv.removeEventListener('scroll', onResize);
     };
   }, []);
+
+  // 세션 스토리지에 저장된 메시지 불러오기
+  useEffect(() => {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+  }, [messages]);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {

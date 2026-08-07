@@ -14,7 +14,6 @@ export default function DisposalInfoDetailage() {
   const [isOpen, setIsOpen] = useState(false);
 
   const guide: Guides = location?.state?.guide;
-  console.log(guide);
 
   const isRecyclePossible = guide?.name.includes('일반쓰레기');
 
