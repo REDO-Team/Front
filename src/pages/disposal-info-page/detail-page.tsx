@@ -11,7 +11,8 @@ import { postGuideFavorite } from '../../apis/disposal-guide';
 export default function DisposalInfoDetailage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenClear, setIsOpenClear] = useState(false);
+  const [isOpenOverlap, setIsOpenOverlap] = useState(false);
 
   const guide: Guides = location?.state?.guide;
 
@@ -20,10 +21,19 @@ export default function DisposalInfoDetailage() {
   const handleFavorites = async () => {
     try {
       const data = await postGuideFavorite(guide?.guideId);
-      console.log(data);
 
-      setIsOpen(true);
-    } catch (e) {
+      console.log(data.code);
+
+      setIsOpenClear(true);
+    } catch (e: unknown) {
+      const error = e as { response?: { data?: { code?: string } } };
+
+      // 이미 즐겨찾기 저장된 경우
+      if (error.response?.data?.code === 'GUIDE_409_001') {
+        setIsOpenOverlap(true);
+        return;
+      }
+
       alert('접속이 원활하지 않습니다. 잠시 후 다시 시도해 주세요.');
       console.error('guide favorite post error', e);
     }
@@ -80,12 +90,23 @@ export default function DisposalInfoDetailage() {
           </button>
         </div>
 
-        {isOpen && (
+        {isOpenClear && (
           <Modal
-            isOpen={isOpen}
+            isOpen={isOpenClear}
             title='즐겨찾기 저장 완료'
             buttonText='보러 가기'
-            onClose={() => setIsOpen(false)}
+            onClose={() => setIsOpenClear(false)}
+            onConfirm={() => {
+              navigate('/my/favorites'); //즐겨찾기 페이지로 이동
+            }}
+          />
+        )}
+        {isOpenOverlap && (
+          <Modal
+            isOpen={isOpenOverlap}
+            title='이미 저장된 배출 정보입니다.'
+            buttonText='보러 가기'
+            onClose={() => setIsOpenOverlap(false)}
             onConfirm={() => {
               navigate('/my/favorites'); //즐겨찾기 페이지로 이동
             }}
