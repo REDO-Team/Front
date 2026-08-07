@@ -1,65 +1,57 @@
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 
-import {
-  createBrowserRouter,
-  Navigate,
-  Outlet,
-  RouterProvider,
-  useLocation,
-  type RouteObject,
-} from 'react-router-dom';
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation, type RouteObject } from 'react-router-dom';
 
 import { getAccessToken } from './apis/token';
 import { getMyInfo } from './apis/user';
 import LoadingSpinner from './components/common/LoadingSpinner';
 
-import "./App.css";
-import Layout from "./layouts/Layout";
-import HomePage from "./pages/home-page";
-import SplashPage from "./pages/splash-page";
-import GuidePage from "./pages/guide-page";
-import CertificationPage from "./pages/certification-page";
-import LoginPage from "./pages/login/login-page";
-import CertificationGuidePage from "./pages/certification-page/guide-page";
-import ShootingPage from "./pages/certification-page/shooting-page";
-import SuccessPage from "./pages/certification-page/success-page";
-import DisposalInfoPage from "./pages/disposal-info-page";
-import ImageSearchPage from "./pages/disposal-info-page/image-search-page";
-import ProblemSearchPage from "./pages/disposal-info-page/problem-search-page";
-import FailPage from "./pages/certification-page/fail-page";
-import MyContributionPage from "./pages/my-contribution-page";
-import DisposalInfoDetailPage from "./pages/disposal-info-page/detail-page";
-import TermsPage from "./pages/signup/terms-page";
-import SignupPage from "./pages/signup/signup-page";
-import ProfileCreatePage from "./pages/signup/profile-create-page";
-import SignupCompletePage from "./pages/signup/complete-page";
-import DisposalInfoFailPage from "./pages/disposal-info-page/fail-page";
-import CamearaPage from "./pages/cameara-page";
-import AllContributionPage from "./pages/all-contribution-page";
-import CommunityMainPage from "./pages/community/main-page";
-import RewardHomePage from "./pages/reward-page/reward-home-page";
-import RewardHistoryPage from "./pages/reward-page/reward-history-page";
-import RewardStorePage from "./pages/reward-page/reward-store-page";
-import RewardProductDetailPage from "./pages/reward-page/reward-product-detail-page";
-import RewardCheckoutPage from "./pages/reward-page/reward-purchase-page";
-import RewardAddressCompletePage from "./pages/reward-page/reward-address-complete-page";
-import RewardAddressListPage from "./pages/reward-page/reward-address-list-page";
-import RewardAddressSearchPage from "./pages/reward-page/reward-address-search-page";
-import RewardAddressDetailPage from "./pages/reward-page/reward-address-detail-page";
-import RewardUseCompletePage from "./pages/reward-page/reward-use-complete-page";
-import MyPage from "./pages/my-page";
+import './App.css';
+import Layout from './layouts/Layout';
+import HomePage from './pages/home-page';
+import GuidePage from './pages/guide-page';
+import CertificationPage from './pages/certification-page';
+import LoginPage from './pages/login/login-page';
+import CertificationGuidePage from './pages/certification-page/guide-page';
+import ShootingPage from './pages/certification-page/shooting-page';
+import SuccessPage from './pages/certification-page/success-page';
+import DisposalInfoPage from './pages/disposal-info-page';
+import ImageSearchPage from './pages/disposal-info-page/image-search-page';
+import ProblemSearchPage from './pages/disposal-info-page/problem-search-page';
+import FailPage from './pages/certification-page/fail-page';
+import MyContributionPage from './pages/my-contribution-page';
+import DisposalInfoDetailPage from './pages/disposal-info-page/detail-page';
+import TermsPage from './pages/signup/terms-page';
+import SignupPage from './pages/signup/signup-page';
+import ProfileCreatePage from './pages/signup/profile-create-page';
+import SignupCompletePage from './pages/signup/complete-page';
+import DisposalInfoFailPage from './pages/disposal-info-page/fail-page';
+import CamearaPage from './pages/cameara-page';
+import AllContributionPage from './pages/all-contribution-page';
+import CommunityMainPage from './pages/community/main-page';
+import RewardHomePage from './pages/reward-page/reward-home-page';
+import RewardHistoryPage from './pages/reward-page/reward-history-page';
+import RewardStorePage from './pages/reward-page/reward-store-page';
+import RewardProductDetailPage from './pages/reward-page/reward-product-detail-page';
+import RewardCheckoutPage from './pages/reward-page/reward-purchase-page';
+import RewardAddressCompletePage from './pages/reward-page/reward-address-complete-page';
+import RewardAddressListPage from './pages/reward-page/reward-address-list-page';
+import RewardAddressSearchPage from './pages/reward-page/reward-address-search-page';
+import RewardAddressDetailPage from './pages/reward-page/reward-address-detail-page';
+import RewardUseCompletePage from './pages/reward-page/reward-use-complete-page';
+import MyPage from './pages/my-page';
 import ProfileEditPage from './pages/my-page/profile-edit-page';
 import MyPostsPage from './pages/my-page/my-posts-page';
 import MyCommentsPage from './pages/my-page/my-comments-page';
 import FavoriteDisposalPage from './pages/my-page/favorite-disposal-page';
 import FavoriteDisposalDetailPage from './pages/my-page/favorite-disposal-detail-page';
 import RewardUseHistoryPage from './pages/my-page/reward-use-history-page';
-import CommunityDetailPage from "./pages/community/detail-page";
-import CommunityWritePage from "./pages/community/write-page";
-import CommunityModifyPage from "./pages/community/modify-page";
-import CommunityCompletePage from "./pages/community/complete-page";
-import CommunityModifyCompletePage from "./pages/community/modify-complete-page";
+import CommunityDetailPage from './pages/community/detail-page';
+import CommunityWritePage from './pages/community/write-page';
+import CommunityModifyPage from './pages/community/modify-page';
+import CommunityCompletePage from './pages/community/complete-page';
+import CommunityModifyCompletePage from './pages/community/modify-complete-page';
 
 interface ApiErrorResponse {
   code?: string;
@@ -100,14 +92,11 @@ const SignupRoute = () => {
   const location = useLocation();
   const accessToken = getAccessToken();
 
-  const isProfilePage =
-    location.pathname === '/signup/profile';
+  const isProfilePage = location.pathname === '/signup/profile';
 
-  const isCompletePage =
-    location.pathname === '/signup/complete';
+  const isCompletePage = location.pathname === '/signup/complete';
 
-  const shouldCheckProfile =
-    Boolean(accessToken) && isProfilePage;
+  const shouldCheckProfile = Boolean(accessToken) && isProfilePage;
 
   const {
     data: user,
@@ -115,10 +104,7 @@ const SignupRoute = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: [
-      'signupProfileCheck',
-      accessToken,
-    ],
+    queryKey: ['signupProfileCheck', accessToken],
     queryFn: getMyInfo,
     enabled: shouldCheckProfile,
     retry: false,
@@ -149,10 +135,7 @@ const SignupRoute = () => {
    * 프로필 생성 직후에만 접근 가능
    */
   if (isCompletePage) {
-    const isProfileCompleted =
-      sessionStorage.getItem(
-        'signupProfileCompleted',
-      ) === 'true';
+    const isProfileCompleted = sessionStorage.getItem('signupProfileCompleted') === 'true';
 
     if (!isProfileCompleted) {
       return <Navigate to='/' replace />;
@@ -182,12 +165,7 @@ const SignupRoute = () => {
   }
 
   if (isError) {
-    const isProfileNotCreated =
-      axios.isAxiosError<ApiErrorResponse>(
-        error,
-      ) &&
-      error.response?.data?.code ===
-        'USER_404_001';
+    const isProfileNotCreated = axios.isAxiosError<ApiErrorResponse>(error) && error.response?.data?.code === 'USER_404_001';
 
     /*
      * USER_404_001:
@@ -261,10 +239,6 @@ const routes: RouteObject[] = [
             element: <HomePage />,
           },
           {
-            path: 'splash',
-            element: <SplashPage />,
-          },
-          {
             path: 'guide',
             element: <GuidePage />,
           },
@@ -290,9 +264,7 @@ const routes: RouteObject[] = [
               },
               {
                 path: 'favorites/:favoriteId',
-                element: (
-                  <FavoriteDisposalDetailPage />
-                ),
+                element: <FavoriteDisposalDetailPage />,
               },
               {
                 path: 'history',
@@ -412,9 +384,7 @@ const routes: RouteObject[] = [
               },
               {
                 path: 'address-complete/:productId',
-                element: (
-                  <RewardAddressCompletePage />
-                ),
+                element: <RewardAddressCompletePage />,
               },
               {
                 path: 'use-complete/:productId',
@@ -444,9 +414,7 @@ const routes: RouteObject[] = [
               },
               {
                 path: 'modify-complete',
-                element: (
-                  <CommunityModifyCompletePage />
-                ),
+                element: <CommunityModifyCompletePage />,
               },
               {
                 path: ':postId',
