@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useRef, useState } from 'react';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import RewardProductCard from '../../components/RewardPage/RewardProductCard';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import FailInfo from '../../components/common/FailInfo';
-import { getRewardProducts } from '../../apis/reward';
+import CoinsIcon from '../../assets/icons/coins.svg?react';
+import { getRewardPoints, getRewardProducts } from '../../apis/reward';
 import type { RewardFilterType } from '../../types/reward';
 
 const FILTER_TABS: { label: string; value: RewardFilterType }[] = [
@@ -14,30 +15,73 @@ const FILTER_TABS: { label: string; value: RewardFilterType }[] = [
 
 export default function RewardStorePage() {
   const [selectedFilter, setSelectedFilter] = useState<RewardFilterType>('ALL');
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const {
+    data: rewardPoints,
+    isPending: isPointPending,
+    isError: isPointError,
+  } = useQuery({
+    queryKey: ['rewardPoints'],
+    queryFn: getRewardPoints,
+  });
   const params =
     selectedFilter === 'ALL'
       ? undefined
       : { rewardProductType: selectedFilter };
-  const { data, isPending, isError } = useQuery({
+  const { data, isPending, isError,hasNextPage,fetchNextPage ,isFetchingNextPage} = useInfiniteQuery({
     queryKey: ['rewardProducts', params],
-    queryFn: () => getRewardProducts(params),
+    queryFn: ({ pageParam }) => getRewardProducts({ ...params, cursor: pageParam, size: 10 }),
+    initialPageParam: undefined as number | undefined,
+    getNextPageParam: (lastPage) => lastPage.nextCursor ? lastPage.nextCursor : undefined,
   });
-  const products = data?.items ?? [];
+  const products = data?.pages.flatMap((page) => page.items) ?? [];
+
+  useEffect(() => {
+    const target = loadMoreRef.current;
+
+    if (!target) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    });
+
+    observer.observe(target);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   return (
     <div className='flex flex-1 flex-col px-5 pb-10 pt-4 font-pretendard'>
       <h1 className='sr-only'>리워드 상점</h1>
 
-      <div role='group' aria-label='상품 유형 필터' className='flex items-center gap-2'>
-        {FILTER_TABS.map((tab) => {
-          const isSelected = selectedFilter === tab.value;
+      <div className='flex items-center justify-between gap-2'>
+        <div role='group' aria-label='상품 유형 필터' className='flex min-w-0 items-center gap-2'>
+          {FILTER_TABS.map((tab) => {
+            const isSelected = selectedFilter === tab.value;
 
-          return (
-            <button key={tab.value} type='button' aria-pressed={isSelected} onClick={() => setSelectedFilter(tab.value)} className={`h-9 rounded-full px-4 text-[13px] font-semibold transition-colors ${isSelected ? 'border border-main-green1 bg-main-green1 text-white' : 'border border-gray-200 bg-white text-gray-600'}`}>
-              {tab.label}
-            </button>
-          );
-        })}
+            return (
+              <button key={tab.value} type='button' aria-pressed={isSelected} onClick={() => setSelectedFilter(tab.value)} className={`h-9 shrink-0 rounded-full px-3 text-[13px] font-semibold transition-colors ${isSelected ? 'border border-main-green1 bg-main-green1 text-white' : 'border border-gray-200 bg-white text-gray-600'}`}>
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className='flex shrink-0 items-center gap-1 text-reward-text' aria-label='현재 보유 포인트'>
+          <CoinsIcon aria-hidden='true' className='h-5 w-5' />
+          <strong className='text-[18px] font-bold'>
+            {isPointPending
+              ? '...'
+              : isPointError || !rewardPoints
+                ? '-'
+                : rewardPoints.totalPoint.toLocaleString('ko-KR')}
+            P
+          </strong>
+        </div>
       </div>
 
       {isPending ? (
@@ -57,9 +101,18 @@ export default function RewardStorePage() {
               product={product}
             />
           ))}
+          <div ref={loadMoreRef} className='h-1' />
         </div>
       ) : (
         <p className='mt-16 text-center text-sm font-medium text-gray-500'>해당하는 상품이 없습니다.</p>
+      )}
+
+      {hasNextPage && (
+        <div ref={loadMoreRef} className='flex flex-1 items-center justify-center py-4'/>)}
+      {isFetchingNextPage && (
+        <div className='flex flex-1 items-center justify-center py-4'>
+          <LoadingSpinner />
+        </div>
       )}
     </div>
   );

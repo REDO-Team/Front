@@ -73,7 +73,7 @@ export default function MyContributionPage() {
 
           <div className='relative z-10 grid grid-cols-6 gap-y-7'>
             {data?.milestones.map((milestone, index) => {
-              const isLocked = milestone.status === 'LOCKED';
+              const isLocked = milestone.status !== 'ACHIEVED';
 
               return (
                 <div key={milestone.type} className={`col-span-2 flex flex-col items-center gap-2 ${itemGridPositions[index] ?? ''}`}>

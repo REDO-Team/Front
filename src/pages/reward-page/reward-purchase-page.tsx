@@ -16,6 +16,7 @@ import {
 } from '../../apis/reward';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import FailInfo from '../../components/common/FailInfo';
+import Modal from '../../components/common/Modal';
 
 interface PurchaseSectionProps {
   product: RewardProductDetail;
@@ -92,6 +93,8 @@ function GifticonPurchaseSection({
 export default function RewardCheckoutPage() {
   const [receiverName, setReceiverName] = useState('');
   const [receiverPhone, setReceiverPhone] = useState('');
+  const [isInsufficientPointModalOpen, setIsInsufficientPointModalOpen] =
+    useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const idempotencyKey = useRef(crypto.randomUUID());
@@ -154,7 +157,12 @@ export default function RewardCheckoutPage() {
   });
 
   const handlePurchase = () => {
-    if (!productDetail) return;
+    if (!productDetail || !rewardPoints) return;
+
+    if (rewardPoints.totalPoint < productDetail.pricePoint) {
+      setIsInsufficientPointModalOpen(true);
+      return;
+    }
 
     if (isPartnerProduct) {
       if (!selectedShippingAddress) return;
@@ -223,7 +231,6 @@ export default function RewardCheckoutPage() {
     receiverName.trim().length > 0 && receiverPhone.trim().length > 0;
   const isPurchaseDisabled =
     isPurchasing ||
-    remainingPoint < 0 ||
     productDetail.stockQuantity < 1 ||
     productDetail.status !== 'ACTIVE' ||
     (isPartner ? !selectedShippingAddress : !hasGifticonRecipient);
@@ -308,6 +315,15 @@ export default function RewardCheckoutPage() {
           {isPurchasing ? '처리 중...' : '포인트 사용하기'}
         </button>
       </div>
+
+      <Modal
+        isOpen={isInsufficientPointModalOpen}
+        title='보유 포인트가 부족합니다'
+        buttonText='돌아가기'
+        buttonColor='red'
+        onClose={() => setIsInsufficientPointModalOpen(false)}
+        onConfirm={() => navigate('/reward/store')}
+      />
     </div>
   );
 }

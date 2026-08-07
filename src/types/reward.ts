@@ -165,12 +165,11 @@ export interface RewardPurchaseResult {
 
 export type FulfillmentType =
   | 'DELIVERY'
-  | 'GIFTICON';
+  | 'COUPON';
 
 export type FulfillmentStatus =
   | 'READY'
-  | 'SHIPPING'
-  | 'DELIVERED'
+  | 'SENT'
   | 'COMPLETED';
 
 export interface RewardRedemptionItem {

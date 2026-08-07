@@ -1,13 +1,62 @@
 import BottomBar from '../../components/common/BottomBar';
 import PencilIcon from '../../assets/icons/pencil.svg';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import HeartIcon from '../../assets/icons/heart.svg';
 import CommentIcon from '../../assets/icons/comment.svg';
 import { useNavigate } from 'react-router-dom';
-import { MOCK_POSTS } from '../../mocks/community';
+import { getCommunityList } from '../../apis/community';
+import YellowCharacter from '../../assets/icons/character/yellow.svg?react';
+import GrayCharacter from '../../assets/icons/character/gray.svg?react';
+import GreenCharacter from '../../assets/icons/character/green.svg?react';
+import OrangeCharacter from '../../assets/icons/character/orange.svg?react';
+import PurpleCharacter from '../../assets/icons/character/purple.svg?react';
+import BlueCharacter from '../../assets/icons/character/blue.svg?react';
+import ShadowIcon from '../../assets/icons/character/shadow.svg?react';
+
+
+const formatTimeAgo = (dateString: string) => {
+  const postDate = new Date(dateString);
+  const now = new Date();
+  const diff = now.getTime() - postDate.getTime();
+
+  const sec = Math.floor(diff / 1000);
+  const min = Math.floor(sec / 60);
+  const hour = Math.floor(min / 60);
+  const day = Math.floor(hour / 24);
+
+  if (sec < 60) return `방금 전`;
+  if (min < 60) return `${min}분 전`;
+  if (hour < 24) return `${hour}시간 전`;
+
+  if (day < 7) return `${day}일 전`;
+  const year = postDate.getFullYear();
+  const month = String(postDate.getMonth() + 1).padStart(2, '0');
+  const date = String(postDate.getDate()).padStart(2, '0');
+  return `${year}-${month}-${date}`;
+};
+
+interface PostItem {
+  id: number;
+  category: string | number;
+  title: string;
+  preview?: string;
+  writer: string;
+  profileImageUrl?: string;
+  characterCode: number;
+  numLikes: number;
+  numComments: number;
+  imageUrl?: string;
+  createdAt: string;
+}
 
 const CATEGORIES = ['전체보기', '정보공유', '리워드후기', '환경실천'];
-
+const formatCategory = (categoryValue: string | number) => {
+  const value = String(categoryValue);
+  if (value === '1') return '정보공유';
+  if (value === '2') return '리워드후기';
+  if (value === '3') return '환경실천';
+  return '전체보기';
+};
 const getCategoryStyle = (category: string) => {
   switch (category) {
     case '정보공유':
@@ -20,6 +69,19 @@ const getCategoryStyle = (category: string) => {
       return 'bg-gray-100 text-gray-500';
   }
 };
+
+const renderCharacterProfile = (code: number) => {
+  switch (code) {
+    case 1: return <YellowCharacter className="w-full h-full" />;
+    case 2: return <GrayCharacter className="w-full h-full" />;
+    case 3: return <GreenCharacter className="w-full h-full" />;
+    case 4: return <OrangeCharacter className="w-full h-full" />;
+    case 5: return <PurpleCharacter className="w-full h-full" />;
+    case 6: return <BlueCharacter className="w-full h-full" />;
+    default: return <ShadowIcon className="w-full h-full" />;
+  }
+};
+
 export default function CommunityMainPage() {
   const navigate = useNavigate();
 
@@ -28,8 +90,26 @@ export default function CommunityMainPage() {
   };
   const [selectedCategory, setSelectedCategory] = useState('전체보기');
 
-  const filteredPosts = selectedCategory === '전체보기' ? MOCK_POSTS : MOCK_POSTS.filter((post) => post.category === selectedCategory);
 
+  const [posts, setPosts] = useState<PostItem[]>([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const data = await getCommunityList();
+        console.log('서버에서 받아온 데이터:', data);
+
+        setPosts(data.result.items);
+      } catch (error) {
+        console.error('게시글 목록 불러오기 실패', error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  const filteredPosts = selectedCategory === '전체보기'
+    ? posts : posts.filter((post) => formatCategory(post.category) === selectedCategory);
   return (
     <div className='font-pretendard bg-bg-green1 min-h-screen pb-32'>
       <section className='flex overflow-x-auto whitespace-nowrap p-4 gap-2 scrollbar-hide'>
@@ -53,40 +133,50 @@ export default function CommunityMainPage() {
       <section className='font-pretendard flex flex-col px-4 gap-4 pb-10'>
         {filteredPosts.map((post) => (
           <article key={post.id} onClick={() => handlePostClick(post.id)} className='bg-white rounded-[20px] p-5 shadow-[0_4px_10px_rgba(0,0,0,0.03)] flex flex-col gap-3'>
-            <span className={`w-fit flex items-center justify-center px-[9px] py-[4px] rounded-[20px] font-pretendard text-[11px] font-bold leading-none ${getCategoryStyle(post.category)}`}>{post.category}</span>
+            <span className={`w-fit flex items-center justify-center px-[9px] py-[4px] rounded-[20px] font-pretendard text-[11px] font-bold leading-none ${getCategoryStyle(formatCategory(post.category))}`}>
+              {formatCategory(post.category)}</span>
 
             <div className='flex justify-between items-start gap-4'>
               <div className='flex flex-col flex-1 gap-2 min-w-0'>
                 <div className='flex flex-col gap-1'>
                   <h3 className='text-[16px] font-semibold text-gray-900 leading-snug break-keep'>{post.title}</h3>
-                  {post.content && <p className='text-[15px] font-medium leading-[22px] text-gray-600 break-keep truncate'>{post.content}</p>}
+                  {post.preview && <p className='text-[15px] font-medium leading-[22px] text-gray-600 break-keep truncate'>{post.preview}</p>}
                 </div>
 
                 <div className='flex items-center gap-3 mt-1'>
                   {/* 유저 프로필 */}
                   <div className='flex items-center gap-1.5'>
-                    <div className={`w-[20px] h-[20px] rounded-full ${post.authorColor}`}></div>
-                    <span className='text-[14px] font-bold leading-[22px] text-gray-600'>{post.author}</span>
+                    {post.profileImageUrl ? (
+                      <img src={post.profileImageUrl} alt='프로필' className='w-[20px] h-[20px] rounded-full object-cover' />
+                    ) : (
+                      <div className='w-[20px] h-[20px] rounded-full bg-gray-100 flex items-center justify-center overflow-hidden'>
+                        {renderCharacterProfile(post.characterCode)}</div>
+                    )}
+                    <span className='text-[14px] font-bold leading-[22px] text-gray-600'>{post.writer}</span>
                   </div>
 
                   <div className='flex flex-row items-center gap-2 whitespace-nowrap text-[14px] font-semibold leading-[22px] text-gray-500'>
                     <span className='flex items-center gap-1'>
                       <img src={HeartIcon} alt='좋아요' className='w-[11.25px] h-[10px]' />
-                      {post.likes}
+                      {post.numLikes}
                     </span>
                     <span className='flex items-center gap-1'>
                       <img src={CommentIcon} alt='댓글' className='w-[11.25px] h-[10.62px]' />
-                      {post.comments}
+                      {post.numComments}
                     </span>
                   </div>
 
-                  {!post.hasThumbnail && <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{post.time}</span>}
+                  {!post.imageUrl && (
+                    <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{formatTimeAgo(post.createdAt)}</span>)}
                 </div>
               </div>
-              {post.hasThumbnail && (
+              {post.imageUrl && (
                 <div className='flex flex-col items-center gap-1.5 shrink-0'>
-                  <div className='w-[60px] h-[60px] shrink-0 rounded-[10px] bg-gradient-to-br from-[#40DC8F] to-[#4BE1FF]'></div>
-                  <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{post.time}</span>
+                  <img
+                    src={post.imageUrl}
+                    alt='썸네일'
+                    className='w-[60px] h-[60px] rounded-[10px] object-cover shrink-0' />
+                  <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{formatTimeAgo(post.createdAt)}</span>
                 </div>
               )}
             </div>
