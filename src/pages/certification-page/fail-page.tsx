@@ -16,8 +16,6 @@ export default function FailPage() {
   const certificationSource = location?.state?.certificationSource;
   const [isOpenModal, setIsOpenModal] = useState(false);
 
-  console.log('FailPage state:', location.state);
-
   const handleRetryShoot = () => {
     // AI 검증 실패에 따른 재시도
     if (failureType === 'VLM_JUDGEMENT_FAILED' && retryAllowed && certificationId) {

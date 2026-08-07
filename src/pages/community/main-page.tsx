@@ -13,7 +13,6 @@ import PurpleCharacter from '../../assets/icons/character/purple.svg?react';
 import BlueCharacter from '../../assets/icons/character/blue.svg?react';
 import ShadowIcon from '../../assets/icons/character/shadow.svg?react';
 
-
 const formatTimeAgo = (dateString: string) => {
   const postDate = new Date(dateString);
   const now = new Date();
@@ -72,13 +71,20 @@ const getCategoryStyle = (category: string) => {
 
 const renderCharacterProfile = (code: number) => {
   switch (code) {
-    case 1: return <YellowCharacter className="w-full h-full" />;
-    case 2: return <GrayCharacter className="w-full h-full" />;
-    case 3: return <GreenCharacter className="w-full h-full" />;
-    case 4: return <OrangeCharacter className="w-full h-full" />;
-    case 5: return <PurpleCharacter className="w-full h-full" />;
-    case 6: return <BlueCharacter className="w-full h-full" />;
-    default: return <ShadowIcon className="w-full h-full" />;
+    case 1:
+      return <YellowCharacter className='w-full h-full' />;
+    case 2:
+      return <GrayCharacter className='w-full h-full' />;
+    case 3:
+      return <GreenCharacter className='w-full h-full' />;
+    case 4:
+      return <OrangeCharacter className='w-full h-full' />;
+    case 5:
+      return <PurpleCharacter className='w-full h-full' />;
+    case 6:
+      return <BlueCharacter className='w-full h-full' />;
+    default:
+      return <ShadowIcon className='w-full h-full' />;
   }
 };
 
@@ -90,14 +96,12 @@ export default function CommunityMainPage() {
   };
   const [selectedCategory, setSelectedCategory] = useState('전체보기');
 
-
   const [posts, setPosts] = useState<PostItem[]>([]);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const data = await getCommunityList();
-        console.log('서버에서 받아온 데이터:', data);
 
         setPosts(data.result.items);
       } catch (error) {
@@ -108,8 +112,7 @@ export default function CommunityMainPage() {
     fetchPosts();
   }, []);
 
-  const filteredPosts = selectedCategory === '전체보기'
-    ? posts : posts.filter((post) => formatCategory(post.category) === selectedCategory);
+  const filteredPosts = selectedCategory === '전체보기' ? posts : posts.filter((post) => formatCategory(post.category) === selectedCategory);
   return (
     <div className='font-pretendard bg-bg-green1 min-h-screen pb-32'>
       <section className='flex overflow-x-auto whitespace-nowrap p-4 gap-2 scrollbar-hide'>
@@ -133,8 +136,7 @@ export default function CommunityMainPage() {
       <section className='font-pretendard flex flex-col px-4 gap-4 pb-10'>
         {filteredPosts.map((post) => (
           <article key={post.id} onClick={() => handlePostClick(post.id)} className='bg-white rounded-[20px] p-5 shadow-[0_4px_10px_rgba(0,0,0,0.03)] flex flex-col gap-3'>
-            <span className={`w-fit flex items-center justify-center px-[9px] py-[4px] rounded-[20px] font-pretendard text-[11px] font-bold leading-none ${getCategoryStyle(formatCategory(post.category))}`}>
-              {formatCategory(post.category)}</span>
+            <span className={`w-fit flex items-center justify-center px-[9px] py-[4px] rounded-[20px] font-pretendard text-[11px] font-bold leading-none ${getCategoryStyle(formatCategory(post.category))}`}>{formatCategory(post.category)}</span>
 
             <div className='flex justify-between items-start gap-4'>
               <div className='flex flex-col flex-1 gap-2 min-w-0'>
@@ -146,12 +148,7 @@ export default function CommunityMainPage() {
                 <div className='flex items-center gap-3 mt-1'>
                   {/* 유저 프로필 */}
                   <div className='flex items-center gap-1.5'>
-                    {post.profileImageUrl ? (
-                      <img src={post.profileImageUrl} alt='프로필' className='w-[20px] h-[20px] rounded-full object-cover' />
-                    ) : (
-                      <div className='w-[20px] h-[20px] rounded-full bg-gray-100 flex items-center justify-center overflow-hidden'>
-                        {renderCharacterProfile(post.characterCode)}</div>
-                    )}
+                    {post.profileImageUrl ? <img src={post.profileImageUrl} alt='프로필' className='w-[20px] h-[20px] rounded-full object-cover' /> : <div className='w-[20px] h-[20px] rounded-full bg-gray-100 flex items-center justify-center overflow-hidden'>{renderCharacterProfile(post.characterCode)}</div>}
                     <span className='text-[14px] font-bold leading-[22px] text-gray-600'>{post.writer}</span>
                   </div>
 
@@ -166,16 +163,12 @@ export default function CommunityMainPage() {
                     </span>
                   </div>
 
-                  {!post.imageUrl && (
-                    <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{formatTimeAgo(post.createdAt)}</span>)}
+                  {!post.imageUrl && <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{formatTimeAgo(post.createdAt)}</span>}
                 </div>
               </div>
               {post.imageUrl && (
                 <div className='flex flex-col items-center gap-1.5 shrink-0'>
-                  <img
-                    src={post.imageUrl}
-                    alt='썸네일'
-                    className='w-[60px] h-[60px] rounded-[10px] object-cover shrink-0' />
+                  <img src={post.imageUrl} alt='썸네일' className='w-[60px] h-[60px] rounded-[10px] object-cover shrink-0' />
                   <span className='ml-auto text-[14px] font-semibold leading-[22px] text-gray-400'>{formatTimeAgo(post.createdAt)}</span>
                 </div>
               )}
