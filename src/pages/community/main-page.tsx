@@ -181,7 +181,6 @@ export default function CommunityMainPage() {
         <img src={PencilIcon} alt='글쓰기' className='h-6 w-6 invert brightness-0' />
       </button>
 
-      <BottomBar />
     </div>
   );
 }
