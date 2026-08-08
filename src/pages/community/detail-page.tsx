@@ -203,7 +203,7 @@ export default function CommunityDetailPage() {
 
   return (
     <div className='bg-bg-green1 min-h-screen pb-24 relative font-pretendard'>
-      <TopBar title='커뮤니티' leftIcon rightIcon={isMyPost ? <MoreIcon /> : HomeIcon} onClick={isMyPost ? () => setIsActionModalOpen(true) : () => navigate('/')} bgColor='bg-green1' />
+      <TopBar title='커뮤니티' leftIcon rightIcon={isMyPost ? <MoreIcon /> : HomeIcon} onClick={isMyPost ? () => setIsActionModalOpen(true) : () => navigate('/')} bgColor='bg-bg-green1' />
 
       <main className='px-5 pt-4 pb-6'>
         <div className='flex items-center gap-1.5 mb-3'>
