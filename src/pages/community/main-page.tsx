@@ -1,4 +1,3 @@
-import BottomBar from '../../components/common/BottomBar';
 import PencilIcon from '../../assets/icons/pencil.svg';
 import { useState, useEffect } from 'react';
 import HeartIcon from '../../assets/icons/heart.svg';
