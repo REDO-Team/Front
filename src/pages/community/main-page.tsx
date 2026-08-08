@@ -1,4 +1,3 @@
-import BottomBar from '../../components/common/BottomBar';
 import PencilIcon from '../../assets/icons/pencil.svg';
 import { useState, useEffect } from 'react';
 import HeartIcon from '../../assets/icons/heart.svg';
@@ -181,7 +180,6 @@ export default function CommunityMainPage() {
         <img src={PencilIcon} alt='글쓰기' className='h-6 w-6 invert brightness-0' />
       </button>
 
-      <BottomBar />
     </div>
   );
 }

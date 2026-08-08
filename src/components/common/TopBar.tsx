@@ -13,7 +13,7 @@ interface TopBarProps {
   navigateBack?: string;
 }
 
-export default function TopBar({ title, leftIcon, leftText, rightIcon, onClick, bgColor = 'white', color = 'black', position = 'fixed', navigateBack }: TopBarProps) {
+export default function TopBar({ title, leftIcon, leftText, rightIcon, onClick, bgColor = 'bg-white', color = 'black', position = 'fixed', navigateBack }: TopBarProps) {
   const navigate = useNavigate();
 
   const handleBack = () => {
@@ -25,9 +25,8 @@ export default function TopBar({ title, leftIcon, leftText, rightIcon, onClick, 
   };
 
   return (
-    <header className={`${position} top-0 w-full max-w-120 flex items-center justify-between h-14 px-4 z-50 bg-${bgColor}  ${!leftIcon && !leftText && !title ? 'justify-end' : 'justify-between'}`}>
+    <header className={`${position} top-0 w-full max-w-120 flex items-center justify-between h-14 px-4 z-50 ${bgColor}  ${!leftIcon && !leftText && !title ? 'justify-end' : 'justify-between'}`}>
       {/* 왼쪽 아이콘 영역 */}
-      {/* 꺾새 옆에 바로 글자를 적을 때 leftIcon에서 두 덩어리로 작성해주세요! */}
       {(leftIcon || leftText) && (
         <div className='flex items-center justify-center z-10 text-lg font-semibold leading-none text-text' onClick={handleBack}>
           <button type='button' className='w-6 h-6 flex justify-center items-center'>
