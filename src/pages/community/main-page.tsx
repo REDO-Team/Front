@@ -4,13 +4,7 @@ import HeartIcon from '../../assets/icons/heart.svg';
 import CommentIcon from '../../assets/icons/comment.svg';
 import { useNavigate } from 'react-router-dom';
 import { getCommunityList } from '../../apis/community';
-import YellowCharacter from '../../assets/icons/character/yellow.svg?react';
-import GrayCharacter from '../../assets/icons/character/gray.svg?react';
-import GreenCharacter from '../../assets/icons/character/green.svg?react';
-import OrangeCharacter from '../../assets/icons/character/orange.svg?react';
-import PurpleCharacter from '../../assets/icons/character/purple.svg?react';
-import BlueCharacter from '../../assets/icons/character/blue.svg?react';
-import ShadowIcon from '../../assets/icons/character/shadow.svg?react';
+import { renderCharacterProfile } from './utils';
 
 const formatTimeAgo = (dateString: string) => {
   const postDate = new Date(dateString);
@@ -40,7 +34,7 @@ interface PostItem {
   preview?: string;
   writer: string;
   profileImageUrl?: string;
-  characterCode: number;
+  characterCode: string;
   numLikes: number;
   numComments: number;
   imageUrl?: string;
@@ -65,25 +59,6 @@ const getCategoryStyle = (category: string) => {
       return 'bg-reward-bg text-reward-text';
     default:
       return 'bg-gray-100 text-gray-500';
-  }
-};
-
-const renderCharacterProfile = (code: number) => {
-  switch (code) {
-    case 1:
-      return <YellowCharacter className='w-full h-full' />;
-    case 2:
-      return <GrayCharacter className='w-full h-full' />;
-    case 3:
-      return <GreenCharacter className='w-full h-full' />;
-    case 4:
-      return <OrangeCharacter className='w-full h-full' />;
-    case 5:
-      return <PurpleCharacter className='w-full h-full' />;
-    case 6:
-      return <BlueCharacter className='w-full h-full' />;
-    default:
-      return <ShadowIcon className='w-full h-full' />;
   }
 };
 
@@ -147,7 +122,7 @@ export default function CommunityMainPage() {
                 <div className='flex items-center gap-3 mt-1'>
                   {/* 유저 프로필 */}
                   <div className='flex items-center gap-1.5'>
-                    {post.profileImageUrl ? <img src={post.profileImageUrl} alt='프로필' className='w-[20px] h-[20px] rounded-full object-cover' /> : <div className='w-[20px] h-[20px] rounded-full bg-gray-100 flex items-center justify-center overflow-hidden'>{renderCharacterProfile(post.characterCode)}</div>}
+                    {post.profileImageUrl ? <img src={post.profileImageUrl} alt='프로필' className='w-[20px] h-[20px] rounded-full object-cover' /> : <div className='w-[20px] h-[20px] rounded-full bg-gray-100 flex items-center justify-center overflow-hidden'>{renderCharacterProfile(Number(post.characterCode))}</div>}
                     <span className='text-[14px] font-bold leading-[22px] text-gray-600'>{post.writer}</span>
                   </div>
 

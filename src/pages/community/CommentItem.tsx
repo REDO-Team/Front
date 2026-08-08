@@ -1,12 +1,6 @@
 import { useState } from "react";
 import Modal from "../../components/common/Modal.tsx";
-import YellowCharacter from '../../assets/icons/character/yellow.svg?react';
-import GrayCharacter from '../../assets/icons/character/gray.svg?react';
-import GreenCharacter from '../../assets/icons/character/green.svg?react';
-import OrangeCharacter from '../../assets/icons/character/orange.svg?react';
-import PurpleCharacter from '../../assets/icons/character/purple.svg?react';
-import BlueCharacter from '../../assets/icons/character/blue.svg?react';
-import ShadowIcon from '../../assets/icons/character/shadow.svg?react';
+import { renderCharacterProfile } from "./utils.tsx";
 
 const formatTime = (dateString: string) => {
   if (!dateString) return "";
@@ -20,23 +14,11 @@ const formatTime = (dateString: string) => {
   return `${year}.${month}.${date} ${hours}:${minutes}`;
 };
 
-const renderCharacterProfile = (code: number) => {
-  switch (code) {
-    case 1: return <YellowCharacter className="w-full h-full" />;
-    case 2: return <GrayCharacter className="w-full h-full" />;
-    case 3: return <GreenCharacter className="w-full h-full" />;
-    case 4: return <OrangeCharacter className="w-full h-full" />;
-    case 5: return <PurpleCharacter className="w-full h-full" />;
-    case 6: return <BlueCharacter className="w-full h-full" />;
-    default: return <ShadowIcon className="w-full h-full" />;
-  }
-};
-
 export interface CommentData {
   commentId: number;
   writer: string;
   profileImageUrl?: string;
-  characterCode: number;
+  characterCode: string;
   content: string;
   createdAt: string;
   isMine: boolean;
@@ -85,7 +67,7 @@ export default function CommentItem({ comment, isMine, onUpdate, onDelete }: Com
             />
           ) : (
             <div className="w-[32px] h-[32px] rounded-full bg-gray-300 flex items-center justify-center">
-              {renderCharacterProfile(comment.characterCode)}
+              {renderCharacterProfile(Number(comment.characterCode))}
             </div>
           )}
 
