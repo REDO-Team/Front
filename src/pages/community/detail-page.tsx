@@ -10,19 +10,13 @@ import Modal from '../../components/common/Modal.tsx';
 import CommentItem, { type CommentData } from './CommentItem.tsx';
 import { getCommunityDetail, likeCommunity, unlikeCommunity, getComments, postComment, deleteCommunity, deleteComment, updateComment } from '../../apis/community.ts';
 import LoadingSpinner from '../../components/common/LoadingSpinner.tsx';
-import YellowCharacter from '../../assets/icons/character/yellow.svg?react';
-import GrayCharacter from '../../assets/icons/character/gray.svg?react';
-import GreenCharacter from '../../assets/icons/character/green.svg?react';
-import OrangeCharacter from '../../assets/icons/character/orange.svg?react';
-import PurpleCharacter from '../../assets/icons/character/purple.svg?react';
-import BlueCharacter from '../../assets/icons/character/blue.svg?react';
-import ShadowIcon from '../../assets/icons/character/shadow.svg?react';
+import { renderCharacterProfile } from './utils.tsx';
 
 interface PostDetail {
   category: string | number;
   title: string;
   profileImageUrl?: string;
-  characterCode: number;
+  characterCode: string;
   writer: string;
   createdAt: string;
   content: string;
@@ -62,25 +56,6 @@ const getCategoryStyle = (category: string) => {
       return 'bg-reward-bg text-reward-text';
     default:
       return 'bg-gray-100 text-gray-500';
-  }
-};
-
-const renderCharacterProfile = (code: number) => {
-  switch (code) {
-    case 1:
-      return <YellowCharacter className='w-full h-full' />;
-    case 2:
-      return <GrayCharacter className='w-full h-full' />;
-    case 3:
-      return <GreenCharacter className='w-full h-full' />;
-    case 4:
-      return <OrangeCharacter className='w-full h-full' />;
-    case 5:
-      return <PurpleCharacter className='w-full h-full' />;
-    case 6:
-      return <BlueCharacter className='w-full h-full' />;
-    default:
-      return <ShadowIcon className='w-full h-full' />;
   }
 };
 
@@ -241,7 +216,7 @@ export default function CommunityDetailPage() {
 
         {/* 작성자 프로필 */}
         <div className='flex items-center gap-2 mb-4'>
-          {post.profileImageUrl ? <img src={post.profileImageUrl} alt='프로필' className='w-[38px] h-[38px] rounded-full object-cover shrink-0' /> : <div className='w-[38px] h-[38px] rounded-full bg-gray-100 flex items-center justify-center overflow-hidden shrink-0'>{renderCharacterProfile(post.characterCode)}</div>}
+          {post.profileImageUrl ? <img src={post.profileImageUrl} alt='프로필' className='w-[38px] h-[38px] rounded-full object-cover shrink-0' /> : <div className='w-[38px] h-[38px] rounded-full bg-gray-100 flex items-center justify-center overflow-hidden shrink-0'>{renderCharacterProfile(Number(post.characterCode))}</div>}
           <div className='flex flex-col'>
             <span className='text-[14px] font-bold text-gray-800'>{post.writer}</span>
             <span className='text-[14px] font-semibold leading-[22px] text-gray-400'>{post.createdAt ? formatTime(post.createdAt) : ''}</span>
