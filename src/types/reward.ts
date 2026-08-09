@@ -44,6 +44,10 @@ export interface RewardProductListResult {
   hasNext: boolean;
 }
 
+export interface RewardProductPreviewResult {
+  items: RewardProductListItem[];
+}
+
 export interface RewardProductDetail extends RewardProductListItem {
   description: string;
   usageGuide: string;

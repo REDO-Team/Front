@@ -9,7 +9,7 @@ import { HOME_SERVICE_MENU_ITEMS } from '../mocks/home';
 import type { HomeServiceMenuItem } from '../types/home';
 import { useNavigate } from 'react-router-dom';
 import { getMyInfo } from '../apis/user';
-import { getRewardProducts } from '../apis/reward';
+import { getRewardPreview } from '../apis/reward';
 import { useQuery } from '@tanstack/react-query';
 import RewardProductCard from '../components/RewardPage/RewardProductCard';
 import { useState } from 'react';
@@ -58,8 +58,8 @@ const useInfo = () => {
 
 const useRewardProducts = () => {
   return useQuery({
-    queryKey: ['rewardProducts', { size: 2 }],
-    queryFn: () => getRewardProducts({ size: 2 }),
+    queryKey: ['rewardProducts', 'preview'],
+    queryFn: getRewardPreview,
   });
 };
 
