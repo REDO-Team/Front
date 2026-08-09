@@ -15,7 +15,7 @@ import LoadingSpinner from '../../components/common/LoadingSpinner';
 const NOTION_URL_BY_CODE: Record<string, string> = {
   SERVICE: 'https://app.notion.com/p/368eb332282b80c39c48d3f7ab31558d?source=copy_link',
   PRIVACY: 'https://app.notion.com/p/391eb332282b806d90c0eff9827a7d5f?source=copy_link',
-  AI: 'https://app.notion.com/p/AI-392eb332282b809086f0d3f3915ec6c7?source=copy_link',
+  AI_SERVICE: 'https://app.notion.com/p/AI-392eb332282b809086f0d3f3915ec6c7?source=copy_link',
   MARKETING: 'https://app.notion.com/p/39aeb332282b8012bd2cca451c75d311?source=copy_link',
 };
 
@@ -64,6 +64,28 @@ const TermsPage = () => {
         setLoadErrorMessage('');
 
         const termsData = await getTerms();
+
+        // AI 서비스 약관과 마케팅 약관 순서 변경
+const aiIndex = termsData.findIndex(
+  (term) => term.code === 'AI_SERVICE',
+);
+
+const marketingIndex = termsData.findIndex(
+  (term) => term.code === 'MARKETING',
+);
+
+if (
+  aiIndex !== -1 &&
+  marketingIndex !== -1
+) {
+  [
+    termsData[aiIndex],
+    termsData[marketingIndex],
+  ] = [
+    termsData[marketingIndex],
+    termsData[aiIndex],
+  ];
+}
 
         setTerms(termsData);
 
