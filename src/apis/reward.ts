@@ -16,6 +16,7 @@ import type {
   RewardPurchaseRequest,
   RewardRedemptionResult,
   RewardRedemptionParams,
+  RewardProductPreviewResult,
 } from '../types/reward';
 
 export const getRewardPoints = async (): Promise<RewardPointResponse> => {
@@ -172,6 +173,18 @@ export const getRewardRedemptions = async (
     throw new Error(
       '리워드 사용 내역 조회 결과가 없습니다.',
     );
+  }
+
+  return response.data.result;
+};
+
+export const getRewardPreview = async (): Promise<RewardProductPreviewResult> => {
+  const response = await api.get<ApiResponse<RewardProductPreviewResult>>(
+    '/api/rewards/products/preview',
+  );
+
+  if (!response.data.result) {
+    throw new Error('리워드 상품 미리보기 조회 결과가 없습니다.');
   }
 
   return response.data.result;
