@@ -65,7 +65,7 @@ function RewardAddressDetailForm({
       await queryClient.invalidateQueries({
         queryKey: ['rewardAddressList'],
       });
-      navigate('/reward/address-list');
+      navigate(-2);
     },
     onError: (error) => {
       console.error('배송지 생성에 실패했습니다.', error);
@@ -86,7 +86,7 @@ function RewardAddressDetailForm({
     }) => editRewardAddress(shippingAddressId, request),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['rewardAddressList'] });
-      navigate('/reward/address-list');
+      navigate(-1);
     },
     onError: (error) => {
       console.error('배송지 수정에 실패했습니다.', error);
