@@ -1,4 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import {
+  useEffect,
+  useRef,
+} from 'react';
+
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 import ShippingIcon from '../../assets/icons/shipping.svg?react';
@@ -38,60 +43,120 @@ const formatRedeemedAt = (
 };
 
 const RewardUseHistoryPage = () => {
+  const loadMoreRef =
+    useRef<HTMLDivElement | null>(null);
+
   const {
     data,
     isPending,
     isError,
-  } = useQuery({
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ['rewardRedemptions'],
-    queryFn: () =>
+
+    initialPageParam:
+      undefined as number | undefined,
+
+    queryFn: ({ pageParam }) =>
       getRewardRedemptions({
+        cursor: pageParam,
         size: 10,
       }),
+
+    getNextPageParam: (lastPage) => {
+      if (
+        !lastPage.hasNext ||
+        lastPage.nextCursor === null
+      ) {
+        return undefined;
+      }
+
+      return lastPage.nextCursor;
+    },
   });
 
   const rewardUseHistory =
-    data?.content ?? [];
+    data?.pages.flatMap(
+      (page) => page.content ?? [],
+    ) ?? [];
+
+  useEffect(() => {
+    const target = loadMoreRef.current;
+
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+
+        if (
+          entry?.isIntersecting &&
+          hasNextPage &&
+          !isFetchingNextPage
+        ) {
+          void fetchNextPage();
+        }
+      },
+      {
+        rootMargin: '100px',
+      },
+    );
+
+    observer.observe(target);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  ]);
 
   const renderStatusIcon = (
-  type: FulfillmentType,
-  status: FulfillmentStatus,
-) => {
-  if (status === 'READY' || status === 'SENT') {
-    return (
-      <ShippingIcon
-        aria-label='처리중'
-        className='h-[22px] w-auto shrink-0'
-      />
-    );
-  }
+    type: FulfillmentType,
+    status: FulfillmentStatus,
+  ) => {
+    if (
+      status === 'READY' ||
+      status === 'SENT'
+    ) {
+      return (
+        <ShippingIcon
+          aria-label='처리중'
+          className='h-[22px] w-auto shrink-0'
+        />
+      );
+    }
 
-  if (
-    type === 'DELIVERY' &&
-    status === 'COMPLETED'
-  ) {
-    return (
-      <DeliveryCompleteIcon
-        aria-label='배송완료'
-        className='h-[22px] w-auto shrink-0'
-      />
-    );
-  }
+    if (
+      type === 'DELIVERY' &&
+      status === 'COMPLETED'
+    ) {
+      return (
+        <DeliveryCompleteIcon
+          aria-label='배송완료'
+          className='h-[22px] w-auto shrink-0'
+        />
+      );
+    }
 
-  if (
-    type === 'COUPON' &&
-    status === 'COMPLETED'
-  ) {
-    return (
-      <ExchangeCompleteIcon
-        aria-label='발송완료'
-        className='h-[22px] w-auto shrink-0'
-      />
-    );
-  }
+    if (
+      type === 'COUPON' &&
+      status === 'COMPLETED'
+    ) {
+      return (
+        <ExchangeCompleteIcon
+          aria-label='발송완료'
+          className='h-[22px] w-auto shrink-0'
+        />
+      );
+    }
 
-  return null;
-};
+    return null;
+  };
 
   if (isPending) {
     return (
@@ -153,12 +218,23 @@ const RewardUseHistoryPage = () => {
                 {/* 배송 상태 */}
                 <div className='ml-[8px] self-start pt-[1px]'>
                   {renderStatusIcon(
-                      item.fulfillmentType,
+                    item.fulfillmentType,
                     item.fulfillmentStatus,
                   )}
                 </div>
               </li>
             ))}
+
+            <div
+              ref={loadMoreRef}
+              className='h-1'
+            />
+
+            {isFetchingNextPage && (
+              <div className='flex justify-center py-4'>
+                <LoadingSpinner />
+              </div>
+            )}
           </ul>
         ) : (
           <div className='flex min-h-[calc(100vh-72px)] flex-col items-center justify-center pb-[80px]'>

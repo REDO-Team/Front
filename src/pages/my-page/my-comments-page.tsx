@@ -1,10 +1,14 @@
 import type { MouseEvent } from 'react';
 import {
+  useInfiniteQuery,
   useMutation,
-  useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { useState } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -21,8 +25,12 @@ const formatCreatedAt = (createdAt: string) => {
   const date = new Date(createdAt);
 
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(
+    date.getMonth() + 1,
+  ).padStart(2, '0');
+  const day = String(
+    date.getDate(),
+  ).padStart(2, '0');
 
   return `${year}.${month}.${day}`;
 };
@@ -39,16 +47,71 @@ const MyCommentsPage = () => {
   const [deleteTarget, setDeleteTarget] =
     useState<DeleteCommentTarget | null>(null);
 
+  const loadMoreRef =
+    useRef<HTMLDivElement | null>(null);
+
   const {
     data,
     isPending,
     isError,
-  } = useQuery({
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ['myComments'],
-    queryFn: () => getMyComments(0, 10),
+    initialPageParam: 0,
+
+    queryFn: ({ pageParam }) =>
+      getMyComments(pageParam, 10),
+
+    getNextPageParam: (lastPage) => {
+      const result = lastPage.result;
+
+      if (!result || !result.hasNext) {
+        return undefined;
+      }
+
+      return result.page + 1;
+    },
   });
 
-  const comments = data?.result?.items ?? [];
+  const comments =
+    data?.pages.flatMap(
+      (page) => page.result?.items ?? [],
+    ) ?? [];
+
+  useEffect(() => {
+    const target = loadMoreRef.current;
+
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+
+        if (
+          entry?.isIntersecting &&
+          hasNextPage &&
+          !isFetchingNextPage
+        ) {
+          void fetchNextPage();
+        }
+      },
+      {
+        rootMargin: '100px',
+      },
+    );
+
+    observer.observe(target);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  ]);
 
   const deleteMutation = useMutation({
     mutationFn: ({
@@ -126,7 +189,7 @@ const MyCommentsPage = () => {
 
   return (
     <div className='min-h-screen bg-bg-my'>
-      <main className='px-[20px] pt-[72px]'>
+      <main className='px-[20px] pt-[60px]'>
         {comments.length > 0 ? (
           <section className='flex flex-col gap-[10px]'>
             {comments.map((comment) => (
@@ -168,6 +231,17 @@ const MyCommentsPage = () => {
                 </div>
               </article>
             ))}
+
+            <div
+              ref={loadMoreRef}
+              className='h-1'
+            />
+
+            {isFetchingNextPage && (
+              <div className='flex justify-center py-4'>
+                <LoadingSpinner />
+              </div>
+            )}
           </section>
         ) : (
           <div className='flex min-h-[calc(100vh-72px)] flex-col items-center justify-center pb-[80px]'>
