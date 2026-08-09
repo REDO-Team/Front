@@ -86,10 +86,10 @@ const Layout = () => {
         {isCommunityWrite && <TopBar title='게시글 작성' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
         {isCommunityModify && <TopBar title='게시글 수정' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
 
-        {isMyPosts && <TopBar title='작성한 게시글' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-my' />}
-        {isMyfavorites && <TopBar title='즐겨찾기한 배출정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-my' />}
-        {isMyhistory && <TopBar title='리워드 사용내역' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-my' />}
-        {isMycomments && <TopBar title='작성한 댓글' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-my' />}
+        {isMyPosts && <TopBar title='작성한 게시글' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
+        {isMyfavorites && <TopBar title='즐겨찾기한 배출정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
+        {isMyhistory && <TopBar title='리워드 사용내역' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
+        {isMycomments && <TopBar title='작성한 댓글' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
 
         {isReward && <TopBar title='리워드 적립' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
         {isRewardHistory && <TopBar title='리워드 내역' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
