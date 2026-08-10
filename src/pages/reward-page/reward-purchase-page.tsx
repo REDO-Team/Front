@@ -17,6 +17,7 @@ import {
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import FailInfo from '../../components/common/FailInfo';
 import Modal from '../../components/common/Modal';
+import { useRewardPurchaseStore } from '../../store/rewardPurchaseStore';
 
 interface PurchaseSectionProps {
   product: RewardProductDetail;
@@ -91,6 +92,7 @@ function GifticonPurchaseSection({
 }
 
 export default function RewardCheckoutPage() {
+  const { selectedShippingAddressId} = useRewardPurchaseStore();
   const [receiverName, setReceiverName] = useState('');
   const [receiverPhone, setReceiverPhone] = useState('');
   const [isInsufficientPointModalOpen, setIsInsufficientPointModalOpen] =
@@ -131,7 +133,9 @@ export default function RewardCheckoutPage() {
     enabled: isPartnerProduct,
   });
   const selectedShippingAddress =
-    addressList?.find(({ isDefault }) => isDefault) ?? addressList?.[0] ?? null;
+    addressList?.find(
+      ({ shippingAddressId }) => shippingAddressId === selectedShippingAddressId,
+    ) ?? addressList?.find(({ isDefault }) => isDefault) ?? addressList?.[0] ?? null;
   const {
     mutate: purchaseReward,
     isPending: isPurchasing,

@@ -10,10 +10,11 @@ import {
   deleteRewardAddress,
   getRewardAddressList,
 } from '../../apis/reward';
+import { useRewardPurchaseStore } from '../../store/rewardPurchaseStore';
 
 export default function RewardAddressListPage() {
   const navigate = useNavigate();
-  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+  const { selectedShippingAddressId, setSelectedShippingAddressId } = useRewardPurchaseStore();
   const [deleteAddressId, setDeleteAddressId] = useState<number | null>(null);
   const {
     data: addressList,
@@ -26,7 +27,7 @@ export default function RewardAddressListPage() {
 
   const shippingAddresses = addressList ?? [];
   const effectiveSelectedAddressId =
-    selectedAddressId ??
+    selectedShippingAddressId ??
     shippingAddresses.find(({ isDefault }) => isDefault)?.shippingAddressId ??
     shippingAddresses[0]?.shippingAddressId ??
     null;
@@ -36,9 +37,9 @@ export default function RewardAddressListPage() {
   const deleteAddressMutation = useMutation({
     mutationFn: deleteRewardAddress,
     onSuccess: (_, deletedAddressId) => {
-      setSelectedAddressId((currentAddressId) =>
-        currentAddressId === deletedAddressId ? null : currentAddressId,
-      );
+      if (selectedShippingAddressId === deletedAddressId) {
+        setSelectedShippingAddressId(null);
+      };
       queryClient.invalidateQueries({ queryKey: ['rewardAddressList'] });
     },
     onError: () => {
@@ -87,7 +88,7 @@ export default function RewardAddressListPage() {
               key={shippingAddress.shippingAddressId}
               shippingAddressListResponse={shippingAddress}
               isSelected={effectiveSelectedAddressId === shippingAddress.shippingAddressId}
-              onSelect={() => setSelectedAddressId(shippingAddress.shippingAddressId)}
+              onSelect={() => setSelectedShippingAddressId(shippingAddress.shippingAddressId)}
               onEdit={() => navigate(`/reward/address-detail/${shippingAddress.shippingAddressId}/edit`)}
               onDelete={() => setDeleteAddressId(shippingAddress.shippingAddressId)}
             />
