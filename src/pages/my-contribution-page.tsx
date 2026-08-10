@@ -50,10 +50,10 @@ export default function MyContributionPage() {
       <section>
         <div className='px-5 py-6'>
           <h2 className='text-[20px] font-bold leading-[1.35] text-text'>
-            {data?.nickname}님,
-            <br />
             {data?.latestAchievedMilestone ? (
               <>
+                {data?.nickname}님,
+                <br />
                 지금까지 {data?.totalCertificationCount}번의 분리수거로
                 <br />
                 <span className='text-main-green2'>{data?.latestAchievedMilestone.name}</span>를 만들었어요!
