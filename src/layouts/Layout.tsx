@@ -74,7 +74,7 @@ const Layout = () => {
         {isCertificationGuide && <TopBar title='인증 가이드' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
         {isCertificationShoot && <TopBar title='촬영하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
         {isCertificationSuccess && <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' navigateBack='certification' />}
-        {isCertificationFail && <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} navigateBack='certification' />}
+        {isCertificationFail && <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' navigateBack='certification' />}
 
         {isDisposalInfo && <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' navigateBack='/' />}
         {isImageSearch && <TopBar title='이미지 검색' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
