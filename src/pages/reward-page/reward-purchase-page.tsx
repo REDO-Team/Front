@@ -193,7 +193,7 @@ export default function RewardCheckoutPage() {
     (isPartnerProduct && isAddressError)
   ) {
     return (
-      <div className='flex flex-1 flex-col bg-white px-5 pb-6 pt-4 font-pretendard'>
+      <div className='flex flex-1 flex-col bg-[#F9FBFB] px-5 pb-6 pt-4 font-pretendard'>
         <FailInfo
           title='제품을 불러오지 못했어요.'
           content='제품 번호를 확인한 후 다시 시도해 주세요.'
@@ -208,7 +208,7 @@ export default function RewardCheckoutPage() {
     (isPartnerProduct && isAddressPending)
   ) {
     return (
-      <div className='flex flex-1 items-center justify-center bg-white'>
+      <div className='flex flex-1 items-center justify-center bg-[#F9FBFB]'>
         <LoadingSpinner />
       </div>
     );
@@ -216,7 +216,7 @@ export default function RewardCheckoutPage() {
 
   if (!productDetail || !rewardPoints) {
     return (
-      <div className='flex flex-1 flex-col bg-white px-5 pb-6 pt-4 font-pretendard'>
+      <div className='flex flex-1 flex-col bg-[#F9FBFB] px-5 pb-6 pt-4 font-pretendard'>
         <FailInfo
           title='제품을 찾을 수 없어요.'
           content='잠시 후 다시 시도해 주세요.'
@@ -236,7 +236,7 @@ export default function RewardCheckoutPage() {
     (isPartner ? !selectedShippingAddress : !hasGifticonRecipient);
 
   return (
-    <div className='flex flex-1 flex-col bg-bg-green1 px-5 pb-6 pt-4 font-pretendard'>
+    <div className='flex flex-1 flex-col bg-[#F9FBFB] px-5 pb-6 pt-4 font-pretendard'>
       <h1 className='text-lg font-bold text-text'>제품 내역</h1>
       <div className='mt-3 flex min-h-27 items-center gap-4 rounded-[28px] bg-white px-5 py-[18px]'>
         <div className='flex h-[70px] w-[70px] shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gray-100'>

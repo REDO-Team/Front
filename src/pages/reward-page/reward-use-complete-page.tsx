@@ -41,7 +41,7 @@ export default function RewardUseCompletePage() {
 
   if (!locationProductType && isPending) {
     return (
-      <div className='flex flex-1 items-center justify-center bg-bg-green1'>
+      <div className='flex flex-1 items-center justify-center bg-[#F9FBFB]'>
         <LoadingSpinner />
       </div>
     );
@@ -49,7 +49,7 @@ export default function RewardUseCompletePage() {
 
   if (!rewardProductType || isError) {
     return (
-      <div className='flex flex-1 flex-col bg-bg-green1 px-5 pb-6 font-pretendard'>
+      <div className='flex flex-1 flex-col bg-[#F9FBFB] px-5 pb-6 font-pretendard'>
         <FailInfo
           title='완료 정보를 불러오지 못했어요.'
           content='리워드 스토어에서 사용 내역을 확인해 주세요.'
@@ -69,7 +69,7 @@ export default function RewardUseCompletePage() {
     rewardProductType === 'PARTNER_BRAND' ? '배송지' : '번호';
 
   return (
-    <div className='flex flex-1 flex-col bg-bg-green1 px-5 pb-6 font-pretendard text-text'>
+    <div className='flex flex-1 flex-col bg-[#F9FBFB] px-5 pb-6 font-pretendard text-text'>
       <div className='flex flex-1 flex-col items-center justify-center text-center'>
         <img
           src={FullCheck}

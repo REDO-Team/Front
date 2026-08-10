@@ -160,7 +160,7 @@ const RewardUseHistoryPage = () => {
 
   if (isPending) {
     return (
-      <div className='flex min-h-screen items-center justify-center bg-bg-my'>
+      <div className='flex min-h-screen items-center justify-center bg-[#F9FBFB]'>
         <LoadingSpinner />
       </div>
     );
@@ -168,14 +168,14 @@ const RewardUseHistoryPage = () => {
 
   if (isError) {
     return (
-      <div className='flex min-h-screen items-center justify-center bg-bg-my'>
+      <div className='flex min-h-screen items-center justify-center bg-[#F9FBFB]'>
         리워드 사용 내역을 불러오지 못했어요.
       </div>
     );
   }
 
   return (
-    <div className='min-h-screen bg-bg-my'>
+    <div className='min-h-screen bg-[#F9FBFB]'>
       <main className='px-5 pb-[40px] pt-[60px]'>
         {rewardUseHistory.length > 0 ? (
           <ul className='flex flex-col gap-[10px]'>

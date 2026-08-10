@@ -45,7 +45,7 @@ export default function RewardAddressSearchPage() {
   };
 
   return (
-    <div className='flex flex-1 flex-col bg-bg-green1 px-4 pb-8 font-pretendard'>
+    <div className='flex flex-1 flex-col bg-[#F9FBFB] px-4 pb-8 font-pretendard'>
       <h1 className='mt-4 text-xl font-semibold text-black'>주소를 검색해주세요</h1>
 
       <form className='mt-4 flex items-center gap-3' onSubmit={handleSearch}>

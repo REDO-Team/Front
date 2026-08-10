@@ -63,10 +63,10 @@ const Layout = () => {
 
   const hideBottomBar = isLogin || isSignup || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isCertificationFail || isImageSearch || isProblemSearch || isMyContribution || isAllContribution || isDisposalInfoFail || isDisposalInfoDetail || isCamera || isDisposalInfo || isReward || isCommunityDetail || isMyPosts || isMycomments || isMyProfileEdit || isMyfavorites || isMyhistory || isCommunityWrite || isCommunityModify;
 
-  const hasGreenBackground = isGuide || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isDisposalInfo || isDisposalInfoDetail || isImageSearch || isProblemSearch || isDisposalInfoFail || isCamera || isAllContribution || isReward || isCommunityMain || isCommunityWrite || isCommunityModify || isCommunityDetail || isMyContribution;
+  const hasGreenBackground = isGuide || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isDisposalInfo || isDisposalInfoDetail || isImageSearch || isProblemSearch || isDisposalInfoFail || isCamera || isCommunityMain || isCommunityWrite || isCommunityModify || isCommunityDetail;
 
   return (
-    <div className={`flex flex-1 flex-col min-h-screen ${hasGreenBackground ? 'bg-bg-green1' : 'bg-white'}`}>
+    <div className={`flex flex-1 flex-col min-h-screen ${hasGreenBackground ? 'bg-bg-green1' : 'bg-bg-my'}`}>
       <div className='flex mx-auto min-h-screen w-full max-w-120'>
         {isGuide && <TopBar title='이용 가이드' bgColor='bg-bg-green1' />}
 
@@ -91,17 +91,17 @@ const Layout = () => {
         {isMyhistory && <TopBar title='리워드 사용내역' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
         {isMycomments && <TopBar title='작성한 댓글' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
 
-        {isReward && <TopBar title='리워드 적립' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
-        {isRewardHistory && <TopBar title='리워드 내역' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
-        {isRewardStore && <TopBar title='리워드 상점' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
-        {isRewardProdocts && <TopBar title='제품 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
-        {isRewardCheckout && <TopBar title='포인트 사용' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
-        {isRewardAddressList && <TopBar title='배송지 목록' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
-        {isRewardAddressSearch && <TopBar title='배송지 입력' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
-        {isRewardAddressEdit && <TopBar title='배송지 입력' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isReward && <TopBar title='리워드 적립' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
+        {isRewardHistory && <TopBar title='리워드 내역' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
+        {isRewardStore && <TopBar title='리워드 상점' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
+        {isRewardProdocts && <TopBar title='제품 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
+        {isRewardCheckout && <TopBar title='포인트 사용' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
+        {isRewardAddressList && <TopBar title='배송지 목록' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
+        {isRewardAddressSearch && <TopBar title='배송지 입력' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
+        {isRewardAddressEdit && <TopBar title='배송지 입력' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
 
-        {isMyContribution && <TopBar title='나의 기여도' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
-        {isAllContribution && <TopBar title='전체 기여도' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isMyContribution && <TopBar title='나의 기여도' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
+        {isAllContribution && <TopBar title='전체 기여도' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
 
         <div className={`mx-auto flex w-full max-w-120 flex-col ${hideTopBar ? 'min-h-dvh' : 'pt-14'}`}>
           <main className='flex flex-1 flex-col'>

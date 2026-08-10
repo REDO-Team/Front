@@ -54,7 +54,7 @@ export default function RewardAddressListPage() {
 
   if (isPending) {
     return (
-      <div className='flex flex-1 items-center justify-center bg-bg-green1'>
+      <div className='flex flex-1 items-center justify-center bg-[#F9FBFB]'>
         <LoadingSpinner />
       </div>
     );
@@ -62,7 +62,7 @@ export default function RewardAddressListPage() {
 
   if (isError || !addressList) {
     return (
-      <div className='flex flex-1 flex-col bg-bg-green1 px-4 pb-8 font-pretendard'>
+      <div className='flex flex-1 flex-col bg-[#F9FBFB] px-4 pb-8 font-pretendard'>
         <FailInfo
           title='배송지 목록을 불러오지 못했어요.'
           content='잠시 후 다시 시도해 주세요.'
@@ -72,7 +72,7 @@ export default function RewardAddressListPage() {
   }
 
   return (
-    <div className='flex flex-1 flex-col bg-bg-green1 px-4 pb-8 font-pretendard'>
+    <div className='flex flex-1 flex-col bg-[#F9FBFB] px-4 pb-8 font-pretendard'>
       <button type='button' onClick={() => navigate('/reward/address-search')} className='mx-4 mt-4 flex h-16 w-[calc(100%-2rem)] items-center justify-center gap-3 rounded-[22px] border border-dashed border-main-green1 bg-bg-green2 font-pretendard text-base font-bold text-main-green1'>
         <span aria-hidden='true' className='text-[30px] font-light leading-none'>
           +

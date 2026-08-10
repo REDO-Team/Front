@@ -25,9 +25,21 @@ export default function RewardProductDetailPage() {
     !product ||
     product.stockQuantity === 0 ||
     product.status !== 'ACTIVE';
+  const descriptionItems = product
+    ? product.description
+        .split(/\r?\n/)
+        .map((content) => content.trim())
+        .filter(Boolean)
+    : [];
+  const gifticonUsageItems = product
+    ? [product.description, product.usageGuide]
+        .flatMap((content) => content.split(/\r?\n/))
+        .map((content) => content.trim())
+        .filter(Boolean)
+    : [];
 
   return (
-    <div className='flex flex-1 flex-col bg-white px-5 pb-6 pt-4 font-pretendard'>
+    <div className='flex flex-1 flex-col bg-[#F9FBFB] px-5 pb-6 pt-4 font-pretendard'>
       {!isValidProductId ? (
         <FailInfo
           title='제품을 찾을 수 없어요.'
@@ -77,23 +89,46 @@ export default function RewardProductDetailPage() {
               <h2 id='product-description-title' className='text-base font-bold text-text'>
                 제품 설명
               </h2>
-              <p className='mt-2 text-sm leading-6 text-gray-600'>{product.description ?? '제품 설명이 준비 중입니다.'}</p>
+              {descriptionItems.length > 0 ? (
+                <ul className='mt-2 space-y-1 text-sm leading-6 text-gray-600'>
+                  {descriptionItems.map((item, index) => (
+                    <li key={`${item}-${index}`} className='flex items-start gap-2'>
+                      <span aria-hidden='true' className='mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-main-green1' />
+                      <span className='min-w-0 break-words'>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className='mt-2 text-sm leading-6 text-gray-600'>제품 설명이 준비 중입니다.</p>
+              )}
             </section>
           ) : (
-            <section aria-labelledby='usage-guide-title'>
-              <h2 id='usage-guide-title' className='text-base font-bold text-text'>
-                사용 안내
-              </h2>
-              <div className='mt-2 flex items-start gap-2 text-sm leading-6 text-gray-600'>
-                <span aria-hidden='true' className='mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-main-green1' />
-                <p>{product.usageGuide ?? '사용 안내가 준비 중입니다.'}</p>
-              </div>
+            <div className='space-y-6'>
+              <section aria-labelledby='usage-guide-title'>
+                <h2 id='usage-guide-title' className='text-base font-bold text-text'>
+                  사용 안내
+                </h2>
+                {gifticonUsageItems.length > 0 ? (
+                  <ul className='mt-2 space-y-1 text-sm leading-6 text-gray-600'>
+                    {gifticonUsageItems.map((item, index) => (
+                      <li key={`${item}-${index}`} className='flex items-start gap-2'>
+                        <span aria-hidden='true' className='mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-main-green1' />
+                        <span className='min-w-0 break-words'>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className='mt-2 text-sm leading-6 text-gray-600'>사용 안내가 준비 중입니다.</p>
+                )}
+              </section>
 
-              <dl className='mt-6 flex items-center justify-between rounded-2xl bg-bg-green1 px-5 py-4 shadow-[0_5px_14px_rgba(0,0,0,0.05)]'>
-                <dt className='text-xs font-medium text-gray-400'>유효기간</dt>
-                <dd className='text-xs font-bold text-gray-700'>발급일로부터 {product.validityDays}일</dd>
-              </dl>
-            </section>
+              {product.validityDays != null && (
+                <dl className='flex items-center justify-between rounded-2xl bg-bg-green1 px-5 py-4 shadow-[0_5px_14px_rgba(0,0,0,0.05)]'>
+                  <dt className='text-xs font-medium text-gray-400'>유효기간</dt>
+                  <dd className='text-xs font-bold text-gray-700'>발급일로부터 {product.validityDays}일</dd>
+                </dl>
+              )}
+            </div>
           )}
 
           <div className='mt-auto pt-8'>

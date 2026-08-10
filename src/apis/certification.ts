@@ -15,7 +15,7 @@ export const postCertification = async ({ image, certificationSource, recycleGui
   formData.append('image', image);
   formData.append('certificationSource', certificationSource);
 
-  if (recycleGuideId !== null) {
+  if (recycleGuideId !== null && recycleGuideId !== undefined) {
     formData.append('recycleGuideId', recycleGuideId.toString());
   }
 

@@ -21,6 +21,7 @@ export default function FailPage() {
     if (failureType === 'VLM_JUDGEMENT_FAILED' && retryAllowed && certificationId) {
       navigate('/camera', {
         state: {
+          from: 'certification',
           certificationId,
         },
       });
@@ -32,7 +33,6 @@ export default function FailPage() {
           from: 'certification',
           certificationSource,
           guideId,
-          // certificationId
         },
       });
     } else {
