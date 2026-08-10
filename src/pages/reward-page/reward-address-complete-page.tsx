@@ -15,7 +15,7 @@ export default function RewardAddressCompletePage() {
   }
 
   return (
-    <div className='flex flex-1 flex-col bg-bg-green1 px-5 pb-6 font-pretendard text-text'>
+    <div className='flex flex-1 flex-col bg-[#F9FBFB] px-5 pb-6 font-pretendard text-text'>
       <div className='flex flex-1 flex-col items-center justify-center text-center'>
         <img
           src={FullCheck}

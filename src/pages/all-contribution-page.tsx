@@ -104,7 +104,7 @@ export default function AllContributionPage() {
 
   if (isPending) {
     return (
-      <div className='flex min-h-[calc(100dvh-56px)] items-center justify-center bg-bg-green1'>
+      <div className='flex min-h-[calc(100dvh-56px)] items-center justify-center bg-[#F9FBFB]'>
         <LoadingSpinner />
       </div>
     );
@@ -112,7 +112,7 @@ export default function AllContributionPage() {
 
   if (isError) {
     return (
-      <div className='flex min-h-[calc(100dvh-56px)] flex-col items-center justify-center gap-4 bg-bg-green1 px-5 text-center'>
+      <div className='flex min-h-[calc(100dvh-56px)] flex-col items-center justify-center gap-4 bg-[#F9FBFB] px-5 text-center'>
         <p className='text-base font-semibold text-text'>
           전체 기여도를 불러오지 못했어요.
         </p>
@@ -131,7 +131,7 @@ export default function AllContributionPage() {
   const feeds = data.pages.flatMap((page) => page.feeds);
 
   return (
-    <div className='min-h-[calc(100dvh-56px)] bg-bg-green1'>
+    <div className='min-h-[calc(100dvh-56px)] bg-[#F9FBFB]'>
       <div className='px-5 py-6'>
         <UserCountBanner
           userCount={firstPage.totalParticipantCount}

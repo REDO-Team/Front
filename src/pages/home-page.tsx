@@ -94,7 +94,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className='min-h-screen bg-bg-green1 pb-32 font-pretendard text-text'>
+    <div className='min-h-screen bg-[#F9FBFB] pb-32 font-pretendard text-text'>
       <main className='px-5 pb-8 pt-4'>
         {/* 홈 상단 인사말과 로그아웃 진입 버튼입니다. */}
         <header className='flex items-start justify-between'>

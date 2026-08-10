@@ -27,7 +27,7 @@ export default function RewardProductDetailPage() {
     product.status !== 'ACTIVE';
 
   return (
-    <div className='flex flex-1 flex-col bg-white px-5 pb-6 pt-4 font-pretendard'>
+    <div className='flex flex-1 flex-col bg-[#F9FBFB] px-5 pb-6 pt-4 font-pretendard'>
       {!isValidProductId ? (
         <FailInfo
           title='제품을 찾을 수 없어요.'
