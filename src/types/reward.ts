@@ -51,7 +51,7 @@ export interface RewardProductPreviewResult {
 export interface RewardProductDetail extends RewardProductListItem {
   description: string;
   usageGuide: string;
-  validityDays: number;
+  validityDays: number | null;
 }
 
 export interface RewardHistory {
