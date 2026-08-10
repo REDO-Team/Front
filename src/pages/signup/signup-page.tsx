@@ -117,7 +117,27 @@ const SignupPage = () => {
     setVerificationCode('');
 
     alert('인증번호를 발송했습니다.');
-  } catch {
+  } catch (error) {
+    if (!axios.isAxiosError(error) || !error.response) {
+      alert('인증번호 발송에 실패했습니다.');
+      return;
+    }
+
+    const {code,message,} = error.response.data;
+
+    // 이메일 형식이 올바르지 않은 경우
+    if (code === 'COMMON_400_002') {
+      alert('올바른 형식의 이메일 주소가 아닙니다.');
+      return;
+    }
+
+    // 이미 가입된 이메일인 경우
+    if (code === 'AUTH_409_001') {
+      alert(message);
+      return;
+    }
+
+    // 그 외 오류
     alert('인증번호 발송에 실패했습니다.');
   }
 };

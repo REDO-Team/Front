@@ -1,11 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect,useState, } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAccessToken } from '../../apis/token';
-
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 import CompleteCheckIcon from '../../assets/icons/signup-complete.svg?react';
 
 const SignupCompletePage = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] =useState(false);
 
   useEffect(() => {
     const accessToken = getAccessToken();
@@ -24,11 +25,25 @@ const SignupCompletePage = () => {
   }, [navigate]);
 
   const handleStart = () => {
-    sessionStorage.removeItem('signupProfileCompleted');
-    sessionStorage.removeItem('signupAgreedTermsIds');
+    setIsLoading(true);
 
-    navigate('/', { replace: true });
+    sessionStorage.removeItem('signupProfileCompleted',);
+    sessionStorage.removeItem('signupAgreedTermsIds',);
+
+    setTimeout(() => {
+      navigate('/', {
+        replace: true,
+      });
+    }, 3000);
   };
+
+  if (isLoading) {
+  return (
+    <div className='flex min-h-dvh items-center justify-center bg-white'>
+      <LoadingSpinner />
+    </div>
+  );
+}
 
   return (
     <div className='mx-auto flex h-dvh w-full max-w-[402px] flex-col overflow-hidden bg-white px-5 pb-[24px] font-pretendard text-text'>
