@@ -5,17 +5,43 @@ import LogoutIcon from '../assets/icons/logout.svg';
 import BigLogo from '../assets/icons/Big-logo.svg?react';
 import RewardIcon from '../assets/icons/reward.svg';
 import TrashIcon from '../assets/icons/trash.svg';
-import { HOME_COMMUNITY_PREVIEWS, HOME_SERVICE_MENU_ITEMS } from '../mocks/home';
+import { HOME_SERVICE_MENU_ITEMS } from '../mocks/home';
 import type { HomeServiceMenuItem } from '../types/home';
 import { useNavigate } from 'react-router-dom';
 import { getMyInfo } from '../apis/user';
-import { getRewardProducts } from '../apis/reward';
+import { getRewardPreview } from '../apis/reward';
 import { useQuery } from '@tanstack/react-query';
 import RewardProductCard from '../components/RewardPage/RewardProductCard';
 import { useState } from 'react';
 import Modal from '../components/common/Modal';
 import { logout } from '../apis/auth';
 import { clearAuthData } from '../apis/token';
+import { getCommunityList } from '../apis/community';
+
+const formatCategory = (categoryValue: string | number) => {
+  const value = String(categoryValue);
+
+  if (value === '1') return '정보공유';
+  if (value === '2') return '리워드후기';
+  if (value === '3') return '환경실천';
+
+  return '전체보기';
+};
+
+const formatTimeAgo = (dateString: string) => {
+  const postDate = new Date(dateString);
+  const diff = Date.now() - postDate.getTime();
+  const minutes = Math.floor(diff / (1000 * 60));
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (minutes < 1) return '방금 전';
+  if (minutes < 60) return `${minutes}분 전`;
+  if (hours < 24) return `${hours}시간 전`;
+  if (days < 7) return `${days}일 전`;
+
+  return postDate.toLocaleDateString('ko-KR');
+};
 
 const SERVICE_MENU_ICON_SRC: Record<HomeServiceMenuItem['icon'], string> = {
   trash: TrashIcon,
@@ -32,14 +58,22 @@ const useInfo = () => {
 
 const useRewardProducts = () => {
   return useQuery({
-    queryKey: ['rewardProducts', { size: 2 }],
-    queryFn: () => getRewardProducts({ size: 2 }),
+    queryKey: ['rewardProducts', 'preview'],
+    queryFn: getRewardPreview,
+  });
+};
+
+const useLatestCommunityPreview = () => {
+  return useQuery({
+    queryKey: ['latestCommunityPreview'],
+    queryFn: getCommunityList,
+    select: (data) => data.result.items[0] ?? null,
   });
 };
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const communityPreview = HOME_COMMUNITY_PREVIEWS[0];
+  const { data: communityPreview } = useLatestCommunityPreview();
   const { data: userInfo } = useInfo();
   const {
     data: rewardData,
@@ -126,22 +160,28 @@ export default function HomePage() {
             <button type='button' onClick={() => navigate(`/community/${communityPreview.id}`)} aria-label={`${communityPreview.title} 게시글 보기`} className='mt-3 flex w-full items-center gap-3 rounded-2xl bg-white p-3 text-left shadow-[0_7px_16px_rgba(0,0,0,0.07)]'>
               <div className='min-w-0 flex-1'>
                 <div className='flex items-center justify-between gap-3'>
-                  <span className='rounded-full bg-skyblue-bg px-2 py-1 text-[10px] font-semibold text-skyblue-text'>{communityPreview.category}</span>
-                  <span className='text-[12px] font-medium text-gray-400'>{communityPreview.createdAtText}</span>
+                  <span className='rounded-full bg-skyblue-bg px-2 py-1 text-[10px] font-semibold text-skyblue-text'>{formatCategory(communityPreview.category)}</span>
+                  <span className='text-[12px] font-medium text-gray-400'>{formatTimeAgo(communityPreview.createdAt)}</span>
                 </div>
                 <h3 className='mt-3 truncate text-[15px] font-bold leading-none'>{communityPreview.title}</h3>
                 <div className='mt-4 flex items-center gap-5 text-[12px] font-semibold text-gray-500'>
                   <span className='flex items-center gap-2'>
                     <span className='h-5 w-5 rounded-full bg-[linear-gradient(135deg,#06C65F,#66E1FF)]' />
-                    {communityPreview.author}
+                    {communityPreview.writer}
                   </span>
                   <span className='flex items-center gap-1'>
                     <span className='h-3 w-3 rounded-[2px] border border-gray-400' />
-                    {communityPreview.commentCount}
+                    {communityPreview.numComments}
                   </span>
                 </div>
               </div>
-              <div className='h-[58px] w-[58px] shrink-0 rounded-xl bg-[linear-gradient(145deg,#06C65F,#66E1FF)]' />
+              {communityPreview.imageUrl && (
+                <img
+                  src={communityPreview.imageUrl}
+                  alt=''
+                  className='h-[58px] w-[58px] shrink-0 rounded-xl object-cover'
+                />
+              )}
             </button>
           </section>
         )}

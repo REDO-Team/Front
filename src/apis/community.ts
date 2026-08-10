@@ -1,5 +1,10 @@
 import api from './api';
 
+import type {
+  MyCommentListResponse,
+  MyCommunityListResponse,
+} from '../types/community';
+
 export const getCommunityList = async () => {
     const response = await api.get('/api/community');
     return response.data;
@@ -61,4 +66,34 @@ export const likeCommunity = async (communityId: number) => {
 export const unlikeCommunity = async (communityId: number) => {
     const response = await api.post(`/api/community/${communityId}/unlike`);
     return response.data;
+};
+
+// 내가 작성한 게시글 조회
+export const getMyCommunities = async (
+  page = 0,
+  size = 10,
+): Promise<MyCommunityListResponse> => {
+  const response = await api.get('/api/community/me', {
+    params: {
+      page,
+      size,
+    },
+  });
+
+  return response.data;
+};
+
+// 내가 작성한 댓글 조회
+export const getMyComments = async (
+  page = 0,
+  size = 10,
+): Promise<MyCommentListResponse> => {
+  const response = await api.get('/api/community/me/comments', {
+    params: {
+      page,
+      size,
+    },
+  });
+
+  return response.data;
 };

@@ -160,7 +160,7 @@ const MyPage = () => {
 
   return (
     <>
-      <div className='flex min-h-screen w-full flex-col overflow-y-auto bg-[#F9FBFB] px-5 pb-[100px] font-pretendard text-text'>
+      <div className='flex min-h-screen w-full flex-col overflow-y-auto bg-[#F9FBFB] px-5 pb-[120px] font-pretendard text-text'>
         {/* 프로필 */}
         <section className='mt-[24px] flex h-[80px] w-full items-center'>
           <div className='flex h-[80px] w-[80px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-white'>

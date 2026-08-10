@@ -63,45 +63,45 @@ const Layout = () => {
 
   const hideBottomBar = isLogin || isSignup || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isCertificationFail || isImageSearch || isProblemSearch || isMyContribution || isAllContribution || isDisposalInfoFail || isDisposalInfoDetail || isCamera || isDisposalInfo || isReward || isCommunityDetail || isMyPosts || isMycomments || isMyProfileEdit || isMyfavorites || isMyhistory || isCommunityWrite || isCommunityModify;
 
-  const hasGreenBackground = isGuide || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isDisposalInfo || isDisposalInfoDetail || isImageSearch || isProblemSearch || isDisposalInfoFail || isCamera || isAllContribution || isReward;
+  const hasGreenBackground = isGuide || isCertification || isCertificationGuide || isCertificationShoot || isCertificationSuccess || isDisposalInfo || isDisposalInfoDetail || isImageSearch || isProblemSearch || isDisposalInfoFail || isCamera || isAllContribution || isReward || isCommunityMain || isCommunityWrite || isCommunityModify || isCommunityDetail || isMyContribution;
 
   return (
     <div className={`flex flex-1 flex-col min-h-screen ${hasGreenBackground ? 'bg-bg-green1' : 'bg-white'}`}>
       <div className='flex mx-auto min-h-screen w-full max-w-120'>
-        {isGuide && <TopBar title='이용 가이드' leftIcon bgColor='bg-green1' />}
+        {isGuide && <TopBar title='이용 가이드' bgColor='bg-bg-green1' />}
 
-        {isCertification && <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />}
-        {isCertificationGuide && <TopBar title='인증 가이드' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />}
-        {isCertificationShoot && <TopBar title='촬영하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />}
-        {isCertificationSuccess && <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' navigateBack='certification' />}
+        {isCertification && <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isCertificationGuide && <TopBar title='인증 가이드' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isCertificationShoot && <TopBar title='촬영하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isCertificationSuccess && <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' navigateBack='certification' />}
         {isCertificationFail && <TopBar title='인증하기' leftIcon rightIcon={Home} onClick={() => navigate('/')} navigateBack='certification' />}
 
-        {isDisposalInfo && <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' navigateBack='/' />}
-        {isImageSearch && <TopBar title='이미지 검색' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />}
-        {isProblemSearch && <TopBar title='문제 상황 검색' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />}
-        {isDisposalInfoDetail && <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' navigateBack='disposal-info' />}
-        {isDisposalInfoFail && <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />}
+        {isDisposalInfo && <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' navigateBack='/' />}
+        {isImageSearch && <TopBar title='이미지 검색' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isProblemSearch && <TopBar title='문제 상황 검색' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isDisposalInfoDetail && <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' navigateBack='disposal-info' />}
+        {isDisposalInfoFail && <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
 
-        {isCommunityMain && <TopBar title='커뮤니티' leftIcon bgColor='bg-green1' />}
-        {isCommunityWrite && <TopBar title='게시글 작성' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />}
-        {isCommunityModify && <TopBar title='게시글 수정' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />}
+        {isCommunityMain && <TopBar title='커뮤니티' bgColor='bg-bg-green1' />}
+        {isCommunityWrite && <TopBar title='게시글 작성' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isCommunityModify && <TopBar title='게시글 수정' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
 
-        {isMyPosts && <TopBar title='작성한 게시글' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-my' />}
-        {isMyfavorites && <TopBar title='즐겨찾기한 배출정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-my' />}
-        {isMyhistory && <TopBar title='리워드 사용내역' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-my' />}
-        {isMycomments && <TopBar title='작성한 댓글' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-my' />}
+        {isMyPosts && <TopBar title='작성한 게시글' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
+        {isMyfavorites && <TopBar title='즐겨찾기한 배출정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
+        {isMyhistory && <TopBar title='리워드 사용내역' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
+        {isMycomments && <TopBar title='작성한 댓글' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-my' />}
 
-        {isReward && <TopBar title='리워드 적립' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />}
-        {isRewardHistory && <TopBar title='리워드 내역' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />}
-        {isRewardStore && <TopBar title='리워드 상점' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />}
-        {isRewardProdocts && <TopBar title='제품 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='white' />}
-        {isRewardCheckout && <TopBar title='포인트 사용' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='white' />}
-        {isRewardAddressList && <TopBar title='배송지 목록' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />}
-        {isRewardAddressSearch && <TopBar title='배송지 입력' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />}
-        {isRewardAddressEdit && <TopBar title='배송지 입력' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='gray-50' />}
+        {isReward && <TopBar title='리워드 적립' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isRewardHistory && <TopBar title='리워드 내역' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isRewardStore && <TopBar title='리워드 상점' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isRewardProdocts && <TopBar title='제품 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isRewardCheckout && <TopBar title='포인트 사용' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isRewardAddressList && <TopBar title='배송지 목록' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isRewardAddressSearch && <TopBar title='배송지 입력' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isRewardAddressEdit && <TopBar title='배송지 입력' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
 
-        {isMyContribution && <TopBar title='나의 기여도' leftIcon rightIcon={Home} onClick={() => navigate('/')} />}
-        {isAllContribution && <TopBar title='전체 기여도' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-green1' />}
+        {isMyContribution && <TopBar title='나의 기여도' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isAllContribution && <TopBar title='전체 기여도' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
 
         <div className={`mx-auto flex w-full max-w-120 flex-col ${hideTopBar ? 'min-h-dvh' : 'pt-14'}`}>
           <main className='flex flex-1 flex-col'>
