@@ -35,8 +35,50 @@ export default function CamearaPage() {
     try {
       const file = await base64ToFile(img);
 
+      // 재인증
+      if (certificationId) {
+        const data = await postCertificationRetry(certificationId, file);
+        // 재인증 성공
+        if (data.result?.status === 'PASSED') {
+          navigate('/certification/success', {
+            state: {
+              itemName: data.result.itemName,
+              date: data.result.judgedAt,
+              point: data.result.earnedPoint,
+            },
+          });
+        }
+        // 재인증 실패
+        else if (data.result?.status === 'FAILED') {
+          // AI 판정 실패
+          if (data.result.failureType === 'VLM_JUDGEMENT_FAILED') {
+            navigate('/certification/fail', {
+              state: {
+                failureType: data.result.failureType,
+                failedReason: data.result.failedReason,
+                retryGuide: data.result.retryGuide,
+                retryAllowed: data.result.retryAllowed,
+                certificationId: data.result.certificationId,
+              },
+            });
+          }
+          // 동일 품목 재인증 시도
+          else if (data.result.failureType === 'DUPLICATE_GUIDE_TODAY') {
+            navigate('/certification/fail', {
+              state: {
+                failureType: data.result.failureType,
+                failedReason: data.result.failedReason,
+                retryGuide: data.result.retryGuide,
+                retryAllowed: data.result.retryAllowed,
+                certificationId: data.result.certificationId,
+              },
+            });
+          }
+        }
+      }
+
       // 신규 인증
-      if (from === 'certification') {
+      else if (from === 'certification') {
         const data = await postCertification({ image: file, certificationSource, recycleGuideId: guideId });
 
         // 신규 인증 성공
@@ -96,47 +138,6 @@ export default function CamearaPage() {
         // 검색 실패
         else {
           navigate('/disposal-info/fail');
-        }
-      }
-      // 재인증
-      else if (certificationId) {
-        const data = await postCertificationRetry(certificationId, file);
-        // 재인증 성공
-        if (data.result?.status === 'PASSED') {
-          navigate('/certification/success', {
-            state: {
-              itemName: data.result.itemName,
-              date: data.result.judgedAt,
-              point: data.result.earnedPoint,
-            },
-          });
-        }
-        // 재인증 실패
-        else if (data.result?.status === 'FAILED') {
-          // AI 판정 실패
-          if (data.result.failureType === 'VLM_JUDGEMENT_FAILED') {
-            navigate('/certification/fail', {
-              state: {
-                failureType: data.result.failureType,
-                failedReason: data.result.failedReason,
-                retryGuide: data.result.retryGuide,
-                retryAllowed: data.result.retryAllowed,
-                certificationId: data.result.certificationId,
-              },
-            });
-          }
-          // 동일 품목 재인증 시도
-          else if (data.result.failureType === 'DUPLICATE_GUIDE_TODAY') {
-            navigate('/certification/fail', {
-              state: {
-                failureType: data.result.failureType,
-                failedReason: data.result.failedReason,
-                retryGuide: data.result.retryGuide,
-                retryAllowed: data.result.retryAllowed,
-                certificationId: data.result.certificationId,
-              },
-            });
-          }
         }
       }
     } catch (e) {
