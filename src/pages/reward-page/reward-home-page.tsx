@@ -1,12 +1,34 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import YellowCharacter from '../../assets/icons/character/yellow-character.svg';
+import YellowRewardCharacter from '../../assets/icons/character/yellow2.svg?react';
+import GrayRewardCharacter from '../../assets/icons/character/gray2.svg?react';
+import GreenRewardCharacter from '../../assets/icons/character/green2.svg?react';
+import OrangeRewardCharacter from '../../assets/icons/character/orange2.svg?react';
+import PurpleRewardCharacter from '../../assets/icons/character/purple2.svg?react';
+import BlueRewardCharacter from '../../assets/icons/character/blue2.svg?react';
 import RewardCard from '../../components/RewardPage/RewardCard';
-import { HOME_USER } from '../../mocks/home';
 import { getRewardHistory, getRewardPoints } from '../../apis/reward';
+import { getMyInfo } from '../../apis/user';
+
+const REWARD_CHARACTER_IMAGE_MAP = {
+  '1': YellowRewardCharacter,
+  '2': GrayRewardCharacter,
+  '3': GreenRewardCharacter,
+  '4': OrangeRewardCharacter,
+  '5': PurpleRewardCharacter,
+  '6': BlueRewardCharacter,
+} as const;
 
 export default function RewardHomePage() {
-  const { nickname } = HOME_USER;
+  const { data: userInfo } = useQuery({
+    queryKey: ['myInfo'],
+    queryFn: getMyInfo,
+  });
+
+  const CharacterImage = userInfo?.characterCode
+    ? REWARD_CHARACTER_IMAGE_MAP[userInfo.characterCode]
+    : REWARD_CHARACTER_IMAGE_MAP['1'];
+
   const { data, isPending, isError } = useQuery({
     queryKey: ['rewardPoints'],
     queryFn: getRewardPoints,
@@ -23,9 +45,9 @@ export default function RewardHomePage() {
   return (
     <div className='flex flex-1 flex-col gap-10 px-5 pb-10 font-pretendard'>
       {/* 포인트 카드 부분 */}
-      <section aria-label={`${nickname}님의 포인트 현황`} className='relative mt-4 h-40 shrink-0 overflow-hidden rounded-[22px] bg-[linear-gradient(120deg,#06C65F_0%,#12CE83_48%,#66E1FF_100%)] px-6 py-7 text-white'>
+      <section aria-label={`${userInfo?.nickname}님의 포인트 현황`} className='relative mt-4 h-40 shrink-0 overflow-hidden rounded-[22px] bg-[linear-gradient(120deg,#06C65F_0%,#12CE83_48%,#66E1FF_100%)] px-6 py-7 text-white'>
         <div className='relative z-10'>
-          <p className='text-[15px] font-semibold leading-none'>{nickname}님의 포인트</p>
+          <p className='text-[15px] font-semibold leading-none'>{userInfo?.nickname}님의 포인트</p>
 
           <p className='mt-2 text-[38px] font-bold leading-none tracking-[-0.02em]'>
             {isPending ? (
@@ -50,7 +72,7 @@ export default function RewardHomePage() {
         </div>
 
         <div aria-hidden='true' className='absolute bottom-0 right-0 h-full w-[155px] overflow-hidden'>
-          <img src={YellowCharacter} alt='' className='absolute -left-[45px] -top-[17px] h-[245px] w-[245px] max-w-none mix-blend-multiply' />
+          <CharacterImage className='absolute -bottom-8 right-5 h-40 w-auto max-w-none' />
         </div>
       </section>
 
