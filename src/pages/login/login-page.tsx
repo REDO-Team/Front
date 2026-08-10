@@ -15,6 +15,21 @@ type SocialProvider =
   | 'kakao'
   | 'naver';
 
+const waitForMinimumLoadingTime = async (
+  startTime: number,
+  minimumTime = 3000,
+) => {
+  const elapsedTime = Date.now() - startTime;
+  const remainingTime = Math.max(
+    minimumTime - elapsedTime,
+    0,
+  );
+
+  await new Promise((resolve) =>
+    setTimeout(resolve, remainingTime),
+  );
+};
+
 interface SocialLoginResult {
   userId?: number;
   isNewUser: boolean;
@@ -44,6 +59,9 @@ const LoginPage = () => {
     setError('');
     setIsLoading(true);
 
+    const startTime = Date.now();
+
+
     try {
       const response = await api.post(
         `/api/auth/login/${provider}`,
@@ -63,6 +81,7 @@ const LoginPage = () => {
           setError(
             '소셜 회원가입 정보를 불러오지 못했습니다.',
           );
+          setIsLoading(false);
           return;
         }
 
@@ -82,19 +101,21 @@ const LoginPage = () => {
         setError(
           '로그인 토큰을 발급받지 못했습니다.',
         );
+        setIsLoading(false);
         return;
       }
 
       setAccessToken(result.accessToken);
 
+      await waitForMinimumLoadingTime(startTime);
+
       navigate('/');
     } catch {
-      setError(
-        '소셜 로그인에 실패했습니다.',
-      );
-    } finally {
-      setIsLoading(false);
-    }
+  setError(
+    '소셜 로그인에 실패했습니다.',
+  );
+  setIsLoading(false);
+}
   },
   [navigate],
 );
@@ -320,6 +341,8 @@ const handleNaverLogin = () => {
     setError('');
     setIsLoading(true);
 
+    const startTime = Date.now();
+
     try {
       const response = await api.post('/api/auth/login', {
         loginId: id.trim(),
@@ -330,12 +353,15 @@ const handleNaverLogin = () => {
 
       setAccessToken(accessToken);
 
+      await waitForMinimumLoadingTime(startTime);
+
       navigate('/');
     } catch {
-      setError('아이디 혹은 비밀번호가 일치하지 않습니다');
-    } finally {
-      setIsLoading(false);
-    }
+  setError(
+    '아이디 혹은 비밀번호가 일치하지 않습니다',
+  );
+  setIsLoading(false);
+}
   };
 
   if (isLoading) {
