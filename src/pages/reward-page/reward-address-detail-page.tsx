@@ -123,7 +123,7 @@ function RewardAddressDetailForm({
   const inputClassName = 'mt-2 h-12 w-full rounded-[20px] border border-gray-200 bg-white px-6 text-[15px] font-medium text-text outline-none placeholder:text-gray-400 focus:border-main-green1';
 
   return (
-    <div className='flex flex-1 flex-col bg-gray-50 px-5 pb-7 font-pretendard'>
+    <div className='flex flex-1 flex-col bg-[#F9FBFB] px-5 pb-7 font-pretendard'>
       <form className='flex flex-1 flex-col pt-4' onSubmit={handleSubmit}>
         <h1 className='text-lg font-bold text-text'>상세정보를 입력해주세요</h1>
 
@@ -239,7 +239,7 @@ export default function RewardAddressDetailPage() {
 
   if (isEditMode && isAddressListPending) {
     return (
-      <div className='flex flex-1 items-center justify-center bg-gray-50'>
+      <div className='flex flex-1 items-center justify-center bg-[#F9FBFB]'>
         <LoadingSpinner />
       </div>
     );
