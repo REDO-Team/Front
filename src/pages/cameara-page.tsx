@@ -1,5 +1,4 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import Home from '/src/assets/icons/white-home.svg';
 import Scan from '/src/assets/icons/scan.svg?react';
 import TopBar from '../components/common/TopBar';
 import Webcam from 'react-webcam';
@@ -7,7 +6,6 @@ import { useRef, useState } from 'react';
 import PhotoAnalysisLoading from '../components/common/PhotoAnalysisLoading';
 import { postGuideImageSearch } from '../apis/disposal-guide';
 import { postCertification, postCertificationRetry } from '../apis/certification';
-// import { useCertificationStore } from '../store/certificationStore';
 
 const base64ToFile = async (base64String: string, filename = 'capture.jpg'): Promise<File> => {
   const response = await fetch(base64String);
@@ -153,7 +151,7 @@ export default function CamearaPage() {
       {!loading && (
         <div className='h-dvh'>
           <div className='relative flex flex-col h-full'>
-            <TopBar title={`${from === 'certification' ? '인증하기' : '이미지 검색'}`} leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='black/50' color='white' position='absolute' />
+            <TopBar title={`${from === 'certification' ? '인증하기' : '이미지 검색'}`} bgColor='black/50' color='white' position='absolute' />
 
             <Webcam audio={false} ref={webcamRef} screenshotFormat='image/jpeg' videoConstraints={{ facingMode: 'environment' }} className='w-full object-cover h-full' />
             <div className='absolute inset-0 flex flex-col items-center justify-center px-20 z-10'>
