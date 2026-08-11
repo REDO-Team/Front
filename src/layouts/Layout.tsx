@@ -80,7 +80,7 @@ const Layout = () => {
         {isImageSearch && <TopBar title='이미지 검색' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
         {isProblemSearch && <TopBar title='문제 상황 검색' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
         {isDisposalInfoDetail && <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' navigateBack='disposal-info' />}
-        {isDisposalInfoFail && <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
+        {isDisposalInfoFail && <TopBar title='배출 정보' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' navigateBack='/disposal-info' />}
 
         {isCommunityMain && <TopBar title='커뮤니티' bgColor='bg-bg-green1' />}
         {isCommunityWrite && <TopBar title='게시글 작성' leftIcon rightIcon={Home} onClick={() => navigate('/')} bgColor='bg-bg-green1' />}
