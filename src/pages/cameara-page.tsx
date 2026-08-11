@@ -7,7 +7,6 @@ import { useRef, useState } from 'react';
 import PhotoAnalysisLoading from '../components/common/PhotoAnalysisLoading';
 import { postGuideImageSearch } from '../apis/disposal-guide';
 import { postCertification, postCertificationRetry } from '../apis/certification';
-// import { useCertificationStore } from '../store/certificationStore';
 
 const base64ToFile = async (base64String: string, filename = 'capture.jpg'): Promise<File> => {
   const response = await fetch(base64String);
