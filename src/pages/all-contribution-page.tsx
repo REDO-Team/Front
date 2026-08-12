@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getAllContributions } from '../apis/contribution';
 import logo from '../assets/icons/logo.svg';
@@ -82,6 +83,7 @@ function ContributionFeedCard({ feed }: { feed: ContributionFeed }) {
 }
 
 export default function AllContributionPage() {
+  const loadMoreRef = useRef<HTMLDivElement>(null);
   const {
     data,
     isPending,
@@ -101,6 +103,29 @@ export default function AllContributionPage() {
     getNextPageParam: (lastPage) =>
       lastPage.hasNext ? lastPage.nextCursor : undefined,
   });
+
+  useEffect(() => {
+    const target = loadMoreRef.current;
+
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (
+          entry?.isIntersecting &&
+          hasNextPage &&
+          !isFetchingNextPage
+        ) {
+          void fetchNextPage();
+        }
+      },
+      { rootMargin: '200px 0px' },
+    );
+
+    observer.observe(target);
+
+    return () => observer.disconnect();
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   if (isPending) {
     return (
@@ -152,16 +177,13 @@ export default function AllContributionPage() {
           </p>
         )}
 
-        {hasNextPage && (
-          <button
-            type='button'
-            onClick={() => fetchNextPage()}
-            disabled={isFetchingNextPage}
-            className='mt-5 flex h-12 w-full items-center justify-center rounded-full bg-white text-sm font-bold text-main-green2 shadow-lg shadow-black/5 disabled:cursor-not-allowed disabled:opacity-60'
-          >
-            {isFetchingNextPage ? '불러오는 중...' : '더 보기'}
-          </button>
-        )}
+        <div
+          ref={loadMoreRef}
+          className='flex min-h-12 items-center justify-center'
+          aria-live='polite'
+        >
+          {isFetchingNextPage && <LoadingSpinner />}
+        </div>
       </div>
     </div>
   );
