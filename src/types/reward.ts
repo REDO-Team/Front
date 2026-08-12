@@ -4,8 +4,6 @@ export type RewardProductType = 'PARTNER_BRAND' | 'COUPON_GIFTICON';
 
 export type RewardFilterType = 'ALL' | RewardProductType;
 
-export type MockRewardProductType = 'PARTNER' | 'GIFTICON';
-
 export type RewardProductStatus = 'ACTIVE' | 'INACTIVE' | 'SOLD_OUT';
 
 export type RewardAddressType = 'HOME' | 'COMPANY' | 'SCHOOL';
@@ -77,22 +75,6 @@ export interface RewardHistoryParams {
 
 
 
-export interface RewardProduct {
-    id: number;
-    name: string;
-    type: MockRewardProductType;
-    point: number;
-    description?: string;
-    usageGuide?: string;
-    validityPeriod?: string;
-}
-
-export interface RewardShippingAddress {
-    id: number;
-    name: string;
-    address: string;
-}
-
 export interface ApiResponse<T> {
   isSuccess: boolean;
   code: string;
@@ -127,9 +109,6 @@ export interface ShippingAddressRequest {
 export interface ShippingAddressListResult {
   shippingAddresses: ShippingAddress[];
 }
-
-export type ShippingAddressListResponse =
-  ApiResponse<ShippingAddressListResult>;
 
 export interface AddressCandidates {
   roadAddress: string;

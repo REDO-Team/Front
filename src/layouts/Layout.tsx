@@ -32,7 +32,7 @@ const Layout = () => {
   const isCamera = !!matchPath('/camera', location.pathname);
 
   const isReward = !!matchPath({ path: '/reward/*', end: false }, location.pathname);
-  const isRewardAddressComplete = !!matchPath('/reward/address-complete/:productId', location.pathname);
+  const isRewardAddressComplete = !!matchPath('/reward/address-complete', location.pathname);
   const isRewardUseComplete = !!matchPath('/reward/use-complete/:productId', location.pathname);
   const isRewardHistory = !!matchPath('/reward/history', location.pathname);
   const isRewardStore = !!matchPath('/reward/store', location.pathname);

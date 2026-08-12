@@ -383,7 +383,7 @@ const routes: RouteObject[] = [
                 element: <RewardAddressDetailPage />,
               },
               {
-                path: 'address-complete/:productId',
+                path: 'address-complete',
                 element: <RewardAddressCompletePage />,
               },
               {
