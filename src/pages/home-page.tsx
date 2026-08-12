@@ -5,7 +5,7 @@ import LogoutIcon from '../assets/icons/logout.svg';
 import BigLogo from '../assets/icons/Big-logo.svg?react';
 import RewardIcon from '../assets/icons/reward.svg';
 import TrashIcon from '../assets/icons/trash.svg';
-import { HOME_SERVICE_MENU_ITEMS } from '../mocks/home';
+import { HOME_SERVICE_MENU_ITEMS } from '../constants/home';
 import type { HomeServiceMenuItem } from '../types/home';
 import { useNavigate } from 'react-router-dom';
 import { getMyInfo } from '../apis/user';
@@ -133,7 +133,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 홈 서비스 메뉴입니다. 아이콘은 mock 데이터의 icon 값으로 매칭합니다. */}
+        {/* 홈 서비스 메뉴입니다. 아이콘은 메뉴 설정의 icon 값으로 매칭합니다. */}
         <section className='mt-7'>
           <h2 className='text-[17px] font-bold leading-none'>어떤 서비스를 찾으시나요?</h2>
           <div className='mt-4 grid grid-cols-2 gap-3'>

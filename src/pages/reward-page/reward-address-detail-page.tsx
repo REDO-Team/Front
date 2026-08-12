@@ -65,7 +65,10 @@ function RewardAddressDetailForm({
       await queryClient.invalidateQueries({
         queryKey: ['rewardAddressList'],
       });
-      navigate(-2);
+      navigate('/reward/address-complete', {
+        replace: true,
+        state: { addressCreated: true },
+      });
     },
     onError: (error) => {
       console.error('배송지 생성에 실패했습니다.', error);
