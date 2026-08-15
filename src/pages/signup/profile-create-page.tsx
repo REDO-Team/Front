@@ -296,10 +296,6 @@ const ProfileCreatePage = () => {
             profileImageFile,
           );
         } catch (error) {
-          console.error(
-            '프로필 이미지 업로드 실패:',
-            error,
-          );
 
           alert(
             '프로필은 생성되었지만 이미지 업로드에 실패했습니다. 마이페이지에서 다시 등록해주세요.',
@@ -316,10 +312,6 @@ const ProfileCreatePage = () => {
         replace: true,
       });
     } catch (error) {
-      console.error(
-        '프로필 생성 실패:',
-        error,
-      );
 
       alert(
         '프로필 생성에 실패했습니다. 다시 시도해주세요.',

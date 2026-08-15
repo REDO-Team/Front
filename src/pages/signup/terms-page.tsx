@@ -96,7 +96,6 @@ if (
 
         setAgreements(initialAgreements);
       } catch (error) {
-        console.error('약관 조회 실패:', error);
 
         setLoadErrorMessage('약관을 불러오지 못했습니다.');
       } finally {
@@ -202,7 +201,6 @@ if (
         replace: true,
       });
     } catch (error) {
-      console.error('소셜 회원가입 실패:', error);
 
       setSubmitErrorMessage('회원가입 중 오류가 발생했습니다.');
     } finally {
