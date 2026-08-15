@@ -95,7 +95,7 @@ if (
         }, {});
 
         setAgreements(initialAgreements);
-      } catch (error) {
+      } catch {
 
         setLoadErrorMessage('약관을 불러오지 못했습니다.');
       } finally {
@@ -200,7 +200,7 @@ if (
       navigate('/signup/profile', {
         replace: true,
       });
-    } catch (error) {
+    } catch {
 
       setSubmitErrorMessage('회원가입 중 오류가 발생했습니다.');
     } finally {

@@ -41,7 +41,7 @@ export const clearAuthData = (): void => {
 
 export const reissueAccessToken = async (): Promise<string> => {
 
-  try {
+  
     const response = await refreshApi.post<ApiResponse<ReissueResult>>(
       '/api/auth/reissue',
     );
@@ -56,8 +56,4 @@ export const reissueAccessToken = async (): Promise<string> => {
     setAccessToken(newAccessToken);
 
     return newAccessToken;
-  } catch (error) {
-
-    throw error;
-  }
 };
