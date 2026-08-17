@@ -1,17 +1,18 @@
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import FullCheck from '../../assets/icons/full-check.svg';
-import { mockRewardProducts } from '../../mocks/reward';
+
+interface RewardAddressCompleteLocationState {
+  addressCreated?: boolean;
+}
 
 export default function RewardAddressCompletePage() {
   const navigate = useNavigate();
-  const { productId } = useParams<{ productId: string }>();
-  const numericProductId = Number(productId);
-  const product = Number.isSafeInteger(numericProductId)
-    ? mockRewardProducts.find(({ id }) => id === numericProductId)
-    : undefined;
+  const { state } = useLocation();
+  const addressCreated = (state as RewardAddressCompleteLocationState | null)
+    ?.addressCreated;
 
-  if (!product || product.type !== 'PARTNER') {
-    return <Navigate to='/reward/store' replace />;
+  if (!addressCreated) {
+    return <Navigate to='/reward/address-list' replace />;
   }
 
   return (
@@ -35,7 +36,7 @@ export default function RewardAddressCompletePage() {
 
       <button
         type='button'
-        onClick={() => navigate(`/reward/checkout/${product.id}`, { replace: true })}
+        onClick={() => navigate('/reward/address-list', { replace: true })}
         className='h-[50px] w-full shrink-0 rounded-full bg-main-green1 text-base font-bold text-white'
       >
         확인

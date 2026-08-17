@@ -5,7 +5,7 @@ import LogoutIcon from '../assets/icons/logout.svg';
 import BigLogo from '../assets/icons/Big-logo.svg?react';
 import RewardIcon from '../assets/icons/reward.svg';
 import TrashIcon from '../assets/icons/trash.svg';
-import { HOME_SERVICE_MENU_ITEMS } from '../mocks/home';
+import { HOME_SERVICE_MENU_ITEMS } from '../constants/home';
 import type { HomeServiceMenuItem } from '../types/home';
 import { useNavigate } from 'react-router-dom';
 import { getMyInfo } from '../apis/user';
@@ -17,6 +17,8 @@ import Modal from '../components/common/Modal';
 import { logout } from '../apis/auth';
 import { clearAuthData } from '../apis/token';
 import { getCommunityList } from '../apis/community';
+import HeartIcon from '../assets/icons/heart.svg';
+import CommentIcon from '../assets/icons/comment.svg';
 
 const formatCategory = (categoryValue: string | number) => {
   const value = String(categoryValue);
@@ -133,7 +135,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 홈 서비스 메뉴입니다. 아이콘은 mock 데이터의 icon 값으로 매칭합니다. */}
+        {/* 홈 서비스 메뉴입니다. 아이콘은 메뉴 설정의 icon 값으로 매칭합니다. */}
         <section className='mt-7'>
           <h2 className='text-[17px] font-bold leading-none'>어떤 서비스를 찾으시나요?</h2>
           <div className='mt-4 grid grid-cols-2 gap-3'>
@@ -157,31 +159,37 @@ export default function HomePage() {
               오늘의 커뮤니티 <span className='ml-1 text-2xl leading-none'>›</span>
             </button>
 
-            <button type='button' onClick={() => navigate(`/community/${communityPreview.id}`)} aria-label={`${communityPreview.title} 게시글 보기`} className='mt-3 flex w-full items-center gap-3 rounded-2xl bg-white p-3 text-left shadow-[0_7px_16px_rgba(0,0,0,0.07)]'>
-              <div className='min-w-0 flex-1'>
-                <div className='flex items-center justify-between gap-3'>
-                  <span className='rounded-full bg-skyblue-bg px-2 py-1 text-[10px] font-semibold text-skyblue-text'>{formatCategory(communityPreview.category)}</span>
-                  <span className='text-[12px] font-medium text-gray-400'>{formatTimeAgo(communityPreview.createdAt)}</span>
+            <button type='button' onClick={() => navigate(`/community/${communityPreview.id}`)} aria-label={`${communityPreview.title} 게시글 보기`} className='mt-3 w-full rounded-2xl bg-white p-4 text-left shadow-[0_7px_16px_rgba(0,0,0,0.07)]'>
+              <div className='flex items-center gap-3'>
+                <div className='min-w-0 flex-1'>
+                  <span className='inline-flex rounded-full bg-skyblue-bg px-2 py-1 text-[10px] font-semibold text-skyblue-text'>{formatCategory(communityPreview.category)}</span>
+                  <h3 className='mt-3 truncate text-[15px] font-bold leading-none'>{communityPreview.title}</h3>
+                  {communityPreview.preview && <p className='mt-2 truncate text-[13px] font-medium text-gray-600'>{communityPreview.preview}</p>}
                 </div>
-                <h3 className='mt-3 truncate text-[15px] font-bold leading-none'>{communityPreview.title}</h3>
-                <div className='mt-4 flex items-center gap-5 text-[12px] font-semibold text-gray-500'>
-                  <span className='flex items-center gap-2'>
-                    <span className='h-5 w-5 rounded-full bg-[linear-gradient(135deg,#06C65F,#66E1FF)]' />
-                    {communityPreview.writer}
-                  </span>
-                  <span className='flex items-center gap-1'>
-                    <span className='h-3 w-3 rounded-[2px] border border-gray-400' />
-                    {communityPreview.numComments}
-                  </span>
-                </div>
+                {communityPreview.imageUrl && (
+                  <img
+                    src={communityPreview.imageUrl}
+                    alt=''
+                    className='h-[58px] w-[58px] shrink-0 rounded-xl object-cover'
+                  />
+                )}
               </div>
-              {communityPreview.imageUrl && (
-                <img
-                  src={communityPreview.imageUrl}
-                  alt=''
-                  className='h-[58px] w-[58px] shrink-0 rounded-xl object-cover'
-                />
-              )}
+
+              <div className='mt-3 flex items-center text-[12px] font-semibold leading-none text-gray-500'>
+                <span className='flex min-w-0 items-center gap-2'>
+                  <span className='h-5 w-5 shrink-0 rounded-full bg-[linear-gradient(135deg,#06C65F,#66E1FF)]' />
+                  <span className='truncate'>{communityPreview.writer}</span>
+                </span>
+                <span className='ml-3 flex shrink-0 items-center gap-1'>
+                  <img src={HeartIcon} alt='' className='h-3 w-[13px]' />
+                  {communityPreview.numLikes}
+                </span>
+                <span className='ml-2 flex shrink-0 items-center gap-1'>
+                  <img src={CommentIcon} alt='' className='h-3 w-[13px]' />
+                  {communityPreview.numComments}
+                </span>
+                <span className='ml-auto shrink-0 pl-3 text-gray-400'>{formatTimeAgo(communityPreview.createdAt)}</span>
+              </div>
             </button>
           </section>
         )}

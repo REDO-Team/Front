@@ -129,8 +129,8 @@ const MyPage = () => {
       clearAuthData();
       closeModal();
       navigate('/login', { replace: true });
-    } catch (error) {
-      console.error('회원탈퇴 실패:', error);
+    } catch {
+      alert('회원탈퇴에 실패했습니다. 다시 시도해주세요.',);
     }
   };
 
