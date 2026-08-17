@@ -2,10 +2,39 @@ import { useEffect, useRef } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getAllContributions } from '../apis/contribution';
 import logo from '../assets/icons/logo.svg';
+import benchIcon from '../assets/icons/bench.svg';
+import bottleIcon from '../assets/icons/bottle.svg';
+import clothesIcon from '../assets/icons/clothes.svg';
+import countIcon from '../assets/icons/count.svg';
+import flowerpotIcon from '../assets/icons/flowerpot.svg';
+import noteIcon from '../assets/icons/note.svg';
+import sneakersIcon from '../assets/icons/sneakers.svg';
+import toiletPaperIcon from '../assets/icons/toilet-paper.svg';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import type { ContributionFeed } from '../types/contribution';
 
 const FEED_PAGE_SIZE = 10;
+
+const contributionTargetIcons = [
+  { keywords: ['휴지', '화장지', '두루마리'], icon: toiletPaperIcon },
+  { keywords: ['노트', '공책'], icon: noteIcon },
+  { keywords: ['유리병', '병'], icon: bottleIcon },
+  { keywords: ['종량제', '쓰레기봉투', '쓰레기 봉투'], icon: countIcon },
+  { keywords: ['화분'], icon: flowerpotIcon },
+  { keywords: ['티셔츠', '티 셔츠', '의류', '옷'], icon: clothesIcon },
+  { keywords: ['신발', '운동화'], icon: sneakersIcon },
+  { keywords: ['벤치'], icon: benchIcon },
+];
+
+const getContributionIcon = (feed: ContributionFeed) => {
+  if (feed.eventType !== 'REWARD_PROGRESS') {
+    return countIcon;
+  }
+
+  return contributionTargetIcons.find(({ keywords }) =>
+    keywords.some((keyword) => feed.targetName.includes(keyword)),
+  )?.icon ?? countIcon;
+};
 
 interface UserCountBannerProps {
   userCount: number;
@@ -61,13 +90,16 @@ function UserCountBanner({
 }
 
 function ContributionFeedCard({ feed }: { feed: ContributionFeed }) {
+  const contributionIcon = getContributionIcon(feed);
+
   return (
     <article className='flex min-h-24 items-center gap-5 rounded-[20px] bg-white px-4 py-4 shadow-lg shadow-black/5'>
       <div className='flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-bg-green3'>
         <img
-          src={feed.profileImageUrl || logo}
-          alt={`${feed.nickname}님의 프로필`}
-          className='h-full w-full object-cover'
+          src={contributionIcon}
+          alt=''
+          aria-hidden='true'
+          className='h-full w-full object-contain'
         />
       </div>
       <div className='min-w-0 flex-1 break-words text-base font-medium leading-[1.5] text-text [overflow-wrap:anywhere]'>
