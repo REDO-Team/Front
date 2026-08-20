@@ -77,7 +77,7 @@ export default function CertificationPage() {
             </div>
             <span className='font-pretendard font-bold text-[22px] text-main-green1'>
               {remain}
-              <span className='text-gray-600'>/3회</span>
+              <span className='text-gray-600'>회</span>
             </span>
           </div>
         </div>
