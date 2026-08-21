@@ -60,7 +60,7 @@ export default function ShootingPage() {
           </div>
         </div>
 
-        <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 py-3.5 w-full text-center mt-auto' onClick={handleClickShoot}>
+        <button type='button' className='font-pretendard font-bold text-lg text-white rounded-4xl bg-main-green1 py-3.5 w-full text-center mt-auto mb-5' onClick={handleClickShoot}>
           촬영하기
         </button>
       </div>
