@@ -46,9 +46,9 @@ export default function MyContributionPage() {
   }
 
   return (
-    <div className='min-h-screen bg-[#F9FBFB] pt-14'>
+    <div className='min-h-screen bg-[#F9FBFB]'>
       <section>
-        <div className='px-5 py-6'>
+        <div className='px-5 pb-6 pt-4'>
           <h2 className='text-[20px] font-bold leading-[1.35] text-text'>
             {data?.latestAchievedMilestone ? (
               <>
