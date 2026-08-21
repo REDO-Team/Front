@@ -56,7 +56,7 @@ export default function ImageSearchPage() {
 
             <input type='file' accept='image/*' className='hidden' ref={fileInputRef} onChange={handleSelectImage} />
 
-            <div className='w-full flex flex-col gap-2.5 mt-auto'>
+            <div className='w-full flex flex-col gap-2.5 mt-auto mb-5'>
               <button type='button' className='font-pretendard font-bold text-lg text-main-green2 rounded-4xl bg-white border border-[#C8F5DA] py-4 w-full flex items-center justify-center' onClick={handleGallaryClick}>
                 갤러리에서 불러오기
               </button>
